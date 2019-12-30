@@ -45,7 +45,7 @@ private:
 
 	bool notAtEndOfOptionElements(const std::list<std::string>::iterator &iterator, const std::list<std::string> &arguments)
 	{
-		return iterator != arguments.end() && iterator->at(0) != '-' && iterator->at(0) != '?')
+		return iterator != arguments.end() && iterator->at(0) != '-' && iterator->at(0) != '?');
 	}
 
 	std::list<std::string> findAndExcise(const char option, const unsigned int length)

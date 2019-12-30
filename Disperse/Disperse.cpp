@@ -3,13 +3,12 @@
 #include <iostream>
 #include <fstream>
 #include "ExpectedException.hpp"
+#include "CmdLine.hpp"
+#include "Optimisation.hpp"
 
-void run(std::ifstream &inputFile, std::ofstream &outputFile)
-{
-
-}
-
-void run(const std::string &inputFileName, const std::string &outputFileName, const std::string factorCombiningFormula)
+// The limit is the maximum allowed risk or minimum allowed return
+void run(Objective objective, double limit, const std::string &inputFileName, const std::string &outputFileName,
+	const std::string &factorCombinationFormula)
 {
 	try
 	{
@@ -45,11 +44,12 @@ void run(const std::string &inputFileName, const std::string &outputFileName, co
 
 void run(const unsigned int argc, const char* const argv[])
 {
-	
+	CmdLineArgs cmdLineArgs(argc, argv);
 
 
-
-	run(std::string(argv[0]), std::string(argv[1]), std::string(argv[2]));
+	const std::list<std::string> &requiredArgs = cmdLineArgs.remainingArguments;
+	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 2);
+	run(*requiredArgs.begin(), *std::next(requiredArgs.begin()));
 }
 
 int main(int argc, char* argv[])

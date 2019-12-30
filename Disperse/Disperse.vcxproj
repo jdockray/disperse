@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
+    <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Security.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

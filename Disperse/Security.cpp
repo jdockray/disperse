@@ -52,14 +52,19 @@ double Security::getMinProportion() const
 	return maxProportion.value_or(1);
 }
 
-void Security::addExposure(std::string factorName, double exposure)
+SecurityWithExposures::SecurityWithExposures(const std::string& identifier)
+	: Security(identifier)
+{
+}
+
+void SecurityWithExposures::addExposure(std::string factorName, double exposure)
 {
 	RepeatedSpecificationOfVariableException::verifyNotSet(factorName, exposures,
 		"exposure to " + factorName + " for security " + identifier);
 	exposures[factorName] = exposure;
 }
 
-double Security::getExposure(std::string factorName)
+double SecurityWithExposures::getExposure(std::string factorName)
 {
 	std::map<std::string, double>::iterator exposure = exposures.find(factorName);
 	return (exposure == exposures.end()) ? 0 : exposure->second;
