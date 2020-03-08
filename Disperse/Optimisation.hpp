@@ -23,31 +23,57 @@ enum class ExitStatus
 	NON_CVX = OSQP_NON_CVX
 };
 
+struct SparseMatrixElement
+{
+	SparseMatrixElement(c_int rowIndex, c_int columnIndex, c_float value)
+		: rowIndex(rowIndex), columnIndex(columnIndex), value(value)
+	{
+	}
+
+	c_int rowIndex;
+	c_int columnIndex;
+	c_float value;
+};
+
+bool operator<(const SparseMatrixElement& a, const SparseMatrixElement& b)
+{
+	if (a.columnIndex != b.columnIndex) return a.columnIndex < b.columnIndex;
+	return a.rowIndex < b.rowIndex;
+}
+
+SafeCSC safeCSCFromDlibMatrixUpperTriangular(dlib::matrix<double> matrix)
+{
+	std::vector<SparseMatrixElement> vectorOfSparseElements;
+	for (int i = 0; i < matrix.nr; ++i)
+	{
+		for (int j = i; j < matrix.nc; ++j)
+		{
+			vectorOfSparseElements.push_back(SparseMatrixElement(i, j, matrix(i, j)));
+		}
+	}
+	return SafeCSC(vectorOfSparseElements, matrix.nr, matrix.nc);
+}
+
 // dlib::upperm can be used to make an upper triangular matrix
 class SafeCSC : public csc
 {
 public:
-	SafeCSC(dlib::matrix<double> matrix)
+	SafeCSC(const std::vector<SparseMatrixElement> &vectorOfSparseElements,
+		c_int matrixRowNumber, c_int matrixColumnNumber)
 	{
-		columnPointers.push_back(0);
-		for (int i = 0; i < matrix.nr; ++i)
-		{			
-			for (int j = 0; j < matrix.nc; ++j)
-			{
-				double value = matrix(i, j);
-				if (value > 0)
-				{
-					rowIndices.push_back(j);
-					values.push_back(value);
-				}
-			}
-			columnPointers.push_back(rowIndices.size());
+		std::sort(vectorOfSparseElements.front(), vectorOfSparseElements.back());
+		c_int currentColumn = -1;
+		for (SparseMatrixElement element : vectorOfSparseElements)
+		{
+			if (element.columnIndex > currentColumn) columnPointers.push_back(rowIndices.size());
+			rowIndices.push_back(element.rowIndex);
+			values.push_back(element.value);
 		}
 		nzmax = rowIndices.size();
-		m = matrix.nr;
-		n = matrix.nc;
+		m = matrixRowNumber;
+		n = matrixColumnNumber;
 		p = columnPointers.data();
-		i = rowIndices.data(); c_int* i;
+		i = rowIndices.data();
 		x = values.data();
 		nz = -1;
 	}
@@ -73,36 +99,38 @@ void solve(Objective objective, double limit, const std::vector<Security>& secur
 	std::vector<c_float> qVector(securities.size());
 	std::vector<unsigned int> indicesOfSecuritiesWithLimits;
 	std::vector<c_float> lVector;
+	lVector.push_back(0);
 	std::vector<c_float> uVector;
+	uVector.push_back(1);
+	std::vector<SparseMatrixElement> elementsOfA;
 	for (int i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
-		// Code to set an individual value of Q required here
+		elementsOfA.push_back(SparseMatrixElement(i, 0, 1)); // For sum of all allocations
 		if (security.getMinProportion() > 0 && security.getMaxProportion())
 		{
 			indicesOfSecuritiesWithLimits.push_back(i);
 			lVector.push_back(security.getMinProportion());
 			uVector.push_back(security.getMaxProportion());
+			elementsOfA.push_back(SparseMatrixElement(i, i + 1, 1));
 		}
-
 	}
 	
-	dlib::matrix<double> aMatrix(osqpData.m, osqpData.n);
 
-	SafeCSC safeCSC(covarianceMatrix);
 	OSQPData osqpData;
 	osqpData.n = securities.size();
+	osqpData.m = securities.size() + 1;
 
-	c_int    m; ///< number of constraints m
-	osqpData.P = &safeCSC; /// the upper triangular part of the quadratic cost matrix P in csc format (size n x n).
+	SafeCSC cscP = safeCSCFromDlibMatrixUpperTriangular(covarianceMatrix);
+	osqpData.P = &cscP;
 
+		
+	SafeCSC cscA(elementsOfA, osqpData.m, osqpData.n);
+	osqpData.A = &cscA;
 
-
-		csc* A; ///< linear constraints matrix A in csc format (size m x n)
-		c_float* q; ///< dense array for linear part of cost function (size n)
-		c_float* l; ///< dense array for lower bound (size m)
-		c_float* u; ///< dense array for upper bound (size m)
-	
+	osqpData.q = qVector.data();
+	osqpData.l = lVector.data();
+	osqpData.u = uVector.data();
 
 	OSQPWorkspace* pOsqpWorkspace;
 	ExitStatus exitStatus = static_cast<ExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &DISPERSE_OSQP_SETTINGS));
