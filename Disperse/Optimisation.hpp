@@ -1,15 +1,25 @@
-#pragma once
+
+
+#ifndef DISPERSE_OPTIMISATION
+#define DISPERSE_OPTIMISATION
+
 #include "dlib\matrix.h"
 #include "osqp\include\osqp.h"
 #include <vector>
 
-enum class Objective
+enum class SetupExitStatus
 {
-	MAXIMISE_RETURN,
-	MINIMISE_RISK
+	SUCCESS = 0,
+	DATA_VALIDATION_ERROR = OSQP_DATA_VALIDATION_ERROR,
+	SETTINGS_VALIDATION_ERROR = OSQP_SETTINGS_VALIDATION_ERROR,
+	LINSYS_SOLVER_LOAD_ERROR = OSQP_LINSYS_SOLVER_LOAD_ERROR,
+	LINSYS_SOLVER_INIT_ERROR = OSQP_LINSYS_SOLVER_INIT_ERROR,
+	NONCVX_ERROR = OSQP_NONCVX_ERROR,
+	MEM_ALLOC_ERROR = OSQP_MEM_ALLOC_ERROR,
+	WORKSPACE_NOT_INIT_ERROR = OSQP_WORKSPACE_NOT_INIT_ERROR
 };
 
-enum class ExitStatus
+enum class SolveExitStatus
 {
 	SOLVED = OSQP_SOLVED,
 	SOLVED_INACCURATE = OSQP_SOLVED_INACCURATE,
@@ -93,8 +103,54 @@ static const class DisperseOSQPSettings : public OSQPSettings
 
 } DISPERSE_OSQP_SETTINGS;
 
-// The limit is the maximum allowed risk or minimum allowed return
-void solve(Objective objective, double limit, const std::vector<Security>& securities, dlib::matrix<double> covarianceMatrix)
+
+class ScopedOSQPWorkspaceUsage
+{
+public:
+	ScopedOSQPWorkspaceUsage(OSQPWorkspace& workspace)
+		: m_workspace(workspace)
+	{
+	}
+	
+	OSQPWorkspace &getWorkspace()
+	{
+		return m_workspace;
+	}
+
+	~ScopedOSQPWorkspaceUsage()
+	{
+		osqp_cleanup(&m_workspace);
+	}
+
+private:
+	OSQPWorkspace& m_workspace;
+};
+	
+OSQPWorkspace* callOSQPSetup(OSQPData &osqpData)
+{
+	OSQPWorkspace* pOsqpWorkspace = NULL;
+	switch (static_cast<SetupExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &DISPERSE_OSQP_SETTINGS)))
+	{
+	case SetupExitStatus::SUCCESS:
+		return pOsqpWorkspace;
+
+		// Throw errors for other cases
+
+	}
+}
+
+void callOSQPSolve(ScopedOSQPWorkspaceUsage& workspaceUsage)
+{
+	switch (static_cast<SolveExitStatus>(osqp_solve(&workspaceUsage.getWorkspace())))
+	{
+	case SolveExitStatus::SOLVED:
+		return;
+
+		// Throw errors for other cases
+	}
+}
+
+void solve(double minimumReturn, const std::vector<Security>& securities, dlib::matrix<double> covarianceMatrix)
 {
 	std::vector<c_float> qVector(securities.size());
 	std::vector<unsigned int> indicesOfSecuritiesWithLimits;
@@ -115,7 +171,6 @@ void solve(Objective objective, double limit, const std::vector<Security>& secur
 			elementsOfA.push_back(SparseMatrixElement(i, i + 1, 1));
 		}
 	}
-	
 
 	OSQPData osqpData;
 	osqpData.n = securities.size();
@@ -124,7 +179,6 @@ void solve(Objective objective, double limit, const std::vector<Security>& secur
 	SafeCSC cscP = safeCSCFromDlibMatrixUpperTriangular(covarianceMatrix);
 	osqpData.P = &cscP;
 
-		
 	SafeCSC cscA(elementsOfA, osqpData.m, osqpData.n);
 	osqpData.A = &cscA;
 
@@ -132,8 +186,17 @@ void solve(Objective objective, double limit, const std::vector<Security>& secur
 	osqpData.l = lVector.data();
 	osqpData.u = uVector.data();
 
-	OSQPWorkspace* pOsqpWorkspace;
-	ExitStatus exitStatus = static_cast<ExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &DISPERSE_OSQP_SETTINGS));
+	OSQPWorkspace* pOsqpWorkspace = callOSQPSetup(osqpData);
+	
+	// Check pOsqpWorkspace not null, asserting and throwing if necessary, maybe in scoped usage constructor
+
+	ScopedOSQPWorkspaceUsage scopedWorkspaceUsage(*pOsqpWorkspace);
+
+	callOSQPSolve(scopedWorkspaceUsage);
+
+
 
 
 }
+
+#endif // #ifndef DISPERSE_OPTIMISATION

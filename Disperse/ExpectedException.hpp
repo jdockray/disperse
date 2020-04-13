@@ -1,6 +1,6 @@
-#pragma once
 
 #include <exception>
+#include <stdexcept>
 #include <vector>
 #include <string>
 #include <set>
@@ -16,7 +16,8 @@ enum class ReturnCode
 	IO_EXCEPTION = 5,
 	NEGATIVE_RISK_EXCEPTION = 6,
 	INVALID_HOLDING_LIMITS = 7,
-	REPEATED_SPECIFICATION_OF_VARIABLE = 8
+	REPEATED_SPECIFICATION_OF_VARIABLE = 8,
+	COULD_NOT_PARSE_NUMBER_EXCEPTION = 9
 };
 
 struct ExpectedException : public std::exception
@@ -25,6 +26,15 @@ struct ExpectedException : public std::exception
 
 	const std::string errorMessage;
 	const ReturnCode returnCode;
+};
+
+class CouldNotParseNumberException : public ExpectedException
+{
+public:
+	static double convert(const std::string& stringToParse);
+
+private:
+	CouldNotParseNumberException(const std::string& attemptedToParse);
 };
 
 class NegativeRiskException : public ExpectedException

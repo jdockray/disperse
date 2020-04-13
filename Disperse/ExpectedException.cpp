@@ -1,5 +1,32 @@
 #include "ExpectedException.hpp"
 
+double CouldNotParseNumberException::convert(const std::string &stringToParse)
+{
+	try
+	{
+		return std::stof(stringToParse);
+	}
+	catch (std::invalid_argument ex)
+	{
+		throw CouldNotParseNumberException(stringToParse);
+	}
+	catch (std::out_of_range ex)
+	{
+		throw CouldNotParseNumberException(stringToParse);
+	}
+
+}
+
+CouldNotParseNumberException::CouldNotParseNumberException(const std::string& attemptedToParse)
+	: ExpectedException("The string " + attemptedToParse + " could not be converted to a number.", ReturnCode::COULD_NOT_PARSE_NUMBER_EXCEPTION)
+{
+}
+
+NegativeRiskException::NegativeRiskException(const double risk, const std::string& securityIdentifier)
+	: ExpectedException("The security " + securityIdentifier + " has a negative risk of " + std::to_string(risk) + " given.", ReturnCode::NEGATIVE_RISK_EXCEPTION)
+{
+}
+
 void NegativeRiskException::verify(const double risk, const std::string& securityIdentifier)
 {
 	if (risk < 0)

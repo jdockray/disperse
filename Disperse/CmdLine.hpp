@@ -1,4 +1,6 @@
-#pragma once
+
+#ifndef DISPERSE_COMMAND_LINE
+#define DISPERSE_COMMAND_LINE
 
 #include <vector>
 #include <list>
@@ -71,3 +73,4 @@ private:
 	}
 };
 
+#endif // #ifndef DISPERSE_COMMAND_LINE

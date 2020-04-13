@@ -6,33 +6,26 @@
 #include "CmdLine.hpp"
 #include "Optimisation.hpp"
 
-// The limit is the maximum allowed risk or minimum allowed return
-void run(Objective objective, double limit, const std::string &inputFileName, const std::string &outputFileName,
-	const std::string &factorCombinationFormula)
+std::ifstream openInputFile(const std::string &fileName)
+{
+	std::ifstream inputFile;
+	inputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		inputFile.open(fileName, std::ios_base::in);
+	}
+	catch (std::ios_base::failure)
+	{
+		throw InputFileException(fileName);
+	}
+}
+
+
+void run(std::string inputFileName, std::string& outputFileName, const double minimumReturn)
 {
 	try
 	{
-		std::ifstream inputFile;
-		inputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		try
-		{
-			inputFile.open(inputFileName, std::ios_base::in);
-		}
-		catch (std::ios_base::failure)
-		{
-			throw InputFileException(inputFileName);
-		}
-		std::ofstream outputFile;
-		outputFile.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-		try
-		{
-			outputFile.open(outputFileName, std::ios_base::out);
-		}
-		catch (std::ios_base::failure)
-		{
-			throw OutputFileException(outputFileName);
-		}
-		run(inputFile, outputFile);
+		run(inputFile, outputFile, minimumReturn);
 		inputFile.close();
 		outputFile.close();
 	}
@@ -45,11 +38,13 @@ void run(Objective objective, double limit, const std::string &inputFileName, co
 void run(const unsigned int argc, const char* const argv[])
 {
 	CmdLineArgs cmdLineArgs(argc, argv);
-
-
-	const std::list<std::string> &requiredArgs = cmdLineArgs.remainingArguments;
-	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 2);
-	run(*requiredArgs.begin(), *std::next(requiredArgs.begin()));
+	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments;
+	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3);
+	std::list<std::string>::const_iterator position = requiredArgs.begin();
+	std::string inputFileName = *position;
+	std::string outputFileName = *(++position);
+	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
+	run(openInputFile(inputFileName), openOutputFile(outputFileName), minimumReturn);
 }
 
 int main(int argc, char* argv[])

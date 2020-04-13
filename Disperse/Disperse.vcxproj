@@ -162,12 +162,16 @@
     <ClCompile Include="CmdLine.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Output.cpp" />
     <ClCompile Include="Security.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
+    <ClInclude Include="Input.hpp" />
     <ClInclude Include="Optimisation.hpp" />
+    <ClInclude Include="Output.hpp" />
     <ClInclude Include="Security.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
