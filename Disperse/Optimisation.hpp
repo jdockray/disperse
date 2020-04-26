@@ -126,27 +126,54 @@ private:
 	OSQPWorkspace& m_workspace;
 };
 	
-OSQPWorkspace* callOSQPSetup(OSQPData &osqpData)
+OSQPWorkspace& callOSQPSetup(OSQPData &osqpData)
 {
 	OSQPWorkspace* pOsqpWorkspace = NULL;
 	switch (static_cast<SetupExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &DISPERSE_OSQP_SETTINGS)))
 	{
 	case SetupExitStatus::SUCCESS:
-		return pOsqpWorkspace;
-
-		// Throw errors for other cases
-
+		break;
+	case SetupExitStatus::MEM_ALLOC_ERROR:
+		throw InsufficientMemoryException();
+	case SetupExitStatus::LINSYS_SOLVER_LOAD_ERROR:
+	case SetupExitStatus::LINSYS_SOLVER_INIT_ERROR:
+		throw SolverInitialisationException();
+	case SetupExitStatus::DATA_VALIDATION_ERROR:
+	case SetupExitStatus::SETTINGS_VALIDATION_ERROR:
+	case SetupExitStatus::WORKSPACE_NOT_INIT_ERROR:
+	case SetupExitStatus::NONCVX_ERROR:
+	default:
+		throw UnexpectedException();
 	}
+	if (!pOsqpWorkspace)
+	{
+		throw UnexpectedException();
+	}
+	return *pOsqpWorkspace;
 }
 
 void callOSQPSolve(ScopedOSQPWorkspaceUsage& workspaceUsage)
 {
 	switch (static_cast<SolveExitStatus>(osqp_solve(&workspaceUsage.getWorkspace())))
 	{
+	case SolveExitStatus::SOLVED_INACCURATE:
+	case SolveExitStatus::MAX_ITER_REACHED:
+// Solution accepted in release mode but we must also test that results are acceptable in debug mode
+#ifndef _DEBUG
+		throw UnexpectedException();
+#endif
 	case SolveExitStatus::SOLVED:
 		return;
-
-		// Throw errors for other cases
+	case SolveExitStatus::SIGINT:
+		throw OptimisationInterruptedException();
+	case SolveExitStatus::PRIMAL_INFEASIBLE:
+	case SolveExitStatus::PRIMAL_INFEASIBLE_INACCURATE:
+	case SolveExitStatus::DUAL_INFEASIBLE:
+	case SolveExitStatus::DUAL_INFEASIBLE_INACCURATE:
+	case SolveExitStatus::NON_CVX:
+	case SolveExitStatus::UNSOLVED:
+	default:
+		throw UnexpectedException();
 	}
 }
 
@@ -186,11 +213,11 @@ void solve(double minimumReturn, const std::vector<Security>& securities, dlib::
 	osqpData.l = lVector.data();
 	osqpData.u = uVector.data();
 
-	OSQPWorkspace* pOsqpWorkspace = callOSQPSetup(osqpData);
+	OSQPWorkspace osqpWorkspace = callOSQPSetup(osqpData);
 	
 	// Check pOsqpWorkspace not null, asserting and throwing if necessary, maybe in scoped usage constructor
 
-	ScopedOSQPWorkspaceUsage scopedWorkspaceUsage(*pOsqpWorkspace);
+	ScopedOSQPWorkspaceUsage scopedWorkspaceUsage(osqpWorkspace);
 
 	callOSQPSolve(scopedWorkspaceUsage);
 

@@ -124,9 +124,28 @@ RepeatedSpecificationOfVariableException::RepeatedSpecificationOfVariableExcepti
 {
 }
 
-ExpectedException::ExpectedException(const std::string &errorMessage, const ReturnCode returnCode)
-	: errorMessage(errorMessage), returnCode(returnCode)
+SolverInitialisationException::SolverInitialisationException()
+	: ExpectedException("The solver could not be initialised.", ReturnCode::SOLVER_INITIALISATION_EXCEPTION)
+{
+}
+
+InsufficientMemoryException::InsufficientMemoryException()
+	: ExpectedException("A memory allocation failed.", ReturnCode::INSUFFICIENT_MEMORY_EXCEPTION)
+{
+}
+
+UnexpectedException::UnexpectedException()
+	: ExpectedException("An unexpected error occured.", ReturnCode::UNEXPECTED_EXCEPTION)
+{
+}
+
+OptimisationInterruptedException::OptimisationInterruptedException()
+	: OptimisationInterruptedException("The optimisation process was interrupted.", ReturnCode::OPTIMISATION_INTERRUPTED)
 {
 }
 
 
+ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
+	: errorMessage(errorMessage), returnCode(returnCode)
+{
+}

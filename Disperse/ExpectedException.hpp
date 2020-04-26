@@ -17,7 +17,10 @@ enum class ReturnCode
 	NEGATIVE_RISK_EXCEPTION = 6,
 	INVALID_HOLDING_LIMITS = 7,
 	REPEATED_SPECIFICATION_OF_VARIABLE = 8,
-	COULD_NOT_PARSE_NUMBER_EXCEPTION = 9
+	COULD_NOT_PARSE_NUMBER_EXCEPTION = 9,
+	SOLVER_INITIALISATION_EXCEPTION = 10,
+	INSUFFICIENT_MEMORY_EXCEPTION = 11,
+	OPTIMISATION_INTERRUPTED = 12
 };
 
 struct ExpectedException : public std::exception
@@ -114,4 +117,29 @@ public:
 private:
 	static void verifyNotSet(bool presence, std::string variableDescription);
 	RepeatedSpecificationOfVariableException(std::string variableDescription);
+};
+
+class SolverInitialisationException : public ExpectedException
+{
+public:
+	SolverInitialisationException();
+};
+
+class InsufficientMemoryException : public ExpectedException
+{
+public:
+	InsufficientMemoryException();
+};
+
+class OptimisationInterruptedException : public ExpectedException
+{
+public:
+	OptimisationInterruptedException();
+};
+
+
+class UnexpectedException : public ExpectedException
+{
+public:
+	UnexpectedException();
 };

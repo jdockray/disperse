@@ -47,12 +47,24 @@ void run(const unsigned int argc, const char* const argv[])
 	run(openInputFile(inputFileName), openOutputFile(outputFileName), minimumReturn);
 }
 
+void runCatchingGlobalExceptions(const unsigned int argc, const char* const argv[])
+{
+	try
+	{
+		run(argc, argv);
+	}
+	catch (std::bad_alloc)
+	{
+		throw InsufficientMemoryException();
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	ReturnCode returnCode = ReturnCode::UNEXPECTED_EXCEPTION;
 	try
 	{
-		run(argc, argv);
+		runCatchingGlobalExceptions(argc, argv);
 		returnCode = ReturnCode::SUCCESS;
 	}
 	catch (ExpectedException ex)
@@ -63,7 +75,8 @@ int main(int argc, char* argv[])
 #ifndef _DEBUG
 	catch (...)
 	{
-		std::cerr << "An unexpected error occurred.";
+		UnexpectedException unexpectedException;
+		std::cerr << unexpectedException.errorMessage;
 	}
 #endif
 	return static_cast<int>(returnCode);
