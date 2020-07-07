@@ -163,6 +163,7 @@
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Optimisation.cpp" />
     <ClCompile Include="Output.cpp" />
     <ClCompile Include="Security.cpp" />
   </ItemGroup>
