@@ -1,50 +1,32 @@
+
+#include "Input.hpp"
+#include "Output.hpp"
+#include "ExpectedException.hpp"
+#include "CmdLine.hpp"
+#include "Optimisation.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "ExpectedException.hpp"
-#include "CmdLine.hpp"
-#include "Optimisation.hpp"
 
-std::ifstream openInputFile(const std::string &fileName)
+void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn)
 {
-	std::ifstream inputFile;
-	inputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	try
-	{
-		inputFile.open(fileName, std::ios_base::in);
-	}
-	catch (std::ios_base::failure)
-	{
-		throw InputFileException(fileName);
-	}
-}
-
-
-void run(std::string inputFileName, std::string& outputFileName, const double minimumReturn)
-{
-	try
-	{
-		run(inputFile, outputFile, minimumReturn);
-		inputFile.close();
-		outputFile.close();
-	}
-	catch (std::ios_base::failure)
-	{
-		throw IOException();
-	}
+	std::vector<Security> securities;
+	dlib::matrix<double> covarianceMatrix;
+	inputSecurities(inputFileName, securities, covarianceMatrix);
+	outputAllocations(securities, solve(minimumReturn, securities, covarianceMatrix), outputFileName);
 }
 
 void run(const unsigned int argc, const char* const argv[])
 {
 	CmdLineArgs cmdLineArgs(argc, argv);
-	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments;
+	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
 	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3);
 	std::list<std::string>::const_iterator position = requiredArgs.begin();
 	std::string inputFileName = *position;
 	std::string outputFileName = *(++position);
 	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-	run(openInputFile(inputFileName), openOutputFile(outputFileName), minimumReturn);
+	run(inputFileName, outputFileName, minimumReturn);
 }
 
 void runCatchingGlobalExceptions(const unsigned int argc, const char* const argv[])

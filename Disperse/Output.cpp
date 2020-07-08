@@ -3,31 +3,32 @@
 //#include <iostream>
 #include <fstream>
 
-std::ofstream openOutputFile(const std::string& fileName)
+
+void outputAllocations(const std::vector<Security> &securities, const std::vector<double>& allocations, std::ofstream& outputFile)
 {
-	std::ofstream outputFile;
-	outputFile.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-	try
+	unsigned int numberOfAllocations = securities.size();
+	if (allocations.size() != numberOfAllocations)
 	{
-		outputFile.open(fileName, std::ios_base::out);
+		throw UnexpectedException();
 	}
-	catch (std::ios_base::failure)
+	outputFile << "\"Asset\", \"Allocation\"" << std::endl;
+	for (unsigned int i = 0; i < numberOfAllocations; i++)
 	{
-		throw OutputFileException(fileName);
+		outputFile << "\"" << securities.at(i).identifier << "\", " << allocations.at(i) << std::endl;
 	}
 }
 
-void outputAllocation(const std::vector<std::pair<Security, double> >& allocations, std::string outputFileName)
+void outputAllocations(const std::vector<Security>& securities, const std::vector<double>& allocations, const std::string& outputFileName)
 {
-	std::ofstream outputFile = openOutputFile(outputFileName);
-	outputFile << "\"Asset\", \"Allocation\"" << std::endl;
-	for (
-		std::vector<std::pair<Security, double> >::const_iterator allocation = allocations.begin();
-		allocation != allocations.end();
-		++allocation
-		)
+	std::ofstream outputFile;
+	try
 	{
-		outputFile << "\"" << allocation->first.identifier << "\", " << allocation->second << std::endl;
+		outputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		outputFile.open(outputFileName, std::ios_base::out);
+		outputAllocations(securities, allocations, outputFile);
 	}
-	outputFile.close();
+	catch (std::ios_base::failure)
+	{
+		throw OutputFileException(outputFileName);
+	}
 }

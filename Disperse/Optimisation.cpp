@@ -115,7 +115,7 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
 }
 
-std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities, dlib::matrix<double> covarianceMatrix)
+std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities, const dlib::matrix<double> covarianceMatrix)
 {
 	std::vector<c_float> qVector(securities.size());
 	std::vector<unsigned int> indicesOfSecuritiesWithLimits;
