@@ -1,12 +1,13 @@
 
-
 #ifndef DISPERSE_OPTIMISATION
 #define DISPERSE_OPTIMISATION
 
 #include "Security.hpp"
+#include "Matrices.hpp"
 #include "dlib\matrix.h"
 #include "osqp\include\osqp.h"
 #include <vector>
+#include <map>
 
 enum class SetupExitStatus
 {
@@ -34,24 +35,10 @@ enum class SolveExitStatus
 	NON_CVX = OSQP_NON_CVX
 };
 
-struct SparseMatrixElement
-{
-	SparseMatrixElement(c_int rowIndex, c_int columnIndex, c_float value);
-
-	c_int rowIndex;
-	c_int columnIndex;
-	c_float value;
-};
-
-bool operator<(const SparseMatrixElement& a, const SparseMatrixElement& b);
-
-SafeCSC safeCSCFromDlibMatrixUpperTriangular(dlib::matrix<double> matrix);
-
 class SafeCSC : public csc
 {
 public:
-	SafeCSC(const std::vector<SparseMatrixElement>& vectorOfSparseElements,
-		c_int matrixRowNumber, c_int matrixColumnNumber);
+	SafeCSC(const SparseMatrix& sparseMatrix);
 
 private:
 	SafeCSC(SafeCSC const&) = delete;

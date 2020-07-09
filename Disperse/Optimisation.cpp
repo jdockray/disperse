@@ -2,44 +2,19 @@
 
 #include "Optimisation.hpp"
 
-SparseMatrixElement::SparseMatrixElement(c_int rowIndex, c_int columnIndex, c_float value)
-	: rowIndex(rowIndex), columnIndex(columnIndex), value(value)
+SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 {
-}
-
-bool operator<(const SparseMatrixElement& a, const SparseMatrixElement& b)
-{
-	if (a.columnIndex != b.columnIndex) return a.columnIndex < b.columnIndex;
-	return a.rowIndex < b.rowIndex;
-}
-
-SafeCSC safeCSCFromDlibMatrixUpperTriangular(dlib::matrix<double> matrix)
-{
-	std::vector<SparseMatrixElement> vectorOfSparseElements;
-	for (int i = 0; i < matrix.nr(); ++i)
-	{
-		for (int j = i; j < matrix.nc(); ++j)
-		{
-			vectorOfSparseElements.push_back(SparseMatrixElement(i, j, matrix(i, j)));
-		}
-	}
-	return SafeCSC(vectorOfSparseElements, matrix.nr(), matrix.nc());
-}
-
-SafeCSC::SafeCSC(const std::vector<SparseMatrixElement>& vectorOfSparseElements,
-	c_int matrixRowNumber, c_int matrixColumnNumber)
-{
-	std::sort(vectorOfSparseElements.front(), vectorOfSparseElements.back());
 	c_int currentColumn = -1;
-	for (SparseMatrixElement element : vectorOfSparseElements)
+	// std::map is ordered so it is already sorted by the key
+	for (const std::pair<std::pair<int, int>, double> const& entry : sparseMatrix.matrixElements())
 	{
-		if (element.columnIndex > currentColumn) columnPointers.push_back(rowIndices.size());
-		rowIndices.push_back(element.rowIndex);
-		values.push_back(element.value);
+		if (entry.first.first > currentColumn) columnPointers.push_back(rowIndices.size());
+		rowIndices.push_back(entry.first.second);
+		values.push_back(entry.second);
 	}
 	nzmax = rowIndices.size();
-	m = matrixRowNumber;
-	n = matrixColumnNumber;
+	m = sparseMatrix.rowCount();
+	n = sparseMatrix.columnCount();
 	p = columnPointers.data();
 	i = rowIndices.data();
 	x = values.data();
@@ -85,6 +60,38 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpDat
 	return std::unique_ptr<OSQPWorkspace, WorkspaceDeleter>(pOsqpWorkspace, WorkspaceDeleter());
 }
 
+std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
+	const UpperTriangularSparseMatrix& matrixP,
+	const std::vector<c_float>& vectorQ,
+	const SparseMatrix& matrixA,
+	const std::vector<c_float>& vectorL,
+	const std::vector<c_float>& vectorU)
+{
+	OSQPData osqpData;
+	osqpData.n = matrixA.rowCount();
+	osqpData.m = matrixA.columnCount();
+
+	if (matrixP.columnCount() != osqpData.n
+		|| vectorQ.size() != osqpData.n
+		|| vectorL.size() != osqpData.m
+		|| vectorU.size() != osqpData.m)
+	{
+		throw UnexpectedException();
+	}
+
+	SafeCSC cscP(matrixP);
+	osqpData.P = &cscP;
+
+	SafeCSC cscA(matrixA);
+	osqpData.A = &cscA;
+
+	osqpData.q = const_cast<c_float*>(vectorQ.data());
+	osqpData.l = const_cast<c_float*>(vectorL.data());
+	osqpData.u = const_cast<c_float*>(vectorU.data());
+
+	return callOSQPSetup(osqpData);
+}
+
 std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 {
 	switch (static_cast<SolveExitStatus>(osqp_solve(&osqpWorkspace)))
@@ -115,43 +122,29 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
 }
 
-std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities, const dlib::matrix<double> covarianceMatrix)
+std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities,
+	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
-	std::vector<c_float> qVector(securities.size());
-	std::vector<unsigned int> indicesOfSecuritiesWithLimits;
-	std::vector<c_float> lVector;
-	lVector.push_back(0);
-	std::vector<c_float> uVector;
-	uVector.push_back(1);
-	std::vector<SparseMatrixElement> elementsOfA;
+	std::vector<c_float> vectorQ(securities.size());
+	std::vector<c_float> vectorL;
+	vectorL.push_back(0);
+	std::vector<c_float> vectorU;
+	vectorU.push_back(1);
+	SparseMatrix matrixA(securities.size(), securities.size() + 1);
 	for (int i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
-		elementsOfA.push_back(SparseMatrixElement(i, 0, 1)); // For sum of all allocations
+		matrixA.setValue(i, 0, 1); // For sum of all allocations
 		if (security.getMinProportion() > 0 && security.getMaxProportion())
 		{
-			indicesOfSecuritiesWithLimits.push_back(i);
-			lVector.push_back(security.getMinProportion());
-			uVector.push_back(security.getMaxProportion());
-			elementsOfA.push_back(SparseMatrixElement(i, i + 1, 1));
+			vectorQ.push_back(security.getExpectedReturn());
+			vectorL.push_back(security.getMinProportion());
+			vectorU.push_back(security.getMaxProportion());
+			matrixA.setValue(i, i + 1, 1);
 		}
 	}
 
-	OSQPData osqpData;
-	osqpData.n = securities.size();
-	osqpData.m = securities.size() + 1;
-
-	SafeCSC cscP = safeCSCFromDlibMatrixUpperTriangular(covarianceMatrix);
-	osqpData.P = &cscP;
-
-	SafeCSC cscA(elementsOfA, osqpData.m, osqpData.n);
-	osqpData.A = &cscA;
-
-	osqpData.q = qVector.data();
-	osqpData.l = lVector.data();
-	osqpData.u = uVector.data();
-
-	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(osqpData);
+	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(covarianceMatrix, vectorQ, matrixA, vectorL, vectorU);
 
 	return callOSQPSolve(*osqpWorkspace);
 }

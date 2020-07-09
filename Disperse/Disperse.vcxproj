@@ -171,6 +171,7 @@
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Input.hpp" />
+    <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Output.hpp" />
     <ClInclude Include="Security.hpp" />
