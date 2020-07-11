@@ -3,14 +3,33 @@
 #define DISPERSE_INPUT
 
 #include "Security.hpp"
+#include "Matrices.hpp"
 #include "dlib\matrix.h"
 #include <vector>
 
-void inputSecurities(const std::string& inputFileName, const std::vector<Security>& securitiesListToAddTo,
-	dlib::matrix<double>& covarianceMatrixToAddTo);
+class InputData
+{
+public:
+	InputData(const std::vector<Security>& securities)
+		: securitiesList(securities), covarianceMatrix(securities.size())
+	{
+	}
 
-void inputSecurities(std::ifstream& inputFile, const std::vector<Security>& securitiesListToAddTo,
-	dlib::matrix<double>& covarianceMatrixToAddTo);
+	const std::vector<Security>& securities() const
+	{
+		return securitiesList;
+	}
 
+	UpperTriangularSparseMatrix& covariances()
+	{
+		return covarianceMatrix;
+	}
+
+private:
+	const std::vector<Security> securitiesList;
+	UpperTriangularSparseMatrix covarianceMatrix;	
+};
+
+InputData inputSecurities(const std::string& inputFileName);
 
 #endif // #ifndef DISPERSE_INPUT

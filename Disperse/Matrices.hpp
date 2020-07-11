@@ -56,6 +56,7 @@ private:
 
 class UpperTriangularSparseMatrix : public SparseMatrix
 {
+public:
 	UpperTriangularSparseMatrix(unsigned int dimension)
 		: SparseMatrix(dimension, dimension)
 	{

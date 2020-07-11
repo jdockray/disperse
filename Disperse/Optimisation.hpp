@@ -59,10 +59,7 @@ struct WorkspaceDeleter
 	void operator()(OSQPWorkspace* pOsqpWorkspace);
 };
 
-std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpData);
-
-std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace);
-
-std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities, const dlib::matrix<double> covarianceMatrix);
+std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities,
+	const UpperTriangularSparseMatrix& covarianceMatrix);
 
 #endif // #ifndef DISPERSE_OPTIMISATION

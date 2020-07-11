@@ -11,10 +11,8 @@
 
 void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn)
 {
-	std::vector<Security> securities;
-	dlib::matrix<double> covarianceMatrix;
-	inputSecurities(inputFileName, securities, covarianceMatrix);
-	outputAllocations(securities, solve(minimumReturn, securities, covarianceMatrix), outputFileName);
+	InputData inputData = inputSecurities(inputFileName);
+	outputAllocations(inputData.securities(), solve(minimumReturn, inputData.securities(), inputData.covariances()), outputFileName);
 }
 
 void run(const unsigned int argc, const char* const argv[])

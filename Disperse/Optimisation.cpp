@@ -62,7 +62,6 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpDat
 
 std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	const UpperTriangularSparseMatrix& matrixP,
-	const std::vector<c_float>& vectorQ,
 	const SparseMatrix& matrixA,
 	const std::vector<c_float>& vectorL,
 	const std::vector<c_float>& vectorU)
@@ -72,7 +71,6 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	osqpData.m = matrixA.columnCount();
 
 	if (matrixP.columnCount() != osqpData.n
-		|| vectorQ.size() != osqpData.n
 		|| vectorL.size() != osqpData.m
 		|| vectorU.size() != osqpData.m)
 	{
@@ -85,10 +83,14 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	SafeCSC cscA(matrixA);
 	osqpData.A = &cscA;
 
-	osqpData.q = const_cast<c_float*>(vectorQ.data());
+	// q is not needed so a zero-filled array is used
+	std::vector<c_float> vectorQ(osqpData.n, 0.0);
+	osqpData.q = vectorQ.data();
+
 	osqpData.l = const_cast<c_float*>(vectorL.data());
 	osqpData.u = const_cast<c_float*>(vectorU.data());
 
+	// osqp_setup copies osqpData so it can then be freed
 	return callOSQPSetup(osqpData);
 }
 
@@ -125,7 +127,6 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
-	std::vector<c_float> vectorQ(securities.size());
 	std::vector<c_float> vectorL;
 	vectorL.push_back(0);
 	std::vector<c_float> vectorU;
@@ -137,14 +138,14 @@ std::vector<double> solve(double minimumReturn, const std::vector<Security>& sec
 		matrixA.setValue(i, 0, 1); // For sum of all allocations
 		if (security.getMinProportion() > 0 && security.getMaxProportion())
 		{
-			vectorQ.push_back(security.getExpectedReturn());
+			//vectorQ.push_back(security.getExpectedReturn());
 			vectorL.push_back(security.getMinProportion());
 			vectorU.push_back(security.getMaxProportion());
 			matrixA.setValue(i, i + 1, 1);
 		}
 	}
 
-	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(covarianceMatrix, vectorQ, matrixA, vectorL, vectorU);
+	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(covarianceMatrix, matrixA, vectorL, vectorU);
 
 	return callOSQPSolve(*osqpWorkspace);
 }
