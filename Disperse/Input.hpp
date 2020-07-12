@@ -31,5 +31,6 @@ private:
 };
 
 InputData inputSecurities(const std::string& inputFileName);
+void augmentFactors(InputData &inputData, const std::string& inputFileName);
 
 #endif // #ifndef DISPERSE_INPUT

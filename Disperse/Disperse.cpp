@@ -9,9 +9,13 @@
 #include <iostream>
 #include <fstream>
 
-void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn)
+void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn, const std::optional<std::string&> additionalFactorsFileName = std::optional<std::string&>())
 {
 	InputData inputData = inputSecurities(inputFileName);
+	if (additionalFactorsFileName.has_value())
+	{
+		augmentFactors(inputData, inpoutFileName);
+	}
 	outputAllocations(inputData.securities(), solve(minimumReturn, inputData.securities(), inputData.covariances()), outputFileName);
 }
 
