@@ -1,71 +1,61 @@
 #include "Security.hpp"
 
 Security::Security(const std::string& identifier)
-	: identifier(identifier)
+	: identifier(identifier), expectedReturn(1), risk(1), maxProportion(1), minProportion(0)
 {
 }
 
 void Security::setExpectedReturn(const double expectedReturn)
 {
-	RepeatedSpecificationOfVariableException::verifyNotSet(this->expectedReturn, "expected return for security " + identifier);
 	this->expectedReturn = expectedReturn;
 }
 
 double Security::getExpectedReturn() const
 {
-	return expectedReturn.value_or(1);
+	return expectedReturn;
 }
 
 void Security::setRisk(const double risk)
 {
-	RepeatedSpecificationOfVariableException::verifyNotSet(this->risk, "risk for security " + identifier);
 	NegativeRiskException::verify(risk, identifier);
 	this->risk = risk;
 }
 
 double Security::getRisk() const
 {
-	return risk.value_or(1);
+	return risk;
 }
 
 void Security::setMaxProportion(const double maxProportion)
 {
-	RepeatedSpecificationOfVariableException::verifyNotSet(this->maxProportion, "maximum holding for security " + identifier);
 	this->maxProportion = maxProportion;
 	InvalidHoldingLimitsException::verify(*this);
 }
 
 double Security::getMaxProportion() const
 {
-	return maxProportion.value_or(1);
+	return maxProportion;
 }
 
 void Security::setMinProportion(const double minProportion)
 {
-	RepeatedSpecificationOfVariableException::verifyNotSet(this->minProportion, "minimum holding for security " + identifier);
-	this->minProportion = minProportion;
+	this->minProportion;
 	InvalidHoldingLimitsException::verify(*this);
 }
 
 double Security::getMinProportion() const
 {
-	return maxProportion.value_or(1);
+	return maxProportion;
 }
 
-SecurityWithExposures::SecurityWithExposures(const std::string& identifier)
-	: Security(identifier)
-{
-}
-
-void SecurityWithExposures::addExposure(std::string factorName, double exposure)
+void Security::addExposure(std::string factorName, double exposure)
 {
 	RepeatedSpecificationOfVariableException::verifyNotSet(factorName, exposures,
 		"exposure to " + factorName + " for security " + identifier);
 	exposures[factorName] = exposure;
 }
 
-double SecurityWithExposures::getExposure(std::string factorName)
+const std::map<std::string, double>& Security::getExposures() const
 {
-	std::map<std::string, double>::iterator exposure = exposures.find(factorName);
-	return (exposure == exposures.end()) ? 0 : exposure->second;
+	return exposures;
 }

@@ -1,7 +1,7 @@
 
 #include "Input.hpp"
 
-InputData inputSecurities(std::ifstream& inputFile)
+std::vector<Security> inputSecurities(std::ifstream& inputFile)
 {
 	std::optional<unsigned int> securityIndentifierColumnIndex;
 	std::optional<unsigned int> expectedReturnColumnIndex;
@@ -10,30 +10,22 @@ InputData inputSecurities(std::ifstream& inputFile)
 	std::optional<unsigned int> maximumAllocationColumnIndex;
 
 	std::vector<Security> securities;
-	std::vector<std::vector<double> > correlations;
 
-
-	InputData inputData(securities);
 	
-	for (auto correlationSet : correlations)
-	{
-		// We need to check that all of the vectors in this vector of vectors have the same size
+	
 
+	
 
-	}
-
-	// Multiplication is required to get from factor correlations to the covariance matrix
-
-	return inputData;
+	return securities;
 }
 
-void augmentFactors(InputData& inputData, std::ifstream& inputFile)
+void augmentFactors(std::vector<Security>& ssecurities, std::ifstream& inputFile)
 {
 
 
 }
 
-InputData inputSecurities(const std::string& inputFileName)
+std::vector<Security> inputSecurities(const std::string& inputFileName)
 {
 	std::ifstream inputFile;
 	try
@@ -48,7 +40,7 @@ InputData inputSecurities(const std::string& inputFileName)
 	}
 }
 
-void augmentFactors(InputData& inputData, const std::string& inputFileName)
+void augmentFactors(std::vector<Security>& ssecurities, const std::string& inputFileName)
 {
 	std::ifstream inputFile;
 	try

@@ -16,7 +16,7 @@ public:
 		return result == elements.end() ? 0 : result->second;
 	}
 
-	void setValue(unsigned int column, unsigned int row, double value)
+	void setValue(unsigned int row, unsigned int column, double value)
 	{
 		if (column >= numberOfColumns || row >= numberOfRows)
 		{
@@ -48,11 +48,83 @@ public:
 		return elements;
 	}
 
+	SparseMatrix getTranspose() const
+	{
+		SparseMatrix transpose(columnCount(), rowCount());
+		for (const auto& element : matrixElements())
+		{
+			transpose.setValue(element.first.second, element.first.first, element.second);
+		}
+		return transpose;
+	}
+
 private:
 	const unsigned int numberOfColumns;
 	const unsigned int numberOfRows;
 	std::map<std::pair<unsigned int, unsigned int>, double> elements;
 };
+
+class DiagonalSparseMatrix : public SparseMatrix
+{
+public:
+	DiagonalSparseMatrix(unsigned int dimension)
+		: SparseMatrix(dimension, dimension)
+	{
+	}
+
+	DiagonalSparseMatrix(const std::vector<double>& diagonalValues)
+		: DiagonalSparseMatrix(diagonalValues.size())
+	{
+		for (unsigned int i = 0; i < diagonalValues.size(); ++i)
+		{
+			SparseMatrix::setValue(i, i, diagonalValues.at(i));
+		}
+	}
+
+	void setValue(unsigned int diagonalPosition, double value)
+	{
+		SparseMatrix::setValue(diagonalPosition, diagonalPosition, value);
+	}
+
+	void setValue(unsigned int row, unsigned int column, double value)
+	{
+		if (row != column)
+		{
+			throw UnexpectedException();
+		}
+		setValue(row, value);
+	}
+};
+
+SparseMatrix multiply(SparseMatrix a, SparseMatrix b)
+{
+	std::map<unsigned int, std::map<unsigned int, double> > matrixBLookup;
+	for (auto const& elementOfB : b.matrixElements())
+	{
+		auto result = matrixBLookup.find(elementOfB.first.first);
+		if (result == matrixBLookup.end())
+		{
+			matrixBLookup[elementOfB.first.first] = { {elementOfB.first.second, elementOfB.second} };
+		}
+		else
+		{
+			result->second.insert({ {elementOfB.first.second, elementOfB.second} });
+		}
+	}
+	SparseMatrix product(a.columnCount(), b.rowCount());
+	for (auto const& elementOfA : a.matrixElements())
+	{
+		auto const& matrixBRow = matrixBLookup.find(elementOfA.first.first);
+		if (matrixBRow != matrixBLookup.end())
+		{
+			for (auto const& elementOfB : matrixBRow->second)
+			{
+				product.setValue(elementOfA.first.first, elementOfB.first, product.getValue(elementOfA.first.first, elementOfB.first) + elementOfA.second * elementOfB.second);
+			}
+		}
+	}
+	return product;
+}
 
 class UpperTriangularSparseMatrix : public SparseMatrix
 {
@@ -62,13 +134,29 @@ public:
 	{
 	}
 
-	void setValue(unsigned int column, unsigned int row, double value)
+	UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix)
+		: SparseMatrix(squareMatrix.rowCount(), squareMatrix.rowCount())
+	{
+		if (rowCount() != columnCount())
+		{
+			throw UnexpectedException();
+		}
+		for (const auto& element : squareMatrix.matrixElements())
+		{
+			if (element.first.first >= element.first.second)
+			{
+				setValue(element.first.second, element.first.first, element.second);
+			}
+		}
+	}
+
+	void setValue(unsigned int row, unsigned int column, double value)
 	{
 		if (row > column)
 		{
 			throw UnexpectedException();
 		}
-		SparseMatrix::setValue(column, row, value);
+		SparseMatrix::setValue(row, column, value);
 	}
 };
 
