@@ -64,11 +64,11 @@ private:
 	std::map<std::pair<unsigned int, unsigned int>, double> elements;
 };
 
-class DiagonalSparseMatrix : public SparseMatrix
+class DiagonalSparseMatrix : public UpperTriangularSparseMatrix
 {
 public:
 	DiagonalSparseMatrix(unsigned int dimension)
-		: SparseMatrix(dimension, dimension)
+		: UpperTriangularSparseMatrix(dimension)
 	{
 	}
 
@@ -77,13 +77,13 @@ public:
 	{
 		for (unsigned int i = 0; i < diagonalValues.size(); ++i)
 		{
-			SparseMatrix::setValue(i, i, diagonalValues.at(i));
+			UpperTriangularSparseMatrix::setValue(i, i, diagonalValues.at(i));
 		}
 	}
 
 	void setValue(unsigned int diagonalPosition, double value)
 	{
-		SparseMatrix::setValue(diagonalPosition, diagonalPosition, value);
+		UpperTriangularSparseMatrix::setValue(diagonalPosition, diagonalPosition, value);
 	}
 
 	void setValue(unsigned int row, unsigned int column, double value)
@@ -96,7 +96,8 @@ public:
 	}
 };
 
-SparseMatrix multiply(SparseMatrix a, SparseMatrix b)
+template<typename T>
+T multiply(SparseMatrix a, SparseMatrix b)
 {
 	std::map<unsigned int, std::map<unsigned int, double> > matrixBLookup;
 	for (auto const& elementOfB : b.matrixElements())
@@ -111,7 +112,7 @@ SparseMatrix multiply(SparseMatrix a, SparseMatrix b)
 			result->second.insert({ {elementOfB.first.second, elementOfB.second} });
 		}
 	}
-	SparseMatrix product(a.columnCount(), b.rowCount());
+	T product(a.columnCount(), b.rowCount());
 	for (auto const& elementOfA : a.matrixElements())
 	{
 		auto const& matrixBRow = matrixBLookup.find(elementOfA.first.first);

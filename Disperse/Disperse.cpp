@@ -66,10 +66,13 @@ void run(const std::string& inputFileName, const std::string& outputFileName, co
 	{
 		augmentFactors(securities, additionalFactorsFileName.value());
 	}
+	const SparseMatrix factorMatrix = generateFactorMatrix(securities);
+	UpperTriangularSparseMatrix correlationMatrix = multiply<UpperTriangularSparseMatrix>(factorMatrix.getTranspose(), factorMatrix);
 	DiagonalSparseMatrix riskDiagonalMatrix(getSecurityRisks(securities));
-	UpperTriangularSparseMatrix correlationMatrix(matrixProduct(generateFactorMatrix(securities)));
-	
-	
+	const UpperTriangularSparseMatrix covarianceMatrix = multiply<UpperTriangularSparseMatrix>(
+		multiply<UpperTriangularSparseMatrix>(riskDiagonalMatrix, correlationMatrix),
+		riskDiagonalMatrix
+	);
 	outputAllocations(securities, solve(minimumReturn, securities, covarianceMatrix), outputFileName);
 }
 
