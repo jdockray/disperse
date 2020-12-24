@@ -2,61 +2,19 @@
 #ifndef DISPERSE_MATRICS
 #define DISPERSE_MATRICS
 
+#include <map>
+#include "ExpectedException.hpp"
+
 class SparseMatrix
 {
 public:
-	SparseMatrix(unsigned int rows, unsigned int columns)
-		: numberOfRows(rows), numberOfColumns(columns)
-	{
-	}
-
-	double getValue(unsigned int row, unsigned int column) const
-	{
-		auto result	= elements.find(std::pair<unsigned int, unsigned int>(column, row));
-		return result == elements.end() ? 0 : result->second;
-	}
-
-	void setValue(unsigned int row, unsigned int column, double value)
-	{
-		if (column >= numberOfColumns || row >= numberOfRows)
-		{
-			throw UnexpectedException();
-		}
-		const std::pair<unsigned int, unsigned int> key(column, row);
-		if (value == 0)
-		{
-			elements.erase(key);
-		}
-		else
-		{
-			elements[key] = value;
-		}
-	}
-
-	unsigned int columnCount() const
-	{
-		return numberOfColumns;
-	}
-
-	unsigned int rowCount() const
-	{
-		return numberOfRows;
-	}
-
-	const std::map<std::pair<unsigned int, unsigned int>, double>& matrixElements() const
-	{
-		return elements;
-	}
-
-	SparseMatrix getTranspose() const
-	{
-		SparseMatrix transpose(columnCount(), rowCount());
-		for (const auto& element : matrixElements())
-		{
-			transpose.setValue(element.first.second, element.first.first, element.second);
-		}
-		return transpose;
-	}
+	SparseMatrix(unsigned int rows, unsigned int columns);
+	double getValue(unsigned int row, unsigned int column) const;
+	void setValue(unsigned int row, unsigned int column, double value);
+	unsigned int columnCount() const;
+	unsigned int rowCount() const;
+	const std::map<std::pair<unsigned int, unsigned int>, double>& matrixElements() const;
+	SparseMatrix getTranspose() const;
 
 private:
 	const unsigned int numberOfColumns;
@@ -64,36 +22,21 @@ private:
 	std::map<std::pair<unsigned int, unsigned int>, double> elements;
 };
 
+class UpperTriangularSparseMatrix : public SparseMatrix
+{
+public:
+	UpperTriangularSparseMatrix(unsigned int dimension);
+	UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix);
+	void setValue(unsigned int row, unsigned int column, double value)
+};
+
 class DiagonalSparseMatrix : public UpperTriangularSparseMatrix
 {
 public:
-	DiagonalSparseMatrix(unsigned int dimension)
-		: UpperTriangularSparseMatrix(dimension)
-	{
-	}
-
-	DiagonalSparseMatrix(const std::vector<double>& diagonalValues)
-		: DiagonalSparseMatrix(diagonalValues.size())
-	{
-		for (unsigned int i = 0; i < diagonalValues.size(); ++i)
-		{
-			UpperTriangularSparseMatrix::setValue(i, i, diagonalValues.at(i));
-		}
-	}
-
-	void setValue(unsigned int diagonalPosition, double value)
-	{
-		UpperTriangularSparseMatrix::setValue(diagonalPosition, diagonalPosition, value);
-	}
-
-	void setValue(unsigned int row, unsigned int column, double value)
-	{
-		if (row != column)
-		{
-			throw UnexpectedException();
-		}
-		setValue(row, value);
-	}
+	DiagonalSparseMatrix(unsigned int dimension);
+	DiagonalSparseMatrix(const std::vector<double>& diagonalValues);
+	void setValue(unsigned int diagonalPosition, double value);
+	void setValue(unsigned int row, unsigned int column, double value);
 };
 
 template<typename T>
@@ -112,7 +55,7 @@ T multiply(SparseMatrix a, SparseMatrix b)
 			result->second.insert({ {elementOfB.first.second, elementOfB.second} });
 		}
 	}
-	T product(a.columnCount(), b.rowCount());
+	SparseMatrix product(a.columnCount(), b.rowCount());
 	for (auto const& elementOfA : a.matrixElements())
 	{
 		auto const& matrixBRow = matrixBLookup.find(elementOfA.first.first);
@@ -126,39 +69,5 @@ T multiply(SparseMatrix a, SparseMatrix b)
 	}
 	return product;
 }
-
-class UpperTriangularSparseMatrix : public SparseMatrix
-{
-public:
-	UpperTriangularSparseMatrix(unsigned int dimension)
-		: SparseMatrix(dimension, dimension)
-	{
-	}
-
-	UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix)
-		: SparseMatrix(squareMatrix.rowCount(), squareMatrix.rowCount())
-	{
-		if (rowCount() != columnCount())
-		{
-			throw UnexpectedException();
-		}
-		for (const auto& element : squareMatrix.matrixElements())
-		{
-			if (element.first.first >= element.first.second)
-			{
-				setValue(element.first.second, element.first.first, element.second);
-			}
-		}
-	}
-
-	void setValue(unsigned int row, unsigned int column, double value)
-	{
-		if (row > column)
-		{
-			throw UnexpectedException();
-		}
-		SparseMatrix::setValue(row, column, value);
-	}
-};
 
 #endif // #ifndef DISPERSE_MATRICS
