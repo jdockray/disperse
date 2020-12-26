@@ -1,4 +1,5 @@
 #include "ExpectedException.hpp"
+#include "Security.hpp"
 
 double CouldNotParseNumberException::convert(const std::string &stringToParse)
 {
@@ -33,52 +34,6 @@ void NegativeRiskException::verify(const double risk, const std::string& securit
 	{
 		throw NegativeRiskException(risk, securityIdentifier);
 	}
-}
-
-NegativeRiskException::NegativeRiskException(const double risk, const std::string& securityIdentifier)
-	: ExpectedException("The security " + securityIdentifier + " has a negative risk of " + std::to_string(risk) + " given.", ReturnCode::NEGATIVE_RISK_EXCEPTION)
-{
-}
-
-void InvalidHoldingLimitsException::verify(const Security &security)
-{
-	if (security.getMaxProportion() < security.getMinProportion())
-	{
-		throw InvalidHoldingLimitsException("The holding maximum is less than the holding minimum for " + security.identifier + ".");
-	}
-	if (security.getMinProportion() < 0)
-	{
-		throw InvalidHoldingLimitsException("The amount which can be placed in " + security.identifier + " is negative.");
-	}
-	if (security.getMinProportion() > 1)
-	{
-		throw InvalidHoldingLimitsException("The amount which can be placed in " + security.identifier + " is greater than 100%.");
-	}
-}
-
-void InvalidHoldingLimitsException::verify(const std::set<Security>& securities)
-{
-	double sumOfMaxima = 0;
-	double sumOfMinima = 0;
-	for (Security security : securities)
-	{
-		verify(security);
-		sumOfMaxima += security.getMaxProportion();
-		sumOfMinima += security.getMinProportion();
-	}
-	if (sumOfMaxima < 1)
-	{
-		throw InvalidHoldingLimitsException("The maximum proportions of each security allowed add up to less than 100%");
-	}
-	if (sumOfMaxima > 1)
-	{
-		throw InvalidHoldingLimitsException("The minimum proportions of each security allowed add up to more than 100%");
-	}
-}
-
-InvalidHoldingLimitsException::InvalidHoldingLimitsException(const std::string& securityIdentifier)
-	: ExpectedException("The combination of holding limits is invalid.", ReturnCode::INVALID_HOLDING_LIMITS)
-{
 }
 
 InvalidHoldingLimitsException::InvalidHoldingLimitsException(const std::string& message)
@@ -144,8 +99,13 @@ OptimisationInterruptedException::OptimisationInterruptedException()
 {
 }
 
-RequiredColumnNotFoundException::RequiredColumnNotFoundException(std::string columnName)
-	: ExpectedException("The required column '" + columnName + "' was not found.", ReturnCode::REQUIRED_COLUMN_NOT_FOUND_EXCEPTION)
+RequiredColumnNotFoundException::RequiredColumnNotFoundException(std::string columnName, std::string fileName)
+	: ExpectedException("The required column '" + columnName + "' was not found in file '" + fileName + "'.", ReturnCode::REQUIRED_COLUMN_NOT_FOUND_EXCEPTION)
+{
+}
+
+SecurityNotRecognisedException::SecurityNotRecognisedException(std::string securityName)
+	: ExpectedException("The security '" + securityName + "' was not recognised.", ReturnCode::SECURITY_NOT_RECOGNISED_EXCEPTION)
 {
 }
 

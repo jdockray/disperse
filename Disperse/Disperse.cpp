@@ -9,24 +9,11 @@
 #include <iostream>
 #include <fstream>
 
-std::set<std::string> getAllFactors(std::vector<Security> securities)
-{
-	std::set<std::string> factors;
-	for (auto security : securities)
-	{
-		for (auto exposures : security.getExposures())
-		{
-			factors.insert(exposures.first);
-		}
-	}
-	return factors;
-}
-
 template <class T>
 std::map<T, size_t> generateMappingFromSet(const std::set<T>& items)
 {
 	size_t index = 0;
-	std::map<T, unsigned int> mapping;
+	std::map<T, size_t> mapping;
 	for (const auto& item : items)
 	{
 		mapping[item] = index++;
@@ -34,37 +21,37 @@ std::map<T, size_t> generateMappingFromSet(const std::set<T>& items)
 	return mapping;
 }
 
-SparseMatrix generateFactorMatrix(std::vector<Security> securities)
+SparseMatrix generateFactorMatrix(const ListOfSecurities& securities)
 {
-	std::map<std::string, size_t> factorMapping = generateMappingFromSet<std::string>(getAllFactors(securities));
+	std::map<std::string, size_t> factorMapping = generateMappingFromSet<std::string>(securities.getAllFactors());
 	SparseMatrix factorMatrix(securities.size(), factorMapping.size());
-	for (int i = 0; i < securities.size(); ++i)
+	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
-		const Security& security = securities.at(i);
+		const Security& security = securities.getSecurity(i);
 		for (auto exposure : security.getExposures())
 		{
 			factorMatrix.setValue(i, factorMapping.at(exposure.first), exposure.second);
 		}
 	}
-
+	return factorMatrix;
 }
 
-std::vector<double> getSecurityRisks(const std::vector<Security>& securities)
+std::vector<double> getSecurityRisks(const ListOfSecurities& securities)
 {
 	std::vector<double> risks;
-	for (const auto& security : securities)
+	for (const auto& security : securities.getSecurities())
 	{
 		risks.push_back(security.getRisk());
 	}
 	return risks;
 }
 
-void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn, const std::optional<std::string&> additionalFactorsFileName = std::optional<std::string&>())
+void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn, const std::optional<std::string> additionalFactorsFileName = std::optional<std::string>())
 {
-	std::vector<Security> securities = inputSecurities(inputFileName);
+	ListOfSecurities securities = inputSecurities(inputFileName);
 	if (additionalFactorsFileName.has_value())
 	{
-		augmentFactors(securities, additionalFactorsFileName.value());
+		inputFactorList(additionalFactorsFileName.value(), securities);
 	}
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities);
 	UpperTriangularSparseMatrix correlationMatrix = multiply<UpperTriangularSparseMatrix>(factorMatrix.getTranspose(), factorMatrix);
@@ -80,7 +67,7 @@ void run(const unsigned int argc, const char* const argv[])
 {
 	CmdLineArgs cmdLineArgs(argc, argv);
 	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
-	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3);
+	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3, "There are not enough positional command line arguments.");
 	std::list<std::string>::const_iterator position = requiredArgs.begin();
 	std::string inputFileName = *position;
 	std::string outputFileName = *(++position);

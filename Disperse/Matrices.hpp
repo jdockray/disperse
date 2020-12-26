@@ -27,7 +27,7 @@ class UpperTriangularSparseMatrix : public SparseMatrix
 public:
 	UpperTriangularSparseMatrix(unsigned int dimension);
 	UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix);
-	void setValue(unsigned int row, unsigned int column, double value)
+	void setValue(unsigned int row, unsigned int column, double value);
 };
 
 class DiagonalSparseMatrix : public UpperTriangularSparseMatrix

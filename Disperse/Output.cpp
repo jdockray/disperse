@@ -1,12 +1,12 @@
 
 #include "Output.hpp"
-//#include <iostream>
+#include "Security.hpp"
 #include <fstream>
 
 
-void outputAllocations(const std::vector<Security> &securities, const std::vector<double>& allocations, std::ofstream& outputFile)
+void outputAllocations(const ListOfSecurities &securities, const std::vector<double>& allocations, std::ofstream& outputFile)
 {
-	unsigned int numberOfAllocations = securities.size();
+	unsigned int numberOfAllocations = static_cast<unsigned int>(securities.size());
 	if (allocations.size() != numberOfAllocations)
 	{
 		throw UnexpectedException();
@@ -14,11 +14,11 @@ void outputAllocations(const std::vector<Security> &securities, const std::vecto
 	outputFile << "\"Asset\", \"Allocation\"" << std::endl;
 	for (unsigned int i = 0; i < numberOfAllocations; i++)
 	{
-		outputFile << "\"" << securities.at(i).identifier << "\", " << allocations.at(i) << std::endl;
+		outputFile << "\"" << securities.getSecurity(i).identifier << "\", " << allocations.at(i) << std::endl;
 	}
 }
 
-void outputAllocations(const std::vector<Security>& securities, const std::vector<double>& allocations, const std::string& outputFileName)
+void outputAllocations(const ListOfSecurities& securities, const std::vector<double>& allocations, const std::string& outputFileName)
 {
 	std::ofstream outputFile;
 	try

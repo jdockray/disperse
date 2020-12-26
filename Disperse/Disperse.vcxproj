@@ -112,6 +112,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\dlib\all\source.cpp" />
     <ClCompile Include="CmdLine.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
@@ -176,6 +179,11 @@
     <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Output.hpp" />
     <ClInclude Include="Security.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\osqp\osqp.vcxproj">
+      <Project>{b531894f-4762-4d73-a596-f71f7165478b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

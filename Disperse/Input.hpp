@@ -3,11 +3,12 @@
 #define DISPERSE_INPUT
 
 #include "Security.hpp"
-#include "Matrices.hpp"
-#include "dlib\matrix.h"
 #include <vector>
 
-std::vector<Security>& inputSecurities(const std::string& inputFileName);
-void augmentFactors(std::vector<Security>& ssecurities, const std::string& inputFileName);
+ListOfSecurities inputSecurities(const std::string& inputFileName);
+void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securities);
+void inputFactorList(const std::string& inputFileName, ListOfSecurities& securities);
 
 #endif // #ifndef DISPERSE_INPUT
+
+// McClatchey swimming

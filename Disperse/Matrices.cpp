@@ -60,7 +60,7 @@ DiagonalSparseMatrix::DiagonalSparseMatrix(unsigned int dimension)
 }
 
 DiagonalSparseMatrix::DiagonalSparseMatrix(const std::vector<double>& diagonalValues)
-	: DiagonalSparseMatrix(diagonalValues.size())
+	: DiagonalSparseMatrix(static_cast<unsigned int>(diagonalValues.size()))
 {
 	for (unsigned int i = 0; i < diagonalValues.size(); ++i)
 	{

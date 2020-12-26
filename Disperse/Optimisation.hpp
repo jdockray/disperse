@@ -49,17 +49,12 @@ private:
 	std::vector<c_float> values;
 };
 
-static const class DisperseOSQPSettings : public OSQPSettings
-{
-	DisperseOSQPSettings();
-} DISPERSE_OSQP_SETTINGS;
-
 struct WorkspaceDeleter
 {
 	void operator()(OSQPWorkspace* pOsqpWorkspace);
 };
 
-std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities,
+std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix);
 
 #endif // #ifndef DISPERSE_OPTIMISATION

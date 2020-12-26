@@ -1,12 +1,11 @@
 
-
 #include "Optimisation.hpp"
 
 SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 {
 	c_int currentColumn = -1;
 	// std::map is ordered so it is already sorted by the key
-	for (const std::pair<std::pair<int, int>, double> const& entry : sparseMatrix.matrixElements())
+	for (const std::pair<std::pair<dlib::uint32, dlib::uint32>, double>& entry : sparseMatrix.matrixElements())
 	{
 		if (entry.first.first > currentColumn) columnPointers.push_back(rowIndices.size());
 		rowIndices.push_back(entry.first.second);
@@ -21,11 +20,6 @@ SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 	nz = -1;
 }
 
-DisperseOSQPSettings::DisperseOSQPSettings()
-{
-	osqp_set_default_settings(this);
-}
-
 void WorkspaceDeleter::operator()(OSQPWorkspace* pOsqpWorkspace)
 {
 	if (pOsqpWorkspace)
@@ -34,10 +28,18 @@ void WorkspaceDeleter::operator()(OSQPWorkspace* pOsqpWorkspace)
 	}
 }
 
+OSQPSettings getSettings()
+{
+	OSQPSettings osqp_settings;
+	osqp_set_default_settings(&osqp_settings);
+	return osqp_settings;
+}
+
 std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpData)
 {
+	static const OSQPSettings osqp_settings = getSettings();
 	OSQPWorkspace* pOsqpWorkspace = NULL;
-	switch (static_cast<SetupExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &DISPERSE_OSQP_SETTINGS)))
+	switch (static_cast<SetupExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &osqp_settings)))
 	{
 	case SetupExitStatus::SUCCESS:
 		break;
@@ -105,7 +107,7 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 		throw UnexpectedException();
 #endif
 	case SolveExitStatus::SOLVED:
-		return;
+		break;
 	case SolveExitStatus::SIGINT:
 		throw OptimisationInterruptedException();
 	case SolveExitStatus::PRIMAL_INFEASIBLE:
@@ -124,7 +126,7 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
 }
 
-std::vector<double> solve(double minimumReturn, const std::vector<Security>& securities,
+std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;
@@ -132,9 +134,9 @@ std::vector<double> solve(double minimumReturn, const std::vector<Security>& sec
 	std::vector<c_float> vectorU;
 	vectorU.push_back(1);
 	SparseMatrix matrixA(securities.size(), securities.size() + 1);
-	for (int i = 0; i < securities.size(); ++i)
+	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
-		const Security& security = securities.at(i);
+		const Security& security = securities.getSecurity(i);
 		matrixA.setValue(i, 0, 1); // For sum of all allocations
 		if (security.getMinProportion() > 0 && security.getMaxProportion())
 		{

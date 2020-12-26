@@ -1,10 +1,15 @@
 
+#ifndef DISPERSE_EXPECTED_EXCEPTION
+#define DISPERSE_EXPECTED_EXCEPTION
+
 #include <exception>
 #include <stdexcept>
 #include <vector>
 #include <string>
 #include <set>
-#include "Security.hpp"
+#include <list>
+#include <map>
+#include <optional>
 
 enum class ReturnCode
 {
@@ -21,8 +26,10 @@ enum class ReturnCode
 	SOLVER_INITIALISATION_EXCEPTION = 10,
 	INSUFFICIENT_MEMORY_EXCEPTION = 11,
 	OPTIMISATION_INTERRUPTED = 12,
-	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13
+	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
+	SECURITY_NOT_RECOGNISED_EXCEPTION = 14
 };
+
 
 struct ExpectedException : public std::exception
 {
@@ -53,12 +60,7 @@ private:
 class InvalidHoldingLimitsException : public ExpectedException
 {
 public:
-	static void verify(const Security &security);
-	static void verify(const std::set<Security>& securities);
-
-private:
-	InvalidHoldingLimitsException();
-	InvalidHoldingLimitsException(const std::string& securityIdentifier);
+	InvalidHoldingLimitsException(const std::string& message);
 };
 
 class IOException : public ExpectedException
@@ -85,16 +87,17 @@ public:
 	static void verifyTrue(bool expectedTrue, std::string message);
 
 	template<typename T>
-	static T verifyAndGetValue(std::optional<T> expectedFilled, std::string message)
+	static T verifyAndGetValue(const std::optional<T>& expectedFilled, const std::string message)
 	{
-		verifyTrue(expectedFilled.has_value());
+		verifyTrue(expectedFilled.has_value(), message);
 		return expectedFilled.value();
 	}
 
 	template<typename T>
-	static void verifyListLengthSufficient(std::list<T> list, unsigned int minimumLength)
+	static void verifyListLengthSufficient(const std::list<T> list, const unsigned int minimumLength,
+		const std::string message)
 	{
-		verifyTrue(list.size() <= minimumLength);
+		verifyTrue(list.size() <= minimumLength, message);
 	}
 
 	MissingArgumentException(std::string message);
@@ -104,15 +107,18 @@ class RepeatedSpecificationOfVariableException : public ExpectedException
 {
 public:
 	template <typename T>
-	static void verifyNotSet(std::optional<T> optionalWhichShouldBeUnset, std::string variableDescription)
+	static void verifyNotSet(const std::optional<T>& optionalWhichShouldBeUnset, const std::string& variableDescription)
 	{
-		verify(optionalWhichShouldBeUnset.has_value(), variableDescription);
+		verifyNotSet(optionalWhichShouldBeUnset.has_value(), variableDescription);
 	}
 
 	template <typename T, typename U>
-	static void verifyNotSet(T element, std::map<T, U> mapWhichShouldNotContainElement, std::string variableDescription)
+	static void verifyNotSet(
+		const T element,
+		const std::map<T, U> mapWhichShouldNotContainElement,
+		const std::string variableDescription)
 	{
-		verify(mapWhichShouldNotContainElement.find(element) != mapWhichShouldNotContainElement.end(), variableDescription);
+		verifyNotSet(mapWhichShouldNotContainElement.find(element) != mapWhichShouldNotContainElement.end(), variableDescription);
 	}
 
 private:
@@ -141,7 +147,13 @@ public:
 class RequiredColumnNotFoundException : public ExpectedException
 {
 public:
-	RequiredColumnNotFoundException(std::string columnName);
+	RequiredColumnNotFoundException(std::string columnName, std::string fileName);
+};
+
+class SecurityNotRecognisedException : public ExpectedException
+{
+public:
+	SecurityNotRecognisedException(std::string securityName);
 };
 
 class UnexpectedException : public ExpectedException
@@ -149,3 +161,5 @@ class UnexpectedException : public ExpectedException
 public:
 	UnexpectedException();
 };
+
+#endif // #ifndef DISPERSE_EXPECTED_EXCEPTION
