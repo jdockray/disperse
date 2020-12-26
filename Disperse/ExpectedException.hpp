@@ -20,7 +20,8 @@ enum class ReturnCode
 	COULD_NOT_PARSE_NUMBER_EXCEPTION = 9,
 	SOLVER_INITIALISATION_EXCEPTION = 10,
 	INSUFFICIENT_MEMORY_EXCEPTION = 11,
-	OPTIMISATION_INTERRUPTED = 12
+	OPTIMISATION_INTERRUPTED = 12,
+	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13
 };
 
 struct ExpectedException : public std::exception
@@ -137,6 +138,11 @@ public:
 	OptimisationInterruptedException();
 };
 
+class RequiredColumnNotFoundException : public ExpectedException
+{
+public:
+	RequiredColumnNotFoundException(std::string columnName);
+};
 
 class UnexpectedException : public ExpectedException
 {

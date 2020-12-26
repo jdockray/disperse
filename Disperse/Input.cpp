@@ -1,84 +1,103 @@
 
 #include "Input.hpp"
+#include "../../csvstream/csvstream.h"
 
-void trim(std::string& stringToTrim)
-{
-	stringToTrim.resize(stringToTrim.find_last_not_of("\r\n"));
-}
+const std::string security_column_name = "Security";
 
-std::vector<std::string> split(const std::string& stringToSplit, const char delimiter)
+void ensureColumnPresent(const csvstream& inputStream, const std::string& columnName)
 {
-	std::stringstream stringStream(stringToSplit);
-	std::vector<std::string> terms;
-	std::string term;
-	while (std::getline(stringStream, term, delimiter))
+	const std::vector headers = inputStream.getheader();
+	if (std::find(headers.begin(), headers.end(), columnName) == headers.end())
 	{
-		terms.push_back(term);
+		throw RequiredColumnNotFoundException(columnName);
 	}
-	return terms;
 }
 
-std::vector<std::string> getLineElements(std::ifstream& inputFile)
+Security& getSecurity(
+	std::map<std::string, Security>& securities,
+	const std::string& securityName)
 {
-	std::string line;
-	std::getline(inputFile, line);
-	trim(line);
-	split(line, ',');
-
-}
-
-std::vector<Security> inputSecurities(std::ifstream& inputFile)
-{
-	std::optional<unsigned int> securityIndentifierColumnIndex;
-	std::optional<unsigned int> expectedReturnColumnIndex;
-	std::optional<unsigned int> riskColumnIndex;
-	std::optional<unsigned int> minimumAllocationColumnIndex;
-	std::optional<unsigned int> maximumAllocationColumnIndex;
-
-
-	
-
-	
-	
-
-	
-
-	return securities;
-}
-
-void augmentFactors(std::map<std::string, Security>& securities, std::ifstream& inputFile)
-{
-	
-
+	if (securities.find(securityName) == securities.end())
+	{
+		securities.insert(std::pair<std::string, Security>(securityName, Security(securityName)));
+	}
+	return securities.at(securityName);
 }
 
 std::vector<Security> inputSecurities(const std::string& inputFileName)
 {
-	std::ifstream inputFile;
-	try
+	const std::string expected_return_column_name = "Expected";
+	const std::string risk_column_name = "Risk";
+	const std::string minimum_allocation_column_name = "Min";
+	const std::string maximum_allocation_column_name = "Max";
+
+	csvstream inputStream(inputFileName);
+	ensureColumnPresent(inputStream, security_column_name);
+	std::vector<Security> securities;
+	std::map<std::string, std::string> row;
+	while (inputStream >> row)
 	{
-		inputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		inputFile.open(inputFileName, std::ios_base::in);
-		return inputSecurities(inputFile);
+		if (row.at(security_column_name).length() != 0)
+		{
+			Security security(row.at(security_column_name));
+			std::map<std::string, std::string>::iterator expectedReturnColumn = row.find(expected_return_column_name);
+			if (expectedReturnColumn != row.end())
+			{
+				security.setExpectedReturn(std::stod(expectedReturnColumn->second));
+			}
+			std::map<std::string, std::string>::iterator riskColumn = row.find(risk_column_name);
+			if (riskColumn != row.end())
+			{
+				security.setRisk(std::stod(riskColumn->second));
+			}
+			std::map<std::string, std::string>::iterator minimumColumn = row.find(minimum_allocation_column_name);
+			if (minimumColumn != row.end())
+			{
+				security.setMinProportion(std::stod(minimumColumn->second));
+			}
+			std::map<std::string, std::string>::iterator maximumColumn = row.find(maximum_allocation_column_name);
+			if (maximumColumn != row.end())
+			{
+				security.setMaxProportion(std::stod(maximumColumn->second));
+			}
+			securities.push_back(security);
+		}
 	}
-	catch (std::ios_base::failure)
+	return securities;
+}
+
+void inputFactorGrid(const std::string& inputFileName, std::map<std::string, Security>& securities)
+{
+	csvstream inputStream(inputFileName);
+	ensureColumnPresent(inputStream, security_column_name);
+	std::map<std::string, std::string> row;
+	while (inputStream >> row)
 	{
-		throw InputFileException(inputFileName);
+		for (std::string column : inputStream.getheader())
+		{
+			if (column == security_column_name) continue;
+			getSecurityCreatingIfNecessary(securities, row.at(security_column_name)).addExposure(
+				row.at(factor_column_name), std::stod(row.at(factor_weighting_column_name)));
+
+		}
+
 	}
 }
 
-void augmentFactors(std::map<std::string, Security> & securities, const std::string& inputFileName)
+void inputFactorList(const std::string& inputFileName, std::map<std::string, Security>& securities)
 {
-	std::ifstream inputFile;
-	try
+	const std::string factor_column_name = "Factor";
+	const std::string factor_weighting_column_name = "Weighting";
+
+	csvstream inputStream(inputFileName);
+	ensureColumnPresent(inputStream, security_column_name);
+	ensureColumnPresent(inputStream, factor_column_name);
+	ensureColumnPresent(inputStream, factor_weighting_column_name);
+	std::map<std::string, std::string> row;
+	while (inputStream >> row)
 	{
-		inputFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		inputFile.open(inputFileName, std::ios_base::in);
-		augmentFactors(securities, inputFile);
-	}
-	catch (std::ios_base::failure)
-	{
-		throw InputFileException(inputFileName);
+		getSecurityCreatingIfNecessary(securities, row.at(security_column_name)).addExposure(
+			row.at(factor_column_name), std::stod(row.at(factor_weighting_column_name)));
 	}
 }
 

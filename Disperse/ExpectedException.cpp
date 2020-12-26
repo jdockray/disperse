@@ -140,10 +140,14 @@ UnexpectedException::UnexpectedException()
 }
 
 OptimisationInterruptedException::OptimisationInterruptedException()
-	: OptimisationInterruptedException("The optimisation process was interrupted.", ReturnCode::OPTIMISATION_INTERRUPTED)
+	: ExpectedException("The optimisation process was interrupted.", ReturnCode::OPTIMISATION_INTERRUPTED)
 {
 }
 
+RequiredColumnNotFoundException::RequiredColumnNotFoundException(std::string columnName)
+	: ExpectedException("The required column '" + columnName + "' was not found.", ReturnCode::REQUIRED_COLUMN_NOT_FOUND_EXCEPTION)
+{
+}
 
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)
