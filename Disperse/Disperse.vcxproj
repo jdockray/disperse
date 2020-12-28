@@ -181,8 +181,14 @@
     <ClInclude Include="Security.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\osqp\lin_sys\direct\qdldl\amd\amd.vcxproj">
+      <Project>{ca8629e7-ff32-41fb-bff9-f5b298e47018}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\osqp\osqp.vcxproj">
       <Project>{b531894f-4762-4d73-a596-f71f7165478b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\qdldl\qdldl.vcxproj">
+      <Project>{f609c7af-b198-4353-abc9-e62a2d92bbe5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
