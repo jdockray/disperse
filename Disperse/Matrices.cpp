@@ -1,18 +1,18 @@
 
 #include "Matrices.hpp"
 
-SparseMatrix::SparseMatrix(unsigned int rows, unsigned int columns)
+SparseMatrix::SparseMatrix(const unsigned int rows, const unsigned int columns)
 	: numberOfRows(rows), numberOfColumns(columns)
 {
 }
 
-double SparseMatrix::getValue(unsigned int row, unsigned int column) const
+double SparseMatrix::getValue(const unsigned int row, const unsigned int column) const
 {
 	auto result = elements.find(std::pair<unsigned int, unsigned int>(column, row));
 	return result == elements.end() ? 0 : result->second;
 }
 
-void SparseMatrix::setValue(unsigned int row, unsigned int column, double value)
+void SparseMatrix::setValue(const unsigned int row, const unsigned int column, const double value)
 {
 	if (column >= numberOfColumns || row >= numberOfRows)
 	{
@@ -54,7 +54,7 @@ SparseMatrix SparseMatrix::getTranspose() const
 	return transpose;
 }
 
-DiagonalSparseMatrix::DiagonalSparseMatrix(unsigned int dimension)
+DiagonalSparseMatrix::DiagonalSparseMatrix(const unsigned int dimension)
 	: UpperTriangularSparseMatrix(dimension)
 {
 }
@@ -68,12 +68,12 @@ DiagonalSparseMatrix::DiagonalSparseMatrix(const std::vector<double>& diagonalVa
 	}
 }
 
-void DiagonalSparseMatrix::setValue(unsigned int diagonalPosition, double value)
+void DiagonalSparseMatrix::setValue(const unsigned int diagonalPosition, const double value)
 {
 	UpperTriangularSparseMatrix::setValue(diagonalPosition, diagonalPosition, value);
 }
 
-void DiagonalSparseMatrix::setValue(unsigned int row, unsigned int column, double value)
+void DiagonalSparseMatrix::setValue(const unsigned int row, const unsigned int column, const double value)
 {
 	if (row != column)
 	{
@@ -82,9 +82,18 @@ void DiagonalSparseMatrix::setValue(unsigned int row, unsigned int column, doubl
 	setValue(row, value);
 }
 
-UpperTriangularSparseMatrix::UpperTriangularSparseMatrix(unsigned int dimension)
+UpperTriangularSparseMatrix::UpperTriangularSparseMatrix(const unsigned int dimension)
 	: SparseMatrix(dimension, dimension)
 {
+}
+
+UpperTriangularSparseMatrix::UpperTriangularSparseMatrix(const unsigned int rows, const unsigned int columns)
+	: SparseMatrix(rows, columns)
+{
+	if (rows != columns)
+	{
+		throw UnexpectedException();
+	}
 }
 
 UpperTriangularSparseMatrix::UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix)
@@ -103,11 +112,74 @@ UpperTriangularSparseMatrix::UpperTriangularSparseMatrix(const SparseMatrix& squ
 	}
 }
 
-void UpperTriangularSparseMatrix::setValue(unsigned int row, unsigned int column, double value)
+unsigned int UpperTriangularSparseMatrix::sideLength() const
 {
+	return rowCount();
+}
+
+void UpperTriangularSparseMatrix::setValue(const unsigned int row, const unsigned int column, const double value)
+{
+	unsigned int storageRow;
+	unsigned int storageColumn;
 	if (row > column)
+	{
+		// Incorrect. Swap over.
+		storageRow = column;
+		storageColumn = row;
+	}
+	else
+	{
+		storageRow = row;
+		storageColumn = column;
+	}
+	SparseMatrix::setValue(row, column, value);
+}
+
+void UpperTriangularCorrelationMatrix::setValue(const unsigned int row, const unsigned int column, const double value)
+{
+	if (row != column)
+	{
+		UpperTriangularCorrelationMatrix::setValue(row, column, value);
+	}
+}
+
+UpperTriangularCorrelationMatrix::UpperTriangularCorrelationMatrix(const unsigned int dimension)
+	: UpperTriangularSparseMatrix(dimension, dimension)
+{
+	setDiagonal();
+}
+
+UpperTriangularCorrelationMatrix::UpperTriangularCorrelationMatrix(const unsigned int rows, const unsigned int columns)
+	: UpperTriangularSparseMatrix(rows, columns)
+{
+	if (rows != columns)
 	{
 		throw UnexpectedException();
 	}
-	SparseMatrix::setValue(row, column, value);
+	setDiagonal();
+}
+
+UpperTriangularCorrelationMatrix::UpperTriangularCorrelationMatrix(const SparseMatrix& squareMatrix)
+	: UpperTriangularSparseMatrix(squareMatrix.rowCount(), squareMatrix.rowCount())
+{
+	if (rowCount() != columnCount())
+	{
+		throw UnexpectedException();
+	}
+	setDiagonal();
+	for (const auto& element : squareMatrix.matrixElements())
+	{
+		if (element.first.first > element.first.second)
+		{
+			setValue(element.first.second, element.first.first, element.second);
+		}
+	}
+}
+
+void UpperTriangularCorrelationMatrix::setDiagonal()
+{
+	for (unsigned int i = 0; i < sideLength(); ++i)
+	{
+		UpperTriangularSparseMatrix::setValue(i, i, 1);
+	}
 }

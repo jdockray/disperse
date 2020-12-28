@@ -33,6 +33,7 @@ private:
 	double maxProportion;
 	double minProportion;
 	std::map<std::string, double> exposures;
+	double remainingExposure;
 
 	void verifyMaxGreaterThanMin();
 };
@@ -116,7 +117,7 @@ public:
 		{
 			throw InvalidHoldingLimitsException("The maximum proportions of each security allowed add up to less than 100%");
 		}
-		if (sumOfMaxima > 1)
+		if (sumOfMinima > 1)
 		{
 			throw InvalidHoldingLimitsException("The minimum proportions of each security allowed add up to more than 100%");
 		}

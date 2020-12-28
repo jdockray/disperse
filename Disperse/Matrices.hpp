@@ -8,9 +8,9 @@
 class SparseMatrix
 {
 public:
-	SparseMatrix(unsigned int rows, unsigned int columns);
-	double getValue(unsigned int row, unsigned int column) const;
-	void setValue(unsigned int row, unsigned int column, double value);
+	SparseMatrix(const unsigned int rows, const unsigned int columns);
+	double getValue(const unsigned int row, const unsigned int column) const;
+	void setValue(const unsigned int row, const unsigned int column, const double value);
 	unsigned int columnCount() const;
 	unsigned int rowCount() const;
 	const std::map<std::pair<unsigned int, unsigned int>, double>& matrixElements() const;
@@ -25,18 +25,32 @@ private:
 class UpperTriangularSparseMatrix : public SparseMatrix
 {
 public:
-	UpperTriangularSparseMatrix(unsigned int dimension);
+	UpperTriangularSparseMatrix(const unsigned int dimension);
+	UpperTriangularSparseMatrix(const unsigned int rows, const unsigned int columns);
 	UpperTriangularSparseMatrix(const SparseMatrix& squareMatrix);
-	void setValue(unsigned int row, unsigned int column, double value);
+	unsigned int sideLength() const;
+	void setValue(const unsigned int row, const unsigned int column, const double value);
+};
+
+class UpperTriangularCorrelationMatrix : public UpperTriangularSparseMatrix
+{
+public:
+	UpperTriangularCorrelationMatrix(const unsigned int dimension);
+	UpperTriangularCorrelationMatrix(const unsigned int rows, const unsigned int columns);
+	UpperTriangularCorrelationMatrix(const SparseMatrix& squareMatrix);
+	void setValue(const unsigned int row, const unsigned int column, const double value);
+private:
+	void setDiagonal();
 };
 
 class DiagonalSparseMatrix : public UpperTriangularSparseMatrix
 {
 public:
-	DiagonalSparseMatrix(unsigned int dimension);
+	DiagonalSparseMatrix(const unsigned int dimension);
+	DiagonalSparseMatrix(const unsigned int rows, const unsigned int columns);
 	DiagonalSparseMatrix(const std::vector<double>& diagonalValues);
-	void setValue(unsigned int diagonalPosition, double value);
-	void setValue(unsigned int row, unsigned int column, double value);
+	void setValue(const unsigned int diagonalPosition, const double value);
+	void setValue(const unsigned int row, const unsigned int column, const double value);
 };
 
 template<typename T>
@@ -55,7 +69,7 @@ T multiply(SparseMatrix a, SparseMatrix b)
 			result->second.insert({ {elementOfB.first.second, elementOfB.second} });
 		}
 	}
-	SparseMatrix product(a.columnCount(), b.rowCount());
+	T product(a.columnCount(), b.rowCount());
 	for (auto const& elementOfA : a.matrixElements())
 	{
 		auto const& matrixBRow = matrixBLookup.find(elementOfA.first.first);

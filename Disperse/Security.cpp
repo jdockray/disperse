@@ -1,7 +1,9 @@
 #include "Security.hpp"
 
 Security::Security(const std::string& identifier)
-	: identifier(identifier), expectedReturn(1), risk(1), maxProportion(1), minProportion(0)
+	:	identifier(identifier), expectedReturn(1),
+		risk(1), maxProportion(1), minProportion(0),
+		remainingExposure(1)
 {
 }
 
@@ -61,13 +63,18 @@ void Security::setMinProportion(const double minProportion)
 
 double Security::getMinProportion() const
 {
-	return maxProportion;
+	return minProportion;
 }
 
 void Security::addExposure(std::string factorName, double exposure)
 {
 	RepeatedSpecificationOfVariableException::verifyNotSet(factorName, exposures,
 		"exposure to " + factorName + " for security " + identifier);
+	remainingExposure -= exposure;
+	if (remainingExposure < 0)
+	{
+		throw ExposureSumExceedsOneException();
+	}
 	exposures[factorName] = exposure;
 }
 

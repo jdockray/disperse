@@ -11,4 +11,3 @@ void inputFactorList(const std::string& inputFileName, ListOfSecurities& securit
 
 #endif // #ifndef DISPERSE_INPUT
 
-// McClatchey swimming

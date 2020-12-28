@@ -27,9 +27,9 @@ enum class ReturnCode
 	INSUFFICIENT_MEMORY_EXCEPTION = 11,
 	OPTIMISATION_INTERRUPTED = 12,
 	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
-	SECURITY_NOT_RECOGNISED_EXCEPTION = 14
+	SECURITY_NOT_RECOGNISED_EXCEPTION = 14,
+	EXPOSURE_SUM_EXCEEDS_ONE = 15
 };
-
 
 struct ExpectedException : public std::exception
 {
@@ -154,6 +154,12 @@ class SecurityNotRecognisedException : public ExpectedException
 {
 public:
 	SecurityNotRecognisedException(std::string securityName);
+};
+
+class ExposureSumExceedsOneException : public ExpectedException
+{
+public:
+	ExposureSumExceedsOneException();
 };
 
 class UnexpectedException : public ExpectedException

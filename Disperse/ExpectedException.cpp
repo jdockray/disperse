@@ -109,6 +109,12 @@ SecurityNotRecognisedException::SecurityNotRecognisedException(std::string secur
 {
 }
 
+ExposureSumExceedsOneException::
+ExposureSumExceedsOneException()
+	: ExpectedException("The sum of the exposures exceeds 1.", ReturnCode::EXPOSURE_SUM_EXCEEDS_ONE)
+{
+}
+
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)
 {

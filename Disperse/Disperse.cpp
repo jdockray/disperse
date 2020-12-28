@@ -54,7 +54,8 @@ void run(const std::string& inputFileName, const std::string& outputFileName, co
 		inputFactorList(additionalFactorsFileName.value(), securities);
 	}
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities);
-	UpperTriangularSparseMatrix correlationMatrix = multiply<UpperTriangularSparseMatrix>(factorMatrix.getTranspose(), factorMatrix);
+	UpperTriangularSparseMatrix correlationMatrix
+		= multiply<UpperTriangularCorrelationMatrix>(factorMatrix.getTranspose(), factorMatrix);
 	DiagonalSparseMatrix riskDiagonalMatrix(getSecurityRisks(securities));
 	const UpperTriangularSparseMatrix covarianceMatrix = multiply<UpperTriangularSparseMatrix>(
 		multiply<UpperTriangularSparseMatrix>(riskDiagonalMatrix, correlationMatrix),
