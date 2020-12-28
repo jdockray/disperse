@@ -133,12 +133,12 @@ std::vector<double> solve(double minimumReturn, const ListOfSecurities& securiti
 	vectorL.push_back(0);
 	std::vector<c_float> vectorU;
 	vectorU.push_back(1);
-	SparseMatrix matrixA(securities.size(), securities.size() + 1);
+	SparseMatrix matrixA(securities.size(), securities.numberOfConstrainedSecurities() + 1);
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.getSecurity(i);
 		matrixA.setValue(i, 0, 1); // For sum of all allocations
-		if (security.getMinProportion() > 0 && security.getMaxProportion())
+		if (security.hasConstrainedProportion())
 		{
 			//vectorQ.push_back(security.getExpectedReturn());
 			vectorL.push_back(security.getMinProportion());

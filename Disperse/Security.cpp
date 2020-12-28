@@ -66,6 +66,11 @@ double Security::getMinProportion() const
 	return minProportion;
 }
 
+bool Security::hasConstrainedProportion() const
+{
+	return getMinProportion() > 0 || getMaxProportion() < 1;
+}
+
 void Security::addExposure(std::string factorName, double exposure)
 {
 	RepeatedSpecificationOfVariableException::verifyNotSet(factorName, exposures,
@@ -81,4 +86,96 @@ void Security::addExposure(std::string factorName, double exposure)
 const std::map<std::string, double>& Security::getExposures() const
 {
 	return exposures;
+}
+
+void ListOfSecurities::addSecurity(const Security& security)
+{
+	m_securityLookup.insert(std::pair<std::string, unsigned int>(security.identifier, m_securities.size()));
+	m_securities.push_back(security);
+}
+
+const std::vector<Security>& ListOfSecurities::getSecurities() const
+{
+	return m_securities;
+}
+
+const Security& ListOfSecurities::getSecurity(const std::string& securityName) const
+{
+	try
+	{
+		return m_securities.at(m_securityLookup.at(securityName));
+	}
+	catch (std::out_of_range)
+	{
+		throw SecurityNotRecognisedException(securityName);
+	}
+}
+
+Security& ListOfSecurities::getSecurity(const std::string& securityName)
+{
+	try
+	{
+		return m_securities.at(m_securityLookup.at(securityName));
+	}
+	catch (std::out_of_range)
+	{
+		throw SecurityNotRecognisedException(securityName);
+	}
+}
+
+const Security& ListOfSecurities::getSecurity(const unsigned int securityNumber) const
+{
+	return m_securities.at(securityNumber);
+}
+
+Security& ListOfSecurities::getSecurity(const unsigned int securityNumber)
+{
+	return m_securities.at(securityNumber);
+}
+
+std::set<std::string> ListOfSecurities::getAllFactors() const
+{
+	std::set<std::string> factors;
+	for (auto security : m_securities)
+	{
+		for (auto exposures : security.getExposures())
+		{
+			factors.insert(exposures.first);
+		}
+	}
+	return factors;
+}
+
+unsigned int ListOfSecurities::size() const
+{
+	return static_cast<unsigned int>(m_securities.size());
+}
+
+unsigned int ListOfSecurities::numberOfConstrainedSecurities() const
+{
+	unsigned int count = 0;
+	for (auto security : m_securities)
+	{
+		if (security.hasConstrainedProportion()) ++count;
+	}
+	return count;
+}
+
+void ListOfSecurities::verifyProportions() const
+{
+	double sumOfMaxima = 0;
+	double sumOfMinima = 0;
+	for (const Security& security : m_securities)
+	{
+		sumOfMaxima += security.getMaxProportion();
+		sumOfMinima += security.getMinProportion();
+	}
+	if (sumOfMaxima < 1)
+	{
+		throw InvalidHoldingLimitsException("The maximum proportions of each security allowed add up to less than 100%");
+	}
+	if (sumOfMinima > 1)
+	{
+		throw InvalidHoldingLimitsException("The minimum proportions of each security allowed add up to more than 100%");
+	}
 }
