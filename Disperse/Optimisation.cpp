@@ -146,7 +146,7 @@ std::vector<double> solve(double minimumReturn, const ListOfSecurities& securiti
 	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;
-	vectorL.push_back(0);
+	vectorL.push_back(1);
 	std::vector<c_float> vectorU;
 	vectorU.push_back(1);
 	SparseMatrix matrixA(securities.numberOfConstrainedSecurities() + 1, securities.size());
