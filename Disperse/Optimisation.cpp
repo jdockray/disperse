@@ -41,26 +41,31 @@ OSQPSettings getSettings()
 	return osqp_settings;
 }
 
+void checkErrorStatus(OSQPErrorStatus errorStatus)
+{
+	switch (errorStatus)
+	{
+	case OSQPErrorStatus::SUCCESS:
+		return;
+	case OSQPErrorStatus::MEM_ALLOC_ERROR:
+		throw InsufficientMemoryException();
+	case OSQPErrorStatus::LINSYS_SOLVER_LOAD_ERROR:
+	case OSQPErrorStatus::LINSYS_SOLVER_INIT_ERROR:
+		throw SolverInitialisationException();
+	case OSQPErrorStatus::DATA_VALIDATION_ERROR:
+	case OSQPErrorStatus::SETTINGS_VALIDATION_ERROR:
+	case OSQPErrorStatus::WORKSPACE_NOT_INIT_ERROR:
+	case OSQPErrorStatus::NONCVX_ERROR:
+	default:
+		throw UnexpectedException();
+	}
+}
+
 std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpData)
 {
 	static const OSQPSettings osqp_settings = getSettings();
 	OSQPWorkspace* pOsqpWorkspace = NULL;
-	switch (static_cast<SetupExitStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &osqp_settings)))
-	{
-	case SetupExitStatus::SUCCESS:
-		break;
-	case SetupExitStatus::MEM_ALLOC_ERROR:
-		throw InsufficientMemoryException();
-	case SetupExitStatus::LINSYS_SOLVER_LOAD_ERROR:
-	case SetupExitStatus::LINSYS_SOLVER_INIT_ERROR:
-		throw SolverInitialisationException();
-	case SetupExitStatus::DATA_VALIDATION_ERROR:
-	case SetupExitStatus::SETTINGS_VALIDATION_ERROR:
-	case SetupExitStatus::WORKSPACE_NOT_INIT_ERROR:
-	case SetupExitStatus::NONCVX_ERROR:
-	default:
-		throw UnexpectedException();
-	}
+	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &osqp_settings)));
 	if (!pOsqpWorkspace)
 	{
 		throw UnexpectedException();
@@ -104,24 +109,29 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 
 std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 {
-	switch (static_cast<SolveExitStatus>(osqp_solve(&osqpWorkspace)))
+	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_solve(&osqpWorkspace)));
+	if (!osqpWorkspace.info)
 	{
-	case SolveExitStatus::SOLVED_INACCURATE:
-	case SolveExitStatus::MAX_ITER_REACHED:
+		throw UnexpectedException();
+	}
+	switch (static_cast<OSQPSolverStatus>(osqpWorkspace.info->status_val))
+	{
+	case OSQPSolverStatus::SOLVED_INACCURATE:
+	case OSQPSolverStatus::MAX_ITER_REACHED:
 		// Solution accepted in release mode but we must also test that results are acceptable in debug mode
 #ifdef _DEBUG
 		throw UnexpectedException();
 #endif
-	case SolveExitStatus::SOLVED:
+	case OSQPSolverStatus::SOLVED:
 		break;
-	case SolveExitStatus::SIGINT:
+	case OSQPSolverStatus::SIGINT:
 		throw OptimisationInterruptedException();
-	case SolveExitStatus::PRIMAL_INFEASIBLE:
-	case SolveExitStatus::PRIMAL_INFEASIBLE_INACCURATE:
-	case SolveExitStatus::DUAL_INFEASIBLE:
-	case SolveExitStatus::DUAL_INFEASIBLE_INACCURATE:
-	case SolveExitStatus::NON_CVX:
-	case SolveExitStatus::UNSOLVED:
+	case OSQPSolverStatus::PRIMAL_INFEASIBLE:
+	case OSQPSolverStatus::PRIMAL_INFEASIBLE_INACCURATE:
+	case OSQPSolverStatus::DUAL_INFEASIBLE:
+	case OSQPSolverStatus::DUAL_INFEASIBLE_INACCURATE:
+	case OSQPSolverStatus::NON_CVX:
+	case OSQPSolverStatus::UNSOLVED:
 	default:
 		throw UnexpectedException();
 	}

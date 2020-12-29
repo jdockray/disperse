@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 
-enum class SetupExitStatus
+enum class OSQPErrorStatus
 {
 	SUCCESS = 0,
 	DATA_VALIDATION_ERROR = OSQP_DATA_VALIDATION_ERROR,
@@ -21,7 +21,7 @@ enum class SetupExitStatus
 	WORKSPACE_NOT_INIT_ERROR = OSQP_WORKSPACE_NOT_INIT_ERROR
 };
 
-enum class SolveExitStatus
+enum class OSQPSolverStatus
 {
 	SOLVED = OSQP_SOLVED,
 	SOLVED_INACCURATE = OSQP_SOLVED_INACCURATE,
