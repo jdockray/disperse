@@ -3,13 +3,19 @@
 
 SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 {
-	c_int currentColumn = -1;
 	// std::map is ordered so it is already sorted by the key
 	for (const std::pair<std::pair<dlib::uint32, dlib::uint32>, double>& entry : sparseMatrix.matrixElements())
 	{
-		if (entry.first.first > currentColumn) columnPointers.push_back(rowIndices.size());
+		while (columnPointers.size() <= entry.first.first)
+		{
+			columnPointers.push_back(rowIndices.size());
+		}
 		rowIndices.push_back(entry.first.second);
 		values.push_back(entry.second);
+	}
+	while (columnPointers.size() <= sparseMatrix.columnCount())
+	{
+		columnPointers.push_back(rowIndices.size());
 	}
 	nzmax = rowIndices.size();
 	m = sparseMatrix.rowCount();
@@ -69,8 +75,8 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	const std::vector<c_float>& vectorU)
 {
 	OSQPData osqpData;
-	osqpData.n = matrixA.rowCount();
-	osqpData.m = matrixA.columnCount();
+	osqpData.n = matrixA.columnCount();
+	osqpData.m = matrixA.rowCount();
 
 	if (matrixP.columnCount() != osqpData.n
 		|| vectorL.size() != osqpData.m
@@ -103,7 +109,7 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	case SolveExitStatus::SOLVED_INACCURATE:
 	case SolveExitStatus::MAX_ITER_REACHED:
 		// Solution accepted in release mode but we must also test that results are acceptable in debug mode
-#ifndef _DEBUG
+#ifdef _DEBUG
 		throw UnexpectedException();
 #endif
 	case SolveExitStatus::SOLVED:
@@ -133,17 +139,17 @@ std::vector<double> solve(double minimumReturn, const ListOfSecurities& securiti
 	vectorL.push_back(0);
 	std::vector<c_float> vectorU;
 	vectorU.push_back(1);
-	SparseMatrix matrixA(securities.size(), securities.numberOfConstrainedSecurities() + 1);
+	SparseMatrix matrixA(securities.numberOfConstrainedSecurities() + 1, securities.size());
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.getSecurity(i);
-		matrixA.setValue(i, 0, 1); // For sum of all allocations
+		matrixA.setValue(0, i, 1); // For sum of all allocations
 		if (security.hasConstrainedProportion())
 		{
 			//vectorQ.push_back(security.getExpectedReturn());
 			vectorL.push_back(security.getMinProportion());
 			vectorU.push_back(security.getMaxProportion());
-			matrixA.setValue(i, i + 1, 1);
+			matrixA.setValue(i + 1, i, 1);
 		}
 	}
 
