@@ -9,11 +9,11 @@
 #include <iostream>
 #include <fstream>
 
-template <class T>
-std::map<T, size_t> generateMappingFromSet(const std::set<T>& items)
+template <class T, class U>
+std::map<U, size_t> generateMappingFromIterable(const T& items)
 {
 	size_t index = 0;
-	std::map<T, size_t> mapping;
+	std::map<U, size_t> mapping;
 	for (const auto& item : items)
 	{
 		mapping[item] = index++;
@@ -21,9 +21,9 @@ std::map<T, size_t> generateMappingFromSet(const std::set<T>& items)
 	return mapping;
 }
 
-SparseMatrix generateFactorMatrix(const ListOfSecurities& securities)
+SparseMatrix generateFactorMatrix(const ListOfSecurities& securities, const std::vector<std::string> factors)
 {
-	std::map<std::string, size_t> factorMapping = generateMappingFromSet<std::string>(securities.getAllFactors());
+	std::map<std::string, size_t> factorMapping = generateMappingFromIterable<std::vector<std::string>, std::string>(factors);
 	SparseMatrix factorMatrix(securities.size(), factorMapping.size());
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
@@ -46,14 +46,24 @@ std::vector<double> getSecurityRisks(const ListOfSecurities& securities)
 	return risks;
 }
 
-void run(const std::string& inputFileName, const std::string& outputFileName, const double minimumReturn, const std::optional<std::string> additionalFactorsFileName = std::optional<std::string>())
+void run(const std::string& inputFileName,
+	const std::string& securityOutputFileName,
+	const double minimumReturn,
+	const std::optional<std::string> factorGridFileName = std::optional<std::string>(),
+	const std::optional<std::string> factorListFileName = std::optional<std::string>(),
+	const std::optional<std::string> factorOutputFileName = std::optional<std::string>())
 {
 	ListOfSecurities securities = inputSecurities(inputFileName);
-	if (additionalFactorsFileName.has_value())
+	if (factorGridFileName.has_value())
 	{
-		inputFactorList(additionalFactorsFileName.value(), securities);
+		inputFactorGrid(factorGridFileName.value(), securities);
 	}
-	const SparseMatrix factorMatrix = generateFactorMatrix(securities);
+	if (factorListFileName.has_value())
+	{
+		inputFactorList(factorListFileName.value(), securities);
+	}
+	std::vector<std::string> factors = securities.getAllFactors();
+	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
 	UpperTriangularSparseMatrix correlationMatrix
 		= multiply<UpperTriangularCorrelationMatrix>(factorMatrix.getTranspose(), factorMatrix);
 	DiagonalSparseMatrix riskDiagonalMatrix(getSecurityRisks(securities));
@@ -61,19 +71,28 @@ void run(const std::string& inputFileName, const std::string& outputFileName, co
 		multiply<UpperTriangularSparseMatrix>(riskDiagonalMatrix, correlationMatrix),
 		riskDiagonalMatrix
 	);
-	outputAllocations(securities, solve(minimumReturn, securities, covarianceMatrix), outputFileName);
+	Solution solution = solve(minimumReturn, securities, covarianceMatrix);
+	outputAllocations(securities.getIdentifiers(), solution.m_securityProportions, securityOutputFileName);
+	if (factorOutputFileName.has_value())
+	{
+		outputFactorExposures(factors, solution.m_factorProportions, factorOutputFileName.value());
+	}
 }
 
 void run(const unsigned int argc, const char* const argv[])
 {
 	CmdLineArgs cmdLineArgs(argc, argv);
+	const std::optional<std::string> factorGridFileName = cmdLineArgs.getSingleArgumentOption('g');
+	const std::optional<std::string> factorListFileName = cmdLineArgs.getSingleArgumentOption('l');
+	const std::optional<std::string> factorOutputFileName = cmdLineArgs.getSingleArgumentOption('f');
 	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
 	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3, "There are not enough positional command line arguments.");
 	std::list<std::string>::const_iterator position = requiredArgs.begin();
 	std::string inputFileName = *position;
-	std::string outputFileName = *(++position);
+	std::string securityOutputFileName = *(++position);
 	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-	run(inputFileName, outputFileName, minimumReturn);
+	run(inputFileName, securityOutputFileName, minimumReturn,
+		factorGridFileName,	factorListFileName,	factorOutputFileName);
 }
 
 void runCatchingGlobalExceptions(const unsigned int argc, const char* const argv[])

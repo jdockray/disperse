@@ -23,7 +23,10 @@ std::optional<std::string> CmdLineArgs::getSingleArgumentOption(const char optio
 std::list<std::string> CmdLineArgs::getMultipleArgumentOption(const char option, const unsigned int length)
 {
 	std::list<std::string> result = findAndExcise(option, length);
-	result.pop_front();
+	if (result.size() > 0)
+	{
+		result.pop_front();
+	}
 	return result;
 }
 
@@ -32,26 +35,26 @@ const std::list<std::string>& CmdLineArgs::remainingArguments() const
 	return arguments;
 }
 
-bool CmdLineArgs::notAtEndOfOptionElements(const std::list<std::string>::iterator& iterator, const std::list<std::string>& arguments)
-{
-	return iterator != arguments.end() && iterator->at(0) != '-' && iterator->at(0) != '?';
-}
-
 std::list<std::string> CmdLineArgs::findAndExcise(const char option, const unsigned int length)
 {
+	std::list<std::string> excisedElements;
 	std::list<std::string>::iterator start = arguments.begin();
-	while (notAtEndOfOptionElements(start, arguments));
+	const char optionCString[]{ '-', option, '\0' };
+	while (start != arguments.end() && *start != optionCString)
 	{
 		++start;
 	}
+	if (start == arguments.end())
+	{
+		return excisedElements;
+	}
 	std::list<std::string>::iterator end = start;
-	unsigned int elementCount = 0;
-	while (elementCount < length && notAtEndOfOptionElements(end, arguments))
+	int elementCount = -1;
+	do
 	{
 		++elementCount;
 		++end;
-	}
-	std::list<std::string> excisedElements;
+	} while (elementCount < length && end != arguments.end() && end->at(0) != '-');
 	if (elementCount == length)
 	{
 		excisedElements.splice(excisedElements.begin(), arguments, start, end);

@@ -18,7 +18,6 @@ public:
 private:
 	std::list<std::string> arguments;
 
-	bool notAtEndOfOptionElements(const std::list<std::string>::iterator& iterator, const std::list<std::string>& arguments);
 	std::list<std::string> findAndExcise(const char option, const unsigned int length);
 };
 

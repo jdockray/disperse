@@ -48,7 +48,8 @@ public:
 	Security& getSecurity(const std::string& securityName);
 	const Security& getSecurity(const unsigned int securityNumber) const;
 	Security& getSecurity(const unsigned int securityNumber);
-	std::set<std::string> getAllFactors() const;
+	std::vector<std::string> getIdentifiers() const;
+	std::vector<std::string> getAllFactors() const;
 	unsigned int size() const;
 	unsigned int numberOfConstrainedSecurities() const;
 	void verifyProportions() const;

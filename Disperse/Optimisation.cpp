@@ -107,7 +107,7 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	return callOSQPSetup(osqpData);
 }
 
-std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
+Solution callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 {
 	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_solve(&osqpWorkspace)));
 	if (!osqpWorkspace.info)
@@ -135,14 +135,17 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	default:
 		throw UnexpectedException();
 	}
-	if (!osqpWorkspace.solution || !osqpWorkspace.solution->x)
+	if (!osqpWorkspace.solution || !osqpWorkspace.solution->x || !osqpWorkspace.solution->y)
 	{
 		throw UnexpectedException();
 	}
-	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
+	return Solution(
+		std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n),
+		std::vector<double>(osqpWorkspace.solution->y, osqpWorkspace.solution->y + osqpWorkspace.data->m)
+	);
 }
 
-std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
+Solution solve(double minimumReturn, const ListOfSecurities& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;

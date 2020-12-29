@@ -5,8 +5,7 @@
 #include <vector>
 #include "Security.hpp"
 
-void outputAllocations(const ListOfSecurities& securities, const std::vector<double>& allocations, const std::string& outputFileName);
-
-void outputAllocations(const ListOfSecurities& securities, const std::vector<double>& allocations, std::ofstream& outputFile);
+void outputAllocations(const std::vector<std::string>& securityIdentifiers, const std::vector<double>& allocations, const std::string& outputFileName);
+void outputFactorExposures(const std::vector<std::string>& factorNames, const std::vector<double>& exposures, const std::string& outputFileName);
 
 #endif // #ifndef DISPERSE_OUTPUT

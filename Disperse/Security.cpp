@@ -133,14 +133,28 @@ Security& ListOfSecurities::getSecurity(const unsigned int securityNumber)
 	return m_securities.at(securityNumber);
 }
 
-std::set<std::string> ListOfSecurities::getAllFactors() const
+std::vector<std::string> ListOfSecurities::getIdentifiers() const
 {
-	std::set<std::string> factors;
+	std::vector<std::string> identifiers;
+	for (auto security : m_securities)
+	{
+		identifiers.push_back(security.identifier);
+	}
+	return identifiers;
+}
+
+std::vector<std::string> ListOfSecurities::getAllFactors() const
+{
+	std::vector<std::string> factors;
+	std::set<std::string> included;
 	for (auto security : m_securities)
 	{
 		for (auto exposures : security.getExposures())
 		{
-			factors.insert(exposures.first);
+			if (included.find(exposures.first) == included.end())
+			{
+				factors.push_back(exposures.first);
+			}
 		}
 	}
 	return factors;
