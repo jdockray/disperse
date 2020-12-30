@@ -65,17 +65,21 @@ void run(const std::string& inputFileName,
 	std::vector<std::string> factors = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
 	UpperTriangularSparseMatrix correlationMatrix
-		= multiply<UpperTriangularCorrelationMatrix>(factorMatrix.getTranspose(), factorMatrix);
+		= multiply<UpperTriangularCorrelationMatrix>(getTranspose<SparseMatrix>(factorMatrix), factorMatrix);
 	DiagonalSparseMatrix riskDiagonalMatrix(getSecurityRisks(securities));
 	const UpperTriangularSparseMatrix covarianceMatrix = multiply<UpperTriangularSparseMatrix>(
 		multiply<UpperTriangularSparseMatrix>(riskDiagonalMatrix, correlationMatrix),
 		riskDiagonalMatrix
 	);
-	Solution solution = solve(minimumReturn, securities, covarianceMatrix);
-	outputAllocations(securities.getIdentifiers(), solution.m_securityProportions, securityOutputFileName);
+	std::vector<double> solution = solve(minimumReturn, securities, covarianceMatrix);
+	outputAllocations(securities.getIdentifiers(), solution, securityOutputFileName);
 	if (factorOutputFileName.has_value())
 	{
-		outputFactorExposures(factors, solution.m_factorProportions, factorOutputFileName.value());
+		outputFactorExposures(
+			factors,
+			getTranspose<SparseVector>(multiply<SparseMatrix>(SparseVector(solution), factorMatrix)).asVector(),
+			factorOutputFileName.value()
+		);
 	}
 }
 

@@ -8,7 +8,7 @@ SparseMatrix::SparseMatrix(const unsigned int rows, const unsigned int columns)
 
 double SparseMatrix::getValue(const unsigned int row, const unsigned int column) const
 {
-	auto result = elements.find(std::pair<unsigned int, unsigned int>(column, row));
+	auto result = elements.find(std::pair<unsigned int, unsigned int>(row, column));
 	return result == elements.end() ? 0 : result->second;
 }
 
@@ -18,7 +18,7 @@ void SparseMatrix::setValue(const unsigned int row, const unsigned int column, c
 	{
 		throw UnexpectedException();
 	}
-	const std::pair<unsigned int, unsigned int> key(column, row);
+	const std::pair<unsigned int, unsigned int> key(row, column);
 	if (value == 0)
 	{
 		elements.erase(key);
@@ -44,18 +44,13 @@ const std::map<std::pair<unsigned int, unsigned int>, double>& SparseMatrix::mat
 	return elements;
 }
 
-SparseMatrix SparseMatrix::getTranspose() const
-{
-	SparseMatrix transpose(columnCount(), rowCount());
-	for (const auto& element : matrixElements())
-	{
-		transpose.setValue(element.first.second, element.first.first, element.second);
-	}
-	return transpose;
-}
-
 DiagonalSparseMatrix::DiagonalSparseMatrix(const unsigned int dimension)
 	: UpperTriangularSparseMatrix(dimension)
+{
+}
+
+DiagonalSparseMatrix::DiagonalSparseMatrix(const unsigned int rows, const unsigned int columns)
+	: UpperTriangularSparseMatrix(rows, columns)
 {
 }
 
@@ -182,4 +177,51 @@ void UpperTriangularCorrelationMatrix::setDiagonal()
 	{
 		UpperTriangularSparseMatrix::setValue(i, i, 1);
 	}
+}
+
+SparseVector::SparseVector(const unsigned int length)
+	: SparseMatrix(length, 1)
+{
+}
+
+SparseVector::SparseVector(const unsigned int rows, const unsigned int columns)
+	: SparseMatrix(rows, 1)
+{
+	if (columns != 1)
+	{
+		throw UnexpectedException();
+	}
+}
+
+SparseVector::SparseVector(const std::vector<double>& values)
+	: SparseMatrix(static_cast<unsigned int>(values.size()), 1)
+{
+	for (unsigned int i = 0; i < values.size(); ++i)
+	{
+		setValue(i, values.at(i));
+	}
+}
+
+void SparseVector::setValue(const unsigned int index, const double value)
+{
+	SparseMatrix::setValue(index, 0, value);
+}
+
+void SparseVector::setValue(const unsigned int row, const unsigned int column, const double value)
+{
+	if (column != 0)
+	{
+		throw UnexpectedException();
+	}
+	setValue(row, value);
+}
+
+std::vector<double> SparseVector::asVector() const
+{
+	std::vector<double> values;
+	for (unsigned int i = 0; i < values.size(); ++i)
+	{
+		values.push_back(getValue(i, 1));
+	}
+	return values;
 }

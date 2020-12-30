@@ -54,8 +54,8 @@ std::list<std::string> CmdLineArgs::findAndExcise(const char option, const unsig
 	{
 		++elementCount;
 		++end;
-	} while (elementCount < length && end != arguments.end() && end->at(0) != '-');
-	if (elementCount == length)
+	} while (elementCount < static_cast<int>(length) && end != arguments.end() && end->at(0) != '-');
+	if (elementCount == static_cast<int>(length))
 	{
 		excisedElements.splice(excisedElements.begin(), arguments, start, end);
 	}

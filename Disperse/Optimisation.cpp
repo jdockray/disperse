@@ -6,11 +6,11 @@ SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 	// std::map is ordered so it is already sorted by the key
 	for (const std::pair<std::pair<dlib::uint32, dlib::uint32>, double>& entry : sparseMatrix.matrixElements())
 	{
-		while (columnPointers.size() <= entry.first.first)
+		while (columnPointers.size() <= entry.first.second)
 		{
 			columnPointers.push_back(rowIndices.size());
 		}
-		rowIndices.push_back(entry.first.second);
+		rowIndices.push_back(entry.first.first);
 		values.push_back(entry.second);
 	}
 	while (columnPointers.size() <= sparseMatrix.columnCount())
@@ -107,7 +107,7 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	return callOSQPSetup(osqpData);
 }
 
-Solution callOSQPSolve(OSQPWorkspace& osqpWorkspace)
+std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 {
 	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_solve(&osqpWorkspace)));
 	if (!osqpWorkspace.info)
@@ -135,17 +135,14 @@ Solution callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	default:
 		throw UnexpectedException();
 	}
-	if (!osqpWorkspace.solution || !osqpWorkspace.solution->x || !osqpWorkspace.solution->y)
+	if (!osqpWorkspace.solution || !osqpWorkspace.solution->x)
 	{
 		throw UnexpectedException();
 	}
-	return Solution(
-		std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n),
-		std::vector<double>(osqpWorkspace.solution->y, osqpWorkspace.solution->y + osqpWorkspace.data->m)
-	);
+	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
 }
 
-Solution solve(double minimumReturn, const ListOfSecurities& securities,
+std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;

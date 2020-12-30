@@ -35,21 +35,6 @@ enum class OSQPSolverStatus
 	NON_CVX = OSQP_NON_CVX
 };
 
-struct Solution
-{
-	Solution(
-		const std::vector<double>& securityProportions,
-		const std::vector<double>& factorProportions
-	)
-		:	m_securityProportions(securityProportions),
-			m_factorProportions(factorProportions)
-	{
-	}
-
-	const std::vector<double> m_securityProportions;
-	const std::vector<double> m_factorProportions;
-};
-
 class SafeCSC : public csc
 {
 public:
@@ -69,7 +54,7 @@ struct WorkspaceDeleter
 	void operator()(OSQPWorkspace* pOsqpWorkspace);
 };
 
-Solution solve(double minimumReturn, const ListOfSecurities& securities,
+std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
 	const UpperTriangularSparseMatrix& covarianceMatrix);
 
 #endif // #ifndef DISPERSE_OPTIMISATION
