@@ -17,7 +17,7 @@ SafeCSC::SafeCSC(const SparseMatrix& matrix)
 			values.push_back(cell.second);
 		}
 	}
-	while (columnPointers.size() <= transposed.columnCount())
+	while (columnPointers.size() <= matrix.columnCount())
 	{
 		columnPointers.push_back(rowIndices.size());
 	}

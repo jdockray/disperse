@@ -24,19 +24,26 @@ void SparseMatrix::setValue(const unsigned int row, const unsigned int column, c
 		throw UnexpectedException();
 	}
 	auto matrixRow = elements.find(row);
-	if (matrixRow == elements.end())
+	if (value == 0)
 	{
-		elements[row] = std::map<unsigned int, double>();
-		matrixRow = elements.find(row);
-	}
-	matrixRow->second[column] = value;
-	if (matrixRow->second[column] == 0)
-	{
+		if (matrixRow == elements.end())
+		{
+			return;
+		}
 		matrixRow->second.erase(column);
 		if (matrixRow->second.size() == 0)
 		{
 			elements.erase(row);
 		}
+	}
+	else
+	{
+		if (matrixRow == elements.end())
+		{
+			elements[row] = std::map<unsigned int, double>();
+			matrixRow = elements.find(row);
+		}
+		matrixRow->second[column] = value;
 	}
 }
 
@@ -87,6 +94,22 @@ SparseMatrix getTranspose(const SparseMatrix& matrix)
 		}
 	}
 	return transpose;
+}
+
+SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix)
+{
+	SparseMatrix upperTriangular(matrix.rowCount(), matrix.columnCount());
+	for (const auto& matrixRow : matrix.matrixElements())
+	{
+		for (const auto& cell : matrixRow.second)
+		{
+			if (matrixRow.first <= cell.first)
+			{
+				upperTriangular.setValue(matrixRow.first, cell.first, 0);
+			}
+		}
+	}
+	return upperTriangular;
 }
 
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values)

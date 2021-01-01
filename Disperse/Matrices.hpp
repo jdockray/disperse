@@ -23,6 +23,7 @@ private:
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);
 SparseMatrix getTranspose(const SparseMatrix& matrix);
+SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix);
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values);
 SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values);
 SparseMatrix vectorToVerticalMatrix(const std::vector<double>& values);

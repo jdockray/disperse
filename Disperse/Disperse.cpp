@@ -65,14 +65,14 @@ void run(const std::string& inputFileName,
 	std::vector<std::string> factors = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
 	SparseMatrix correlationMatrix = multiply(factorMatrix, getTranspose(factorMatrix));
-	for (int i = 0; i < correlationMatrix.rowCount(); ++i)
+	SparseMatrix upperTriagonalCorrelationMatrix = upperTriangularMatrix(correlationMatrix);
+	for (int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
 	{
-		correlationMatrix.setValue(i, i, 1);
+		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
 	}
 	SparseMatrix riskDiagonalMatrix(vectorToDiagonalMatrix(getSecurityRisks(securities)));
-	const SparseMatrix midpoint = multiply(riskDiagonalMatrix, correlationMatrix);
 	const SparseMatrix covarianceMatrix = multiply(
-		midpoint,
+		multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix),
 		riskDiagonalMatrix
 	);
 	std::vector<double> solution = solve(minimumReturn, securities, covarianceMatrix);
