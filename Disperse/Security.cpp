@@ -154,6 +154,7 @@ std::vector<std::string> ListOfSecurities::getAllFactors() const
 			if (included.find(exposures.first) == included.end())
 			{
 				factors.push_back(exposures.first);
+				included.insert(exposures.first);
 			}
 		}
 	}

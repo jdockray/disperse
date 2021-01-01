@@ -4,14 +4,18 @@
 SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
 {
 	// std::map is ordered so it is already sorted by the key
-	for (const std::pair<std::pair<dlib::uint32, dlib::uint32>, double>& entry : sparseMatrix.matrixElements())
+	for (const auto row : sparseMatrix.matrixElements())
 	{
-		while (columnPointers.size() <= entry.first.second)
+		for (const auto cell : row.second)
 		{
-			columnPointers.push_back(rowIndices.size());
+			rowIndices.push_back(row.first);
+			while (columnPointers.size() <= cell.first)
+			{
+				columnPointers.push_back(rowIndices.size());
+			}
+			
+			values.push_back(cell.second);
 		}
-		rowIndices.push_back(entry.first.first);
-		values.push_back(entry.second);
 	}
 	while (columnPointers.size() <= sparseMatrix.columnCount())
 	{
@@ -74,7 +78,7 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpDat
 }
 
 std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
-	const UpperTriangularSparseMatrix& matrixP,
+	const SparseMatrix& matrixP,
 	const SparseMatrix& matrixA,
 	const std::vector<c_float>& vectorL,
 	const std::vector<c_float>& vectorU)
@@ -143,7 +147,7 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 }
 
 std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
-	const UpperTriangularSparseMatrix& covarianceMatrix)
+	const SparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;
 	vectorL.push_back(1);

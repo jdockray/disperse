@@ -64,11 +64,15 @@ void run(const std::string& inputFileName,
 	}
 	std::vector<std::string> factors = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
-	UpperTriangularSparseMatrix correlationMatrix
-		= multiply<UpperTriangularCorrelationMatrix>(getTranspose<SparseMatrix>(factorMatrix), factorMatrix);
-	DiagonalSparseMatrix riskDiagonalMatrix(getSecurityRisks(securities));
-	const UpperTriangularSparseMatrix covarianceMatrix = multiply<UpperTriangularSparseMatrix>(
-		multiply<UpperTriangularSparseMatrix>(riskDiagonalMatrix, correlationMatrix),
+	SparseMatrix correlationMatrix = multiply(getTranspose(factorMatrix), factorMatrix);
+	for (int i = 0; i < correlationMatrix.rowCount(); ++i)
+	{
+		correlationMatrix.setValue(i, i, 1);
+	}
+	SparseMatrix riskDiagonalMatrix(vectorToDiagonalMatrix(getSecurityRisks(securities)));
+	const SparseMatrix midpoint = multiply(riskDiagonalMatrix, correlationMatrix);
+	const SparseMatrix covarianceMatrix = multiply(
+		midpoint,
 		riskDiagonalMatrix
 	);
 	std::vector<double> solution = solve(minimumReturn, securities, covarianceMatrix);
@@ -77,7 +81,7 @@ void run(const std::string& inputFileName,
 	{
 		outputFactorExposures(
 			factors,
-			getTranspose<SparseVector>(multiply<SparseMatrix>(SparseVector(solution), factorMatrix)).asVector(),
+			verticalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix)),
 			factorOutputFileName.value()
 		);
 	}

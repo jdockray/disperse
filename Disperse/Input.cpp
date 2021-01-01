@@ -69,7 +69,7 @@ void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securit
 		Security& security = securities.getSecurity(row.at(security_column_name));
 		for (std::string column : inputStream.getheader())
 		{
-			if (column.length() == 0) continue;
+			if (column == security_column_name) continue;
 			security.addExposure(column, std::stod(row.at(column)));
 		}
 	}
@@ -87,8 +87,9 @@ void inputFactorList(const std::string& inputFileName, ListOfSecurities& securit
 	std::map<std::string, std::string> row;
 	while (inputStream >> row)
 	{
-		if (row.at(security_column_name).length() == 0) continue;
-		securities.getSecurity(row.at(security_column_name)).addExposure(
+		const std::string securityIdentifier = row.at(security_column_name);
+		if (securityIdentifier.length() == 0) continue;
+		securities.getSecurity(securityIdentifier).addExposure(
 			row.at(factor_column_name), std::stod(row.at(factor_weighting_column_name)));
 	}
 }

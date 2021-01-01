@@ -55,6 +55,6 @@ struct WorkspaceDeleter
 };
 
 std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
-	const UpperTriangularSparseMatrix& covarianceMatrix);
+	const SparseMatrix& covarianceMatrix);
 
 #endif // #ifndef DISPERSE_OPTIMISATION
