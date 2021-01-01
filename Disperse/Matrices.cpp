@@ -57,11 +57,11 @@ const std::map<unsigned int, std::map<unsigned int, double> >& SparseMatrix::mat
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b)
 {
-	SparseMatrix product(a.columnCount(), b.rowCount());
-	const SparseMatrix aTransposed = getTranspose(a);
-	for (auto const& matrixARow : aTransposed.matrixElements())
+	SparseMatrix product(a.rowCount(), b.columnCount());
+	const SparseMatrix bTransposed = getTranspose(b);
+	for (auto const& matrixARow : a.matrixElements())
 	{
-		for (auto const& matrixBColumn : b.matrixElements())
+		for (auto const& matrixBColumn : bTransposed.matrixElements())
 		{
 			double sum = 0;
 			for (auto const& matrixACell : matrixARow.second)

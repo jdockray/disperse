@@ -64,7 +64,7 @@ void run(const std::string& inputFileName,
 	}
 	std::vector<std::string> factors = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
-	SparseMatrix correlationMatrix = multiply(getTranspose(factorMatrix), factorMatrix);
+	SparseMatrix correlationMatrix = multiply(factorMatrix, getTranspose(factorMatrix));
 	for (int i = 0; i < correlationMatrix.rowCount(); ++i)
 	{
 		correlationMatrix.setValue(i, i, 1);
