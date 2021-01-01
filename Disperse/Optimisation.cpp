@@ -1,29 +1,29 @@
 
 #include "Optimisation.hpp"
 
-SafeCSC::SafeCSC(const SparseMatrix& sparseMatrix)
+SafeCSC::SafeCSC(const SparseMatrix& matrix)
 {
+	SparseMatrix transposed = getTranspose(matrix);
 	// std::map is ordered so it is already sorted by the key
-	for (const auto row : sparseMatrix.matrixElements())
+	for (const auto column : transposed.matrixElements())
 	{
-		for (const auto cell : row.second)
+		for (const auto cell : column.second)
 		{
-			rowIndices.push_back(row.first);
-			while (columnPointers.size() <= cell.first)
+			while (columnPointers.size() <= column.first)
 			{
-				columnPointers.push_back(rowIndices.size());
+				columnPointers.push_back(values.size());
 			}
-			
+			rowIndices.push_back(cell.first);
 			values.push_back(cell.second);
 		}
 	}
-	while (columnPointers.size() <= sparseMatrix.columnCount())
+	while (columnPointers.size() <= transposed.columnCount())
 	{
 		columnPointers.push_back(rowIndices.size());
 	}
 	nzmax = rowIndices.size();
-	m = sparseMatrix.rowCount();
-	n = sparseMatrix.columnCount();
+	m = matrix.rowCount();
+	n = matrix.columnCount();
 	p = columnPointers.data();
 	i = rowIndices.data();
 	x = values.data();
