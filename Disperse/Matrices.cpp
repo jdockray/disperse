@@ -65,6 +65,10 @@ const std::map<unsigned int, std::map<unsigned int, double> >& SparseMatrix::mat
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b)
 {
 	SparseMatrix product(a.rowCount(), b.columnCount());
+	if (a.columnCount() != b.rowCount())
+	{
+		throw UnexpectedException();
+	}
 	const SparseMatrix bTransposed = getTranspose(b);
 	for (auto const& matrixARow : a.matrixElements())
 	{
@@ -151,7 +155,7 @@ std::vector<double> horizontalMatrixToVector(const SparseMatrix& matrix)
 	std::vector<double> values(matrix.columnCount());
 	for (int i = 0; i < matrix.columnCount(); ++i)
 	{
-		values.push_back(matrix.getValue(0, i));
+		values.at(i) = matrix.getValue(0, i);
 	}
 	return values;
 }
@@ -165,7 +169,7 @@ std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix)
 	std::vector<double> values(matrix.rowCount());
 	for (int i = 0; i < matrix.rowCount(); ++i)
 	{
-		values.push_back(matrix.getValue(i, 0));
+		values.at(i) = matrix.getValue(i, 0);
 	}
 	return values;
 }

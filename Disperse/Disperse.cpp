@@ -81,7 +81,7 @@ void run(const std::string& inputFileName,
 	{
 		outputFactorExposures(
 			factors,
-			verticalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix)),
+			horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix)),
 			factorOutputFileName.value()
 		);
 	}
