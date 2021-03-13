@@ -70,7 +70,7 @@ void run(const std::string& inputFileName,
 	{
 		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
 	}
-	SparseMatrix riskDiagonalMatrix(vectorToDiagonalMatrix(getSecurityRisks(securities)));
+	SparseMatrix riskDiagonalMatrix = vectorToDiagonalMatrix(getSecurityRisks(securities));
 	const SparseMatrix covarianceMatrix = multiply(
 		multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix),
 		riskDiagonalMatrix

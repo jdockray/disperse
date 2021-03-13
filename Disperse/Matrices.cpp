@@ -109,7 +109,7 @@ SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix)
 		{
 			if (matrixRow.first <= cell.first)
 			{
-				upperTriangular.setValue(matrixRow.first, cell.first, 0);
+				upperTriangular.setValue(matrixRow.first, cell.first, cell.second);
 			}
 		}
 	}
