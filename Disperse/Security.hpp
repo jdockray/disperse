@@ -53,13 +53,13 @@ public:
 	Security& getSecurity(const unsigned int securityNumber);
 	std::vector<std::string> getIdentifiers() const;
 	std::vector<std::string> getAllFactors() const;
-	unsigned int size() const;
-	unsigned int numberOfConstrainedSecurities() const;
+	size_t size() const;
+	size_t numberOfConstrainedSecurities() const;
 	void verifyProportions() const;
 
 private:
 	std::vector<Security> m_securities;
-	std::map<std::string, unsigned int> m_securityLookup;
+	std::map<std::string, size_t> m_securityLookup;
 };
 
 #endif // #ifndef DISPERSE_SECURITY

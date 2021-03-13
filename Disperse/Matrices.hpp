@@ -11,17 +11,17 @@
 class SparseMatrix
 {
 public:
-	SparseMatrix(const unsigned int rows, const unsigned int columns);
-	double getValue(const unsigned int row, const unsigned int column) const;
-	void setValue(const unsigned int row, const unsigned int column, const double value);
-	unsigned int columnCount() const;
-	unsigned int rowCount() const;
-	const std::map<unsigned int, std::map<unsigned int, double> >& matrixElements() const;
+	SparseMatrix(const size_t rows, const size_t columns);
+	double getValue(const size_t row, const size_t column) const;
+	void setValue(const size_t row, const size_t column, const double value);
+	size_t columnCount() const;
+	size_t rowCount() const;
+	const std::map<size_t, std::map<size_t, double> >& matrixElements() const;
 
 private:
-	const unsigned int numberOfColumns;
-	const unsigned int numberOfRows;
-	std::map<unsigned int, std::map<unsigned int, double> > elements;
+	const size_t numberOfColumns;
+	const size_t numberOfRows;
+	std::map<size_t, std::map<size_t, double> > elements;
 };
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);

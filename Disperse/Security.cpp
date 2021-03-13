@@ -90,7 +90,7 @@ const std::map<std::string, double>& Security::getExposures() const
 
 void ListOfSecurities::addSecurity(const Security& security)
 {
-	m_securityLookup.insert(std::pair<std::string, unsigned int>(security.identifier, m_securities.size()));
+	m_securityLookup.insert(std::pair<std::string, size_t>(security.identifier, m_securities.size()));
 	m_securities.push_back(security);
 }
 
@@ -161,14 +161,14 @@ std::vector<std::string> ListOfSecurities::getAllFactors() const
 	return factors;
 }
 
-unsigned int ListOfSecurities::size() const
+size_t ListOfSecurities::size() const
 {
-	return static_cast<unsigned int>(m_securities.size());
+	return m_securities.size();
 }
 
-unsigned int ListOfSecurities::numberOfConstrainedSecurities() const
+size_t ListOfSecurities::numberOfConstrainedSecurities() const
 {
-	unsigned int count = 0;
+	size_t count = 0;
 	for (auto security : m_securities)
 	{
 		if (security.hasConstrainedProportion()) ++count;

@@ -1,12 +1,12 @@
 
 #include "Matrices.hpp"
 
-SparseMatrix::SparseMatrix(const unsigned int rows, const unsigned int columns)
+SparseMatrix::SparseMatrix(const size_t rows, const size_t columns)
 	: numberOfRows(rows), numberOfColumns(columns)
 {
 }
 
-double SparseMatrix::getValue(const unsigned int row, const unsigned int column) const
+double SparseMatrix::getValue(const size_t row, const size_t column) const
 {
 	auto matrixRow = elements.find(row);
 	if (matrixRow == elements.end())
@@ -17,7 +17,7 @@ double SparseMatrix::getValue(const unsigned int row, const unsigned int column)
 	return (cell == matrixRow->second.end()) ? 0 : cell->second;
 }
 
-void SparseMatrix::setValue(const unsigned int row, const unsigned int column, const double value)
+void SparseMatrix::setValue(const size_t row, const size_t column, const double value)
 {
 	if (column >= numberOfColumns || row >= numberOfRows)
 	{
@@ -40,24 +40,24 @@ void SparseMatrix::setValue(const unsigned int row, const unsigned int column, c
 	{
 		if (matrixRow == elements.end())
 		{
-			elements[row] = std::map<unsigned int, double>();
+			elements[row] = std::map<size_t, double>();
 			matrixRow = elements.find(row);
 		}
 		matrixRow->second[column] = value;
 	}
 }
 
-unsigned int SparseMatrix::columnCount() const
+size_t SparseMatrix::columnCount() const
 {
 	return numberOfColumns;
 }
 
-unsigned int SparseMatrix::rowCount() const
+size_t SparseMatrix::rowCount() const
 {
 	return numberOfRows;
 }
 
-const std::map<unsigned int, std::map<unsigned int, double> >& SparseMatrix::matrixElements() const
+const std::map<size_t, std::map<size_t, double> >& SparseMatrix::matrixElements() const
 {
 	return elements;
 }
@@ -119,7 +119,7 @@ SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix)
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(values.size(), values.size());
-	for (int i = 0; i < values.size(); ++i)
+	for (size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(i, i, values.at(i));
 	}
@@ -129,7 +129,7 @@ SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values)
 SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(1, values.size());
-	for (int i = 0; i < values.size(); ++i)
+	for (size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(0, i, values.at(i));
 	}
@@ -139,7 +139,7 @@ SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values)
 SparseMatrix vectorToVerticalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(values.size(), 1);
-	for (int i = 0; i < values.size(); ++i)
+	for (size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(i, 0, values.at(i));
 	}
@@ -153,7 +153,7 @@ std::vector<double> horizontalMatrixToVector(const SparseMatrix& matrix)
 		throw UnexpectedException();
 	}
 	std::vector<double> values(matrix.columnCount());
-	for (int i = 0; i < matrix.columnCount(); ++i)
+	for (size_t i = 0; i < matrix.columnCount(); ++i)
 	{
 		values.at(i) = matrix.getValue(0, i);
 	}
@@ -167,7 +167,7 @@ std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix)
 		throw UnexpectedException();
 	}
 	std::vector<double> values(matrix.rowCount());
-	for (int i = 0; i < matrix.rowCount(); ++i)
+	for (size_t i = 0; i < matrix.rowCount(); ++i)
 	{
 		values.at(i) = matrix.getValue(i, 0);
 	}
