@@ -2,12 +2,15 @@
 #ifndef DISPERSE_SECURITY
 #define DISPERSE_SECURITY
 
+#include "ExpectedException.hpp"
+
+#pragma warning(push, 0)
 #include <string>
 #include <list>
 #include <map>
 #include <vector>
 #include <optional>
-#include "ExpectedException.hpp"
+#pragma warning(pop)
 
 class Security
 {

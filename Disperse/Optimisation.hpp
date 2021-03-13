@@ -4,10 +4,13 @@
 
 #include "Security.hpp"
 #include "Matrices.hpp"
+
+#pragma warning(push, 0)
 #include "dlib\matrix.h"
 #include "osqp\include\osqp.h"
 #include <vector>
 #include <map>
+#pragma warning(pop)
 
 enum class OSQPErrorStatus
 {

@@ -2,6 +2,7 @@
 #ifndef DISPERSE_EXPECTED_EXCEPTION
 #define DISPERSE_EXPECTED_EXCEPTION
 
+#pragma warning(push, 0)
 #include <exception>
 #include <stdexcept>
 #include <vector>
@@ -10,6 +11,7 @@
 #include <list>
 #include <map>
 #include <optional>
+#pragma warning(pop)
 
 enum class ReturnCode
 {

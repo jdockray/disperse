@@ -1,7 +1,10 @@
 
 #include "Output.hpp"
 #include "Security.hpp"
+
+#pragma warning(push, 0)
 #include <fstream>
+#pragma warning(pop)
 
 class CSVOutput
 {

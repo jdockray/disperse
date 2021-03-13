@@ -3,7 +3,10 @@
 #define DISPERSE_INPUT
 
 #include "Security.hpp"
+
+#pragma warning(push, 0)
 #include <vector>
+#pragma warning(pop)
 
 ListOfSecurities inputSecurities(const std::string& inputFileName);
 void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securities);

@@ -2,8 +2,11 @@
 #ifndef DISPERSE_MATRICS
 #define DISPERSE_MATRICS
 
-#include <map>
 #include "ExpectedException.hpp"
+
+#pragma warning(push, 0)
+#include <map>
+#pragma warning(pop)
 
 class SparseMatrix
 {

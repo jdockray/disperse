@@ -1,9 +1,12 @@
 
 #include "Input.hpp"
-#include "../../csvstream/csvstream.h"
 #include "Matrices.hpp"
 #include "Security.hpp"
+
+#pragma warning(push, 0)
+#include "../../csvstream/csvstream.h"
 #include "dlib\matrix.h"
+#pragma warning(pop)
 
 const std::string security_column_name = "Security";
 

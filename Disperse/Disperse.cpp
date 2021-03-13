@@ -4,10 +4,13 @@
 #include "ExpectedException.hpp"
 #include "CmdLine.hpp"
 #include "Optimisation.hpp"
+
+#pragma warning(push, 0)
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
+#pragma warning(pop)
 
 template <class T, class U>
 std::map<U, size_t> generateMappingFromIterable(const T& items)

@@ -2,9 +2,11 @@
 #ifndef DISPERSE_COMMAND_LINE
 #define DISPERSE_COMMAND_LINE
 
+#pragma warning(push, 0)
 #include <list>
 #include <optional>
 #include <string>
+#pragma warning(pop)
 
 class CmdLineArgs
 {
