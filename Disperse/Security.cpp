@@ -1,4 +1,6 @@
+
 #include "Security.hpp"
+#include "ExpectedException.hpp"
 
 Security::Security(const std::string& identifier)
 	:	identifier(identifier), expectedReturn(1),
@@ -69,6 +71,16 @@ double Security::getMinProportion() const
 bool Security::hasConstrainedProportion() const
 {
 	return getMinProportion() > 0 || getMaxProportion() < 1;
+}
+
+void Security::setGroup(const std::string group)
+{
+	this->group = group;
+}
+
+std::string Security::getGroup() const
+{
+	return group;
 }
 
 void Security::addExposure(std::string factorName, double exposure)

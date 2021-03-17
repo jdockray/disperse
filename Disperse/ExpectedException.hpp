@@ -30,7 +30,8 @@ enum class ReturnCode
 	OPTIMISATION_INTERRUPTED = 12,
 	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
 	SECURITY_NOT_RECOGNISED_EXCEPTION = 14,
-	EXPOSURE_SUM_EXCEEDS_ONE = 15
+	EXPOSURE_SUM_EXCEEDS_ONE = 15,
+	INVALID_GROUP_LIMITS = 16
 };
 
 struct ExpectedException : public std::exception
@@ -162,6 +163,12 @@ class ExposureSumExceedsOneException : public ExpectedException
 {
 public:
 	ExposureSumExceedsOneException();
+};
+
+class InvalidGroupLimitsException : public ExpectedException
+{
+public:
+	InvalidGroupLimitsException(const std::string& message);
 };
 
 class UnexpectedException : public ExpectedException

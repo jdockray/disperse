@@ -2,8 +2,6 @@
 #ifndef DISPERSE_SECURITY
 #define DISPERSE_SECURITY
 
-#include "ExpectedException.hpp"
-
 #pragma warning(push, 0)
 #include <string>
 #include <list>
@@ -28,6 +26,9 @@ public:
 	void setMinProportion(const double minProportion);
 	double getMinProportion() const;
 	bool hasConstrainedProportion() const;
+	void setGroup(const std::string group);
+	std::string getGroup() const;
+
 	void addExposure(std::string factorName, double exposure);
 	const std::map<std::string, double>& getExposures() const;
 
@@ -36,6 +37,7 @@ private:
 	double risk;
 	double maxProportion;
 	double minProportion;
+	std::string group;
 	std::map<std::string, double> exposures;
 	double remainingExposure;
 

@@ -26,6 +26,7 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 	const std::string risk_column_name = "Risk";
 	const std::string minimum_allocation_column_name = "Min";
 	const std::string maximum_allocation_column_name = "Max";
+	const std::string group_column_name = "Group";
 
 	csvstream inputStream(inputFileName);
 	ensureColumnPresent(inputStream, security_column_name, inputFileName);
@@ -54,6 +55,11 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 		if (maximumColumn != row.end())
 		{
 			security.setMaxProportion(std::stod(maximumColumn->second));
+		}
+		std::map<std::string, std::string>::iterator groupColumn = row.find(group_column_name);
+		if (groupColumn != row.end())
+		{
+			security.setGroup(groupColumn->second);
 		}
 		securities.addSecurity(security);
 	}

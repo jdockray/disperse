@@ -41,6 +41,11 @@ InvalidHoldingLimitsException::InvalidHoldingLimitsException(const std::string& 
 {
 }
 
+InvalidGroupLimitsException::InvalidGroupLimitsException(const std::string& message)
+	: ExpectedException(message, ReturnCode::INVALID_GROUP_LIMITS)
+{
+}
+
 IOException::IOException()
 	: ExpectedException("A file input/output error occurred.", ReturnCode::IO_EXCEPTION)
 {

@@ -42,6 +42,9 @@
     <ClCompile Include="DlibSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Group.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpectedException.hpp">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrices.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Group.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

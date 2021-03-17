@@ -169,6 +169,7 @@
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
+    <ClCompile Include="Group.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Matrices.cpp" />
     <ClCompile Include="Optimisation.cpp" />
@@ -178,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
+    <ClInclude Include="Group.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />

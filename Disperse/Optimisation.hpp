@@ -3,6 +3,7 @@
 #define DISPERSE_OPTIMISATION
 
 #include "Security.hpp"
+#include "Group.hpp"
 #include "Matrices.hpp"
 
 #pragma warning(push, 0)

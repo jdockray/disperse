@@ -147,13 +147,13 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 }
 
 std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
-	const SparseMatrix& covarianceMatrix)
+	const ListOfGroups& groups, const SparseMatrix& covarianceMatrix)
 {
 	std::vector<c_float> vectorL;
 	vectorL.push_back(1);
 	std::vector<c_float> vectorU;
 	vectorU.push_back(1);
-	SparseMatrix matrixA(securities.numberOfConstrainedSecurities() + 1, securities.size());
+	SparseMatrix matrixA(securities.numberOfConstrainedSecurities() + groups.numberOfConstrainedGroups() + 1, securities.size());
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.getSecurity(i);
