@@ -146,28 +146,22 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 	return std::vector<double>(osqpWorkspace.solution->x, osqpWorkspace.solution->x + osqpWorkspace.data->n);
 }
 
-std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
-	const ListOfGroups& groups, const SparseMatrix& covarianceMatrix)
+std::vector<double> solve(const SparseMatrix& covarianceMatrix, const std::vector<Constraint>& constraints)
 {
+	const size_t numberOfSecurities = covarianceMatrix.columnCount();
 	std::vector<c_float> vectorL;
-	vectorL.push_back(1);
 	std::vector<c_float> vectorU;
-	vectorU.push_back(1);
-	SparseMatrix matrixA(securities.numberOfConstrainedSecurities() + groups.numberOfConstrainedGroups() + 1, securities.size());
-	for (unsigned int i = 0; i < securities.size(); ++i)
+	SparseMatrix matrixA(constraints.size(), numberOfSecurities);
+	for (const Constraint constraint : constraints)
 	{
-		const Security& security = securities.getSecurity(i);
-		matrixA.setValue(0, i, 1); // For sum of all allocations
-		if (security.hasConstrainedProportion())
+		for (size_t i = 0; i < numberOfSecurities; ++i)
 		{
-			//vectorQ.push_back(security.getExpectedReturn());
-			vectorL.push_back(security.getMinProportion());
-			vectorU.push_back(security.getMaxProportion());
-			matrixA.setValue(i + 1, i, 1);
+			matrixA.setValue(vectorL.size(), i, constraint.getWeight(i));
 		}
+		vectorL.push_back(constraint.getMinimum());
+		vectorU.push_back(constraint.getMaximum());
 	}
 
 	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(covarianceMatrix, matrixA, vectorL, vectorU);
-
 	return callOSQPSolve(*osqpWorkspace);
 }

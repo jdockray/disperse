@@ -1,6 +1,7 @@
 
 #include "Output.hpp"
 #include "Security.hpp"
+#include "ExpectedException.hpp"
 
 #pragma warning(push, 0)
 #include <fstream>

@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine.cpp" />
+    <ClCompile Include="Constraint.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
+    <ClInclude Include="Constraint.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />
     <ClInclude Include="Input.hpp" />

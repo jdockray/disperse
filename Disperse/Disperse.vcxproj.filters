@@ -45,6 +45,9 @@
     <ClCompile Include="Group.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Constraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpectedException.hpp">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Group.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Constraint.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

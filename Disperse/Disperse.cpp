@@ -4,6 +4,7 @@
 #include "ExpectedException.hpp"
 #include "CmdLine.hpp"
 #include "Optimisation.hpp"
+#include "Constraint.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -78,7 +79,22 @@ void run(const std::string& inputFileName,
 		multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix),
 		riskDiagonalMatrix
 	);
-	std::vector<double> solution = solve(minimumReturn, securities, covarianceMatrix);
+	std::vector<Constraint> constraints;
+	constraints.push_back(Constraint(1, 1, 1)); // Weights must add to 1
+	Constraint mimimumReturnConstraint(INFINITY, minimumReturn, securities.size());
+	for (size_t i = 0; i < securities.size(); ++i)
+	{
+		Security& security = securities.getSecurity(i);
+		mimimumReturnConstraint.setWeight(i, security.getExpectedReturn());
+		if (security.hasConstrainedProportion())
+		{
+			Constraint proportionConstraint(security.getMaxProportion(), security.getMinProportion(), securities.size());
+			proportionConstraint.setWeight(i, 1);
+			constraints.push_back(proportionConstraint);
+		}
+	}
+	constraints.push_back(mimimumReturnConstraint);
+	std::vector<double> solution = solve(covarianceMatrix, constraints);
 	outputAllocations(securities.getIdentifiers(), solution, securityOutputFileName);
 	if (factorOutputFileName.has_value())
 	{

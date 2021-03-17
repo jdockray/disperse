@@ -5,6 +5,7 @@
 #include "Security.hpp"
 #include "Group.hpp"
 #include "Matrices.hpp"
+#include "Constraint.hpp"
 
 #pragma warning(push, 0)
 #include "dlib\matrix.h"
@@ -58,7 +59,6 @@ struct WorkspaceDeleter
 	void operator()(OSQPWorkspace* pOsqpWorkspace);
 };
 
-std::vector<double> solve(double minimumReturn, const ListOfSecurities& securities,
-	const SparseMatrix& covarianceMatrix);
+std::vector<double> solve(const SparseMatrix& covarianceMatrix, const std::vector<Constraint>& constraints);
 
 #endif // #ifndef DISPERSE_OPTIMISATION

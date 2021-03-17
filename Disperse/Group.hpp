@@ -5,6 +5,7 @@
 #pragma warning(push, 0)
 #include <string>
 #include <vector>
+#include <map>
 #pragma warning(pop)
 
 class Group
