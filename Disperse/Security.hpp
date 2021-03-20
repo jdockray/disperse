@@ -27,6 +27,7 @@ public:
 	double getMinProportion() const;
 	bool hasConstrainedProportion() const;
 	void setGroup(const std::string group);
+	bool hasGroup() const;
 	std::string getGroup() const;
 
 	void addExposure(std::string factorName, double exposure);
@@ -37,7 +38,7 @@ private:
 	double risk;
 	double maxProportion;
 	double minProportion;
-	std::string group;
+	std::optional<std::string> group;
 	std::map<std::string, double> exposures;
 	double remainingExposure;
 

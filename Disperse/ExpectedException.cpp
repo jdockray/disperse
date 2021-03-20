@@ -114,6 +114,11 @@ SecurityNotRecognisedException::SecurityNotRecognisedException(std::string secur
 {
 }
 
+GroupNotRecognisedException::GroupNotRecognisedException(std::string groupName)
+	: ExpectedException("The group '" + groupName + "' was not recognised.", ReturnCode::GROUP_NOT_RECOGNISED_EXCEPTION)
+{
+}
+
 ExposureSumExceedsOneException::
 ExposureSumExceedsOneException()
 	: ExpectedException("The sum of the exposures exceeds 1.", ReturnCode::EXPOSURE_SUM_EXCEEDS_ONE)

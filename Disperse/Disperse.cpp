@@ -5,6 +5,7 @@
 #include "CmdLine.hpp"
 #include "Optimisation.hpp"
 #include "Constraint.hpp"
+#include "Group.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -50,12 +51,83 @@ std::vector<double> getSecurityRisks(const ListOfSecurities& securities)
 	return risks;
 }
 
-void run(const std::string& inputFileName,
+SparseMatrix generateCovarianceMatrix(const ListOfSecurities& securities, const SparseMatrix& factorMatrix)
+{
+	SparseMatrix correlationMatrix = multiply(factorMatrix, getTranspose(factorMatrix));
+	SparseMatrix upperTriagonalCorrelationMatrix = upperTriangularMatrix(correlationMatrix);
+	for (int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
+	{
+		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
+	}
+	SparseMatrix riskDiagonalMatrix = vectorToDiagonalMatrix(getSecurityRisks(securities));
+	return multiply(
+		multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix),
+		riskDiagonalMatrix
+	);
+}
+
+Constraint getMinimumReturnConstraint(const double minimumReturn, const ListOfSecurities& securities)
+{
+	Constraint mimimumReturnConstraint(INFINITY, minimumReturn, securities.size());
+	for (size_t i = 0; i < securities.size(); ++i)
+	{
+		mimimumReturnConstraint.setWeight(i, securities.getSecurity(i).getExpectedReturn());
+	}
+	return mimimumReturnConstraint;
+}
+
+void addSecurityConstraints(const ListOfSecurities& securities, std::vector<Constraint>& constraints)
+{
+	for (size_t i = 0; i < securities.size(); ++i)
+	{
+		const Security& security = securities.getSecurity(i);
+		if (security.hasConstrainedProportion())
+		{
+			Constraint proportionConstraint(security.getMaxProportion(), security.getMinProportion(), securities.size());
+			proportionConstraint.setWeight(i, 1);
+			constraints.push_back(proportionConstraint);
+		}
+	}
+}
+
+void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& securities, std::vector<Constraint>& constraints)
+{
+	for (Group group : groups.getGroups())
+	{
+		if (group.hasConstrainedProportion())
+		{
+			Constraint groupConstraint(group.getMaxProportion(), group.getMinProportion(), securities.size());
+			for (size_t i = 0; i < securities.size(); ++i)
+			{
+				const Security& security = securities.getSecurity(i);
+				if (security.hasGroup() && security.getGroup() == group.identifier)
+				{
+					groupConstraint.setWeight(i, 1);
+				}
+			}
+			constraints.push_back(groupConstraint);
+		}
+	}
+}
+
+std::vector<Constraint> getConstraints(double minimumReturn, const ListOfSecurities& securities, const ListOfGroups& groups)
+{
+	std::vector<Constraint> constraints;
+	constraints.push_back(Constraint(1, 1, 1)); // Weights must add to 1
+	constraints.push_back(getMinimumReturnConstraint(minimumReturn, securities));
+	addSecurityConstraints(securities, constraints);
+	addGroupConstraints(groups, securities, constraints);
+	return constraints;
+}
+
+void run(
+	const std::string& inputFileName,
 	const std::string& securityOutputFileName,
 	const double minimumReturn,
 	const std::optional<std::string> factorGridFileName = std::optional<std::string>(),
 	const std::optional<std::string> factorListFileName = std::optional<std::string>(),
-	const std::optional<std::string> factorOutputFileName = std::optional<std::string>())
+	const std::optional<std::string> factorOutputFileName = std::optional<std::string>(),
+	const std::optional<std::string> groupInputFileName = std::optional<std::string>())
 {
 	ListOfSecurities securities = inputSecurities(inputFileName);
 	if (factorGridFileName.has_value())
@@ -66,40 +138,23 @@ void run(const std::string& inputFileName,
 	{
 		inputFactorList(factorListFileName.value(), securities);
 	}
-	std::vector<std::string> factors = securities.getAllFactors();
-	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factors);
-	SparseMatrix correlationMatrix = multiply(factorMatrix, getTranspose(factorMatrix));
-	SparseMatrix upperTriagonalCorrelationMatrix = upperTriangularMatrix(correlationMatrix);
-	for (int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
-	{
-		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
-	}
-	SparseMatrix riskDiagonalMatrix = vectorToDiagonalMatrix(getSecurityRisks(securities));
-	const SparseMatrix covarianceMatrix = multiply(
-		multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix),
-		riskDiagonalMatrix
+	ListOfGroups groups = groupInputFileName.has_value()
+		? inputGroups(groupInputFileName.value())
+		: ListOfGroups();
+
+	const std::vector<std::string> factorNames = securities.getAllFactors();
+	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factorNames);
+
+	std::vector<double> solution = solve(
+		generateCovarianceMatrix(securities, factorMatrix),
+		getConstraints(minimumReturn, securities, groups)
 	);
-	std::vector<Constraint> constraints;
-	constraints.push_back(Constraint(1, 1, 1)); // Weights must add to 1
-	Constraint mimimumReturnConstraint(INFINITY, minimumReturn, securities.size());
-	for (size_t i = 0; i < securities.size(); ++i)
-	{
-		Security& security = securities.getSecurity(i);
-		mimimumReturnConstraint.setWeight(i, security.getExpectedReturn());
-		if (security.hasConstrainedProportion())
-		{
-			Constraint proportionConstraint(security.getMaxProportion(), security.getMinProportion(), securities.size());
-			proportionConstraint.setWeight(i, 1);
-			constraints.push_back(proportionConstraint);
-		}
-	}
-	constraints.push_back(mimimumReturnConstraint);
-	std::vector<double> solution = solve(covarianceMatrix, constraints);
+
 	outputAllocations(securities.getIdentifiers(), solution, securityOutputFileName);
 	if (factorOutputFileName.has_value())
 	{
 		outputFactorExposures(
-			factors,
+			factorNames,
 			horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix)),
 			factorOutputFileName.value()
 		);

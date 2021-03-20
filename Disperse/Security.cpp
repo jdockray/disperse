@@ -78,9 +78,14 @@ void Security::setGroup(const std::string group)
 	this->group = group;
 }
 
+bool Security::hasGroup() const
+{
+	return group.has_value();
+}
+
 std::string Security::getGroup() const
 {
-	return group;
+	return group.value();
 }
 
 void Security::addExposure(std::string factorName, double exposure)

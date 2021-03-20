@@ -3,7 +3,7 @@
 #include "ExpectedException.hpp"
 
 Group::Group(const std::string& identifier)
-	: identifier(identifier)
+	: identifier(identifier), maxProportion(1), minProportion(0)
 {
 }
 
@@ -69,7 +69,7 @@ const Group& ListOfGroups::getGroup(const std::string& groupName) const
 	}
 	catch (std::out_of_range)
 	{
-		throw SecurityNotRecognisedException(groupName);
+		throw GroupNotRecognisedException(groupName);
 	}
 }
 
@@ -81,7 +81,7 @@ Group& ListOfGroups::getGroup(const std::string& groupName)
 	}
 	catch (std::out_of_range)
 	{
-		throw SecurityNotRecognisedException(groupName);
+		throw GroupNotRecognisedException(groupName);
 	}
 }
 

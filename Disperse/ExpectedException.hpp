@@ -31,7 +31,8 @@ enum class ReturnCode
 	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
 	SECURITY_NOT_RECOGNISED_EXCEPTION = 14,
 	EXPOSURE_SUM_EXCEEDS_ONE = 15,
-	INVALID_GROUP_LIMITS = 16
+	INVALID_GROUP_LIMITS = 16,
+	GROUP_NOT_RECOGNISED_EXCEPTION = 17
 };
 
 struct ExpectedException : public std::exception
@@ -169,6 +170,12 @@ class InvalidGroupLimitsException : public ExpectedException
 {
 public:
 	InvalidGroupLimitsException(const std::string& message);
+};
+
+class GroupNotRecognisedException : public ExpectedException
+{
+public:
+	GroupNotRecognisedException(std::string groupName);
 };
 
 class UnexpectedException : public ExpectedException

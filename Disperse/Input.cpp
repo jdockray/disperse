@@ -1,7 +1,6 @@
 
 #include "Input.hpp"
 #include "Matrices.hpp"
-#include "Security.hpp"
 
 #pragma warning(push, 0)
 #include "../../csvstream/csvstream.h"
@@ -103,3 +102,36 @@ void inputFactorList(const std::string& inputFileName, ListOfSecurities& securit
 	}
 }
 
+ListOfGroups inputGroups(const std::string& groupInputFileName)
+{
+	ListOfGroups groups;
+
+	const std::string group_column_name = "Group";
+	const std::string group_minimum_column_name = "Minimum";
+	const std::string group_maximum_column_name = "Maximum";
+
+	csvstream inputStream(groupInputFileName);
+	ensureColumnPresent(inputStream, group_column_name, groupInputFileName);
+
+	std::map<std::string, std::string> row;
+	while (inputStream >> row)
+	{
+		const std::string groupIdentifier = row.at(group_column_name);
+		if (groupIdentifier.length() == 0) continue;
+
+		Group group(groupIdentifier);
+		std::map<std::string, std::string>::iterator minimumColumn = row.find(group_minimum_column_name);
+		if (minimumColumn != row.end())
+		{
+			group.setMinProportion(std::stod(minimumColumn->second));
+		}
+		std::map<std::string, std::string>::iterator maximumColumn = row.find(group_maximum_column_name);
+		if (maximumColumn != row.end())
+		{
+			group.setMaxProportion(std::stod(maximumColumn->second));
+		}
+		
+		groups.addGroup(group);
+	}
+	return groups;
+}
