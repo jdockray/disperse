@@ -130,7 +130,7 @@ void outputFactorExposures(
 }
 
 void outputGroupProportions(
-	const ListOfGroups& groups,
+	const std::vector<std::string> groupNames,
 	const std::map<std::string, double>& groupProportions,
 	const std::string& groupOutputFileName
 )
@@ -139,9 +139,9 @@ void outputGroupProportions(
 	csvOutput.writeElement("Group");
 	csvOutput.writeElement("Proportion");
 	csvOutput.finishLine();
-	for (int i = 0; i < groups.size(); ++i)
+	for (int i = 0; i < groupNames.size(); ++i)
 	{
-		const std::string groupName = groups.getGroup(i).identifier;
+		const std::string groupName = groupNames.at(i);
 		csvOutput.writeElement(groupName);
 		std::map<std::string, double>::const_iterator groupEntry = groupProportions.find(groupName);
 		csvOutput.writeElement(groupEntry == groupProportions.end() ? 0.0 : groupEntry->second);
