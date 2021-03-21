@@ -25,6 +25,7 @@ private:
 };
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);
+SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c);
 SparseMatrix getTranspose(const SparseMatrix& matrix);
 SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix);
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values);
@@ -32,5 +33,6 @@ SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values);
 SparseMatrix vectorToVerticalMatrix(const std::vector<double>& values);
 std::vector<double> horizontalMatrixToVector(const SparseMatrix& matrix);
 std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix);
+double getSingleValue(const SparseMatrix& matrix);
 
 #endif // #ifndef DISPERSE_MATRICS

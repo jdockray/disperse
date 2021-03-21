@@ -87,6 +87,11 @@ SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b)
 	return product;
 }
 
+SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c)
+{
+	return multiply(multiply(a, b), c);
+}
+
 SparseMatrix getTranspose(const SparseMatrix& matrix)
 {
 	SparseMatrix transpose(matrix.columnCount(), matrix.rowCount());
@@ -174,4 +179,11 @@ std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix)
 	return values;
 }
 
-
+double getSingleValue(const SparseMatrix& matrix)
+{
+	if (matrix.rowCount() != 1 || matrix.columnCount() != 1)
+	{
+		throw UnexpectedException();
+	}
+	return matrix.getValue(0, 0);
+}
