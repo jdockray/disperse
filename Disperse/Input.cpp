@@ -60,7 +60,7 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 		{
 			security.setGroup(groupColumn->second);
 		}
-		securities.addSecurity(security);
+		securities.add(security);
 	}
 	securities.verifyProportions();
 	return securities;
@@ -74,7 +74,7 @@ void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securit
 	while (inputStream >> row)
 	{
 		if (row.at(security_column_name).length() == 0) continue;
-		Security& security = securities.getSecurity(row.at(security_column_name));
+		Security& security = securities.get(row.at(security_column_name));
 		for (std::string column : inputStream.getheader())
 		{
 			if (column == security_column_name) continue;
@@ -97,7 +97,7 @@ void inputFactorList(const std::string& inputFileName, ListOfSecurities& securit
 	{
 		const std::string securityIdentifier = row.at(security_column_name);
 		if (securityIdentifier.length() == 0) continue;
-		securities.getSecurity(securityIdentifier).addExposure(
+		securities.get(securityIdentifier).addExposure(
 			row.at(factor_column_name), std::stod(row.at(factor_weighting_column_name)));
 	}
 }
@@ -131,7 +131,7 @@ ListOfGroups inputGroups(const std::string& groupInputFileName)
 			group.setMaxProportion(std::stod(maximumColumn->second));
 		}
 		
-		groups.addGroup(group);
+		groups.add(group);
 	}
 	return groups;
 }

@@ -29,10 +29,9 @@ enum class ReturnCode
 	INSUFFICIENT_MEMORY_EXCEPTION = 11,
 	OPTIMISATION_INTERRUPTED = 12,
 	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
-	SECURITY_NOT_RECOGNISED_EXCEPTION = 14,
-	EXPOSURE_SUM_EXCEEDS_ONE = 15,
-	INVALID_GROUP_LIMITS = 16,
-	GROUP_NOT_RECOGNISED_EXCEPTION = 17
+	IDENTIFIER_NOT_RECOGNISED_EXCEPTION = 14,
+	INVALID_LIMIT_SUM = 15,
+	INVALID_LIMITS = 16
 };
 
 struct ExpectedException : public std::exception
@@ -154,28 +153,22 @@ public:
 	RequiredColumnNotFoundException(std::string columnName, std::string fileName);
 };
 
-class SecurityNotRecognisedException : public ExpectedException
+class IdentifierNotRecognisedException : public ExpectedException
 {
 public:
-	SecurityNotRecognisedException(std::string securityName);
+	IdentifierNotRecognisedException(std::string identifier);
 };
 
-class ExposureSumExceedsOneException : public ExpectedException
+class InvalidLimitSumException : public ExpectedException
 {
 public:
-	ExposureSumExceedsOneException();
+	InvalidLimitSumException();
 };
 
-class InvalidGroupLimitsException : public ExpectedException
+class InvalidLimitsException : public ExpectedException
 {
 public:
-	InvalidGroupLimitsException(const std::string& message);
-};
-
-class GroupNotRecognisedException : public ExpectedException
-{
-public:
-	GroupNotRecognisedException(std::string groupName);
+	InvalidLimitsException(const std::string& message);
 };
 
 class UnexpectedException : public ExpectedException

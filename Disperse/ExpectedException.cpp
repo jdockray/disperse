@@ -41,11 +41,6 @@ InvalidHoldingLimitsException::InvalidHoldingLimitsException(const std::string& 
 {
 }
 
-InvalidGroupLimitsException::InvalidGroupLimitsException(const std::string& message)
-	: ExpectedException(message, ReturnCode::INVALID_GROUP_LIMITS)
-{
-}
-
 IOException::IOException()
 	: ExpectedException("A file input/output error occurred.", ReturnCode::IO_EXCEPTION)
 {
@@ -109,21 +104,21 @@ RequiredColumnNotFoundException::RequiredColumnNotFoundException(std::string col
 {
 }
 
-SecurityNotRecognisedException::SecurityNotRecognisedException(std::string securityName)
-	: ExpectedException("The security '" + securityName + "' was not recognised.", ReturnCode::SECURITY_NOT_RECOGNISED_EXCEPTION)
+IdentifierNotRecognisedException::IdentifierNotRecognisedException(std::string identifier)
+	: ExpectedException("The identifier '" + identifier + "' was not recognised.", ReturnCode::IDENTIFIER_NOT_RECOGNISED_EXCEPTION)
 {
 }
 
-GroupNotRecognisedException::GroupNotRecognisedException(std::string groupName)
-	: ExpectedException("The group '" + groupName + "' was not recognised.", ReturnCode::GROUP_NOT_RECOGNISED_EXCEPTION)
+InvalidLimitSumException::InvalidLimitSumException()
+	: ExpectedException("The sum of the maxima limits is invalid.", ReturnCode::INVALID_LIMIT_SUM)
 {
 }
 
-ExposureSumExceedsOneException::
-ExposureSumExceedsOneException()
-	: ExpectedException("The sum of the exposures exceeds 1.", ReturnCode::EXPOSURE_SUM_EXCEEDS_ONE)
+InvalidLimitsException::InvalidLimitsException(const std::string& message)
+	: ExpectedException(message, ReturnCode::INVALID_LIMITS)
 {
 }
+
 
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)

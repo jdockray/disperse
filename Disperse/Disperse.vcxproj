@@ -170,11 +170,11 @@
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
-    <ClCompile Include="Group.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Matrices.cpp" />
     <ClCompile Include="Optimisation.cpp" />
     <ClCompile Include="Output.cpp" />
+    <ClCompile Include="QuickMapping.cpp" />
     <ClCompile Include="Security.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +186,7 @@
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Output.hpp" />
+    <ClInclude Include="QuickMapping.hpp" />
     <ClInclude Include="Security.hpp" />
   </ItemGroup>
   <ItemGroup>

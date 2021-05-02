@@ -2,30 +2,20 @@
 #ifndef DISPERSE_SECURITY
 #define DISPERSE_SECURITY
 
+#include "QuickMapping.hpp"
 #pragma warning(push, 0)
-#include <string>
-#include <list>
-#include <map>
-#include <vector>
 #include <optional>
 #pragma warning(pop)
 
-class Security
+class Security : public IdentifiedObject, public ObjectWithMaxAndMinProportions
 {
 public:
 	Security(const std::string& identifier);
 	
-	const std::string identifier;
-
 	void setExpectedReturn(const double expectedReturn);
 	double getExpectedReturn() const;
 	void setRisk(const double risk);
 	double getRisk() const;
-	void setMaxProportion(const double maxProportion);
-	double getMaxProportion() const;
-	void setMinProportion(const double minProportion);
-	double getMinProportion() const;
-	bool hasConstrainedProportion() const;
 	void setGroup(const std::string group);
 	bool hasGroup() const;
 	std::string getGroup() const;
@@ -36,33 +26,20 @@ public:
 private:
 	double expectedReturn;
 	double risk;
-	double maxProportion;
-	double minProportion;
 	std::optional<std::string> group;
 	std::map<std::string, double> exposures;
 	double remainingExposure;
-
-	void verifyMaxGreaterThanMin();
 };
 
-class ListOfSecurities
+class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security>
 {
 public:
-	void addSecurity(const Security& security);
-	const std::vector<Security>& getSecurities() const;
-	const Security& getSecurity(const std::string& securityName) const;
-	Security& getSecurity(const std::string& securityName);
-	const Security& getSecurity(const unsigned int securityNumber) const;
-	Security& getSecurity(const unsigned int securityNumber);
-	std::vector<std::string> getIdentifiers() const;
-	std::vector<std::string> getAllFactors() const;
-	size_t size() const;
-	size_t numberOfConstrainedSecurities() const;
-	void verifyProportions() const;
+	const std::vector<Security>& getObjects() const
+	{
+		return IdentifiedObjectList<Security>::getObjects();
+	}
 
-private:
-	std::vector<Security> m_securities;
-	std::map<std::string, size_t> m_securityLookup;
+	std::vector<std::string> getAllFactors() const;
 };
 
 #endif // #ifndef DISPERSE_SECURITY

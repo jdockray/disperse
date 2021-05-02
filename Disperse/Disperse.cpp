@@ -32,7 +32,7 @@ SparseMatrix generateFactorMatrix(const ListOfSecurities& securities, const std:
 	SparseMatrix factorMatrix(securities.size(), factorMapping.size());
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
-		const Security& security = securities.getSecurity(i);
+		const Security& security = securities.at(i);
 		for (auto exposure : security.getExposures())
 		{
 			factorMatrix.setValue(i, factorMapping.at(exposure.first), exposure.second);
@@ -44,7 +44,7 @@ SparseMatrix generateFactorMatrix(const ListOfSecurities& securities, const std:
 std::vector<double> getSecurityRisks(const ListOfSecurities& securities)
 {
 	std::vector<double> risks;
-	for (const auto& security : securities.getSecurities())
+	for (const Security& security : securities.getObjects())
 	{
 		risks.push_back(security.getRisk());
 	}
@@ -68,7 +68,7 @@ Constraint getMinimumReturnConstraint(const double minimumReturn, const ListOfSe
 	Constraint mimimumReturnConstraint(INFINITY, minimumReturn, securities.size());
 	for (size_t i = 0; i < securities.size(); ++i)
 	{
-		mimimumReturnConstraint.setWeight(i, securities.getSecurity(i).getExpectedReturn());
+		mimimumReturnConstraint.setWeight(i, securities.at(i).getExpectedReturn());
 	}
 	return mimimumReturnConstraint;
 }
@@ -77,7 +77,7 @@ void addSecurityConstraints(const ListOfSecurities& securities, std::vector<Cons
 {
 	for (size_t i = 0; i < securities.size(); ++i)
 	{
-		const Security& security = securities.getSecurity(i);
+		const Security& security = securities.at(i);
 		if (security.hasConstrainedProportion())
 		{
 			Constraint proportionConstraint(security.getMaxProportion(), security.getMinProportion(), securities.size());
@@ -89,15 +89,15 @@ void addSecurityConstraints(const ListOfSecurities& securities, std::vector<Cons
 
 void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& securities, std::vector<Constraint>& constraints)
 {
-	for (Group group : groups.getGroups())
+	for (Group group : groups.getObjects())
 	{
 		if (group.hasConstrainedProportion())
 		{
 			Constraint groupConstraint(group.getMaxProportion(), group.getMinProportion(), securities.size());
 			for (size_t i = 0; i < securities.size(); ++i)
 			{
-				const Security& security = securities.getSecurity(i);
-				if (security.hasGroup() && security.getGroup() == group.identifier)
+				const Security& security = securities.at(i);
+				if (security.hasGroup() && security.getGroup() == group.getIdentifier())
 				{
 					groupConstraint.setWeight(i, 1);
 				}
@@ -122,7 +122,7 @@ std::map<std::string, double> getGroupProportions(const ListOfSecurities& securi
 	std::map<std::string, double> proportions;
 	for (size_t i = 0; i < securities.size(); ++i)
 	{
-		const Security& security = securities.getSecurity(i);
+		const Security& security = securities.at(i);
 		if (security.hasGroup())
 		{
 			std::map<std::string, double>::iterator groupEntry
