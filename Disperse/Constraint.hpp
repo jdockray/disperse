@@ -10,7 +10,9 @@ class Constraint
 {
 public:
 	Constraint(const double maximum, const double minimum, const size_t numberOfSecurities);
-	Constraint(const double maximum, const double minimum, const size_t numberOfSecurities, const double defaultWeight);
+	Constraint(const double maximum, const double minimum, const size_t numberOfSecurities, const double fillWithWeight);
+	Constraint(const double maximum, const double minimum, const size_t numberOfSecurities,
+		const size_t securityWithNonZeroWeight, const double weightOfSecurity);
 	Constraint(const double maximum, const double minimum, const std::vector<double>& securityMultipliers);
 	void setMaximum(const double maximum);
 	double getMaximum() const;

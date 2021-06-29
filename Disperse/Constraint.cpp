@@ -7,10 +7,17 @@ Constraint::Constraint(const double maximum, const double minimum, const size_t 
 {
 }
 
-Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities, const double defaultWeight)
+Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities, const double fillWithWeight)
 	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)
 {
-	std::fill(securityWeights.begin(), securityWeights.end(), defaultWeight);
+	std::fill(securityWeights.begin(), securityWeights.end(), fillWithWeight);
+}
+
+Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities,
+	const size_t securityWithNonZeroWeight, const double weightOfSecurity)
+	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)
+{
+	securityWeights.at(securityWithNonZeroWeight) = weightOfSecurity;
 }
 
 Constraint::Constraint(const double maximum, const double minimum, const std::vector<double>& securityMultipliers)
