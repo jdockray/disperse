@@ -100,7 +100,7 @@ public:
 	static void verifyListLengthSufficient(const std::list<T> list, const unsigned int minimumLength,
 		const std::string message)
 	{
-		verifyTrue(list.size() <= minimumLength, message);
+		verifyTrue(list.size() >= minimumLength, message);
 	}
 
 	MissingArgumentException(std::string message);
