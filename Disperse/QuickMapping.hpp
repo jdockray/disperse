@@ -78,12 +78,12 @@ public:
 		}
 	}
 
-	const T& at(const unsigned int index) const
+	const T& at(const size_t index) const
 	{
 		return m_objects.at(index);
 	}
 
-	T& at(const unsigned int index)
+	T& at(const size_t index)
 	{
 		return m_objects.at(index);
 	}
