@@ -48,8 +48,8 @@ public:
 	void add(const T& element)
 	{
 		m_identifiers.push_back(element.getIdentifier());
-		m_objects.push_back(element);
 		m_lookup[element.getIdentifier()] = m_objects.size();
+		m_objects.push_back(element);
 	}
 
 	const T& get(const std::string& identifier) const
