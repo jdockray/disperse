@@ -9,7 +9,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-m FactorGrid.csv -l FactorList.csv -f FactorOutput.csv Securities.csv SecurityOutput.csv 0.5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-g Groups.csv -m FactorGrid.csv -l FactorList.csv -f FactorOutput.csv -p GroupOutput.csv Securities.csv SecurityOutput.csv 0.5</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>C:\Users\Joel\Documents\Documents\2022\Documents\March\DisperseTest</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
