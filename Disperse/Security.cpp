@@ -2,9 +2,11 @@
 #include "Security.hpp"
 #include "ExpectedException.hpp"
 
+const std::string DEFAULT_GROUP_NAME = "(Default)";
+
 Security::Security(const std::string& identifier)
 	:	IdentifiedObject(identifier), expectedReturn(1),
-		risk(1), remainingExposure(1)
+		risk(1), group(DEFAULT_GROUP_NAME), remainingExposure(1)
 {
 }
 
@@ -34,14 +36,9 @@ void Security::setGroup(const std::string group)
 	this->group = group;
 }
 
-bool Security::hasGroup() const
-{
-	return group.has_value();
-}
-
 std::string Security::getGroup() const
 {
-	return group.value();
+	return group;
 }
 
 void Security::addExposure(std::string factorName, double exposure)
@@ -77,4 +74,17 @@ std::vector<std::string> ListOfSecurities::getAllFactors() const
 		}
 	}
 	return factors;
+}
+
+std::set<std::string> ListOfSecurities::getAllGroups() const
+{
+	std::set<std::string> groups;
+	for (const Security security : this->getObjects())
+	{
+		if (groups.find(security.getGroup()) == groups.end())
+		{
+			groups.insert(security.getGroup());
+		}
+	}
+	return groups;
 }

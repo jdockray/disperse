@@ -96,7 +96,7 @@ void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& sec
 			for (size_t i = 0; i < securities.size(); ++i)
 			{
 				const Security& security = securities.at(i);
-				if (security.hasGroup() && security.getGroup() == group.getIdentifier())
+				if (security.getGroup() == group.getIdentifier())
 				{
 					groupConstraint.setWeight(i, 1);
 				}
@@ -122,21 +122,30 @@ std::map<std::string, double> getGroupProportions(const ListOfSecurities& securi
 	for (size_t i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
-		if (security.hasGroup())
+		std::map<std::string, double>::iterator groupEntry
+			= proportions.find(security.getGroup());
+		if (groupEntry == proportions.end())
 		{
-			std::map<std::string, double>::iterator groupEntry
-				= proportions.find(security.getGroup());
-			if (groupEntry == proportions.end())
-			{
-				proportions[security.getGroup()] = solution.at(i);
-			}
-			else
-			{
-				groupEntry->second += solution.at(i);
-			}
+			proportions[security.getGroup()] = solution.at(i);
+		}
+		else
+		{
+			groupEntry->second += solution.at(i);
 		}
 	}
 	return proportions;
+}
+
+void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& requiredGroupNames)
+{
+	for (const std::string groupName : requiredGroupNames)
+	{
+		const std::vector<std::string>& currentGroupNames = groups.getIdentifiers();
+		if (std::find(currentGroupNames.begin(), currentGroupNames.end(), groupName) == currentGroupNames.end())
+		{
+			groups.add(groupName);
+		}
+	}
 }
 
 void run(
@@ -158,9 +167,11 @@ void run(
 	{
 		inputFactorList(factorListFileName.value(), securities);
 	}
+
 	ListOfGroups groups = groupInputFileName.has_value()
 		? inputGroups(groupInputFileName.value())
 		: ListOfGroups();
+	ensureAllGroupsPresent(groups, securities.getAllGroups());
 
 	const std::vector<std::string> factorNames = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factorNames);

@@ -17,7 +17,6 @@ public:
 	void setRisk(const double risk);
 	double getRisk() const;
 	void setGroup(const std::string group);
-	bool hasGroup() const;
 	std::string getGroup() const;
 
 	void addExposure(std::string factorName, double exposure);
@@ -26,7 +25,7 @@ public:
 private:
 	double expectedReturn;
 	double risk;
-	std::optional<std::string> group;
+	std::string group;
 	std::map<std::string, double> exposures;
 	double remainingExposure;
 };
@@ -40,6 +39,7 @@ public:
 	}
 
 	std::vector<std::string> getAllFactors() const;
+	std::set<std::string> getAllGroups() const;
 };
 
 #endif // #ifndef DISPERSE_SECURITY
