@@ -109,7 +109,7 @@ void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& sec
 std::vector<Constraint> getConstraints(double minimumReturn, const ListOfSecurities& securities, const ListOfGroups& groups)
 {
 	std::vector<Constraint> constraints;
-	constraints.push_back(Constraint(1, 1, 1)); // Weights must add to 1
+	constraints.push_back(Constraint(1, 1, securities.size(), 1)); // Weights must add to 1
 	constraints.push_back(getMinimumReturnConstraint(minimumReturn, securities));
 	addSecurityConstraints(securities, constraints);
 	addGroupConstraints(groups, securities, constraints);
