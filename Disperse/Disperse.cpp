@@ -78,11 +78,8 @@ void addSecurityConstraints(const ListOfSecurities& securities, std::vector<Cons
 	for (size_t i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
-		if (security.hasConstrainedProportion())
-		{
-			constraints.push_back(Constraint(security.getMaxProportion(),
-				security.getMinProportion(), securities.size(), i, 1));
-		}
+		constraints.push_back(Constraint(security.getMaxProportion(),
+			security.getMinProportion(), securities.size(), i, 1));
 	}
 }
 
