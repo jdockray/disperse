@@ -5,9 +5,11 @@
 const std::string DEFAULT_GROUP_NAME = "(Default)";
 
 Security::Security(const std::string& identifier)
-	:	IdentifiedObject(identifier), expectedReturn(1),
-		risk(1), group(DEFAULT_GROUP_NAME), remainingExposure(1)
+	:	IdentifiedObject(identifier), expectedReturn(1), risk(1), group(DEFAULT_GROUP_NAME),
+		residualFactorName(RESIDUAL_FACTOR_NAME_PREFIX + identifier + RESIDUAL_FACTOR_NAME_POSTFIX),
+		remainingExposure(1)
 {
+	exposures[residualFactorName] = remainingExposure;
 }
 
 void Security::setExpectedReturn(const double expectedReturn)
@@ -51,6 +53,14 @@ void Security::addExposure(std::string factorName, double exposure)
 		throw InvalidLimitSumException();
 	}
 	exposures[factorName] = exposure;
+	if (remainingExposure == 0)
+	{
+		exposures.erase(residualFactorName);
+	}
+	else
+	{
+		exposures[residualFactorName] = remainingExposure;
+	}
 }
 
 const std::map<std::string, double>& Security::getExposures() const

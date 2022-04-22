@@ -23,11 +23,15 @@ public:
 	const std::map<std::string, double>& getExposures() const;
 
 private:
+	inline static const std::string RESIDUAL_FACTOR_NAME_PREFIX = "";
+	inline static const std::string RESIDUAL_FACTOR_NAME_POSTFIX = " residual";
+	const std::string residualFactorName;
+
 	double expectedReturn;
 	double risk;
 	std::string group;
 	std::map<std::string, double> exposures;
-	double remainingExposure;
+	double remainingExposure; // To avoid repeated lookup
 };
 
 class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security>
