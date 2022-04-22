@@ -58,6 +58,11 @@ const std::map<std::string, double>& Security::getExposures() const
 	return exposures;
 }
 
+const std::vector<Security>& ListOfSecurities::getObjects() const
+{
+	return IdentifiedObjectList<Security>::getObjects();
+}
+
 std::vector<std::string> ListOfSecurities::getAllFactors() const
 {
 	std::vector<std::string> factors;

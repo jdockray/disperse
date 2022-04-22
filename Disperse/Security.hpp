@@ -33,11 +33,7 @@ private:
 class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security>
 {
 public:
-	const std::vector<Security>& getObjects() const
-	{
-		return IdentifiedObjectList<Security>::getObjects();
-	}
-
+	const std::vector<Security>& getObjects() const;
 	std::vector<std::string> getAllFactors() const;
 	std::set<std::string> getAllGroups() const;
 };
