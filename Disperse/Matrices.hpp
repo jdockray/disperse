@@ -6,6 +6,7 @@
 
 #pragma warning(push, 0)
 #include <map>
+#include <functional>
 #pragma warning(pop)
 
 class SparseMatrix
@@ -27,6 +28,7 @@ private:
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c);
 SparseMatrix getTranspose(const SparseMatrix& matrix);
+void applyToAllNonZeroElements(SparseMatrix& matrix, std::function<double(double)> function);
 SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix);
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values);
 SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values);

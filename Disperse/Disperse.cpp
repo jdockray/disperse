@@ -51,16 +51,27 @@ std::vector<double> getSecurityRisks(const ListOfSecurities& securities)
 	return risks;
 }
 
-SparseMatrix generateCovarianceMatrix(const ListOfSecurities& securities, const SparseMatrix& factorMatrix)
+SparseMatrix generateUpperTriagonalCorrelationMatrix(const SparseMatrix& factorMatrix)
 {
-	SparseMatrix correlationMatrix = multiply(factorMatrix, getTranspose(factorMatrix));
+	SparseMatrix sqRootedFactorMatrix(factorMatrix);
+	applyToAllNonZeroElements(sqRootedFactorMatrix, [](double(x)) { return sqrt(x); });
+	SparseMatrix correlationMatrix = multiply(sqRootedFactorMatrix, getTranspose(sqRootedFactorMatrix));
 	SparseMatrix upperTriagonalCorrelationMatrix = upperTriangularMatrix(correlationMatrix);
 	for (int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
 	{
 		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
 	}
-	SparseMatrix riskDiagonalMatrix = vectorToDiagonalMatrix(getSecurityRisks(securities));
-	return multiply(riskDiagonalMatrix, upperTriagonalCorrelationMatrix, riskDiagonalMatrix);
+	return upperTriagonalCorrelationMatrix;
+}
+
+SparseMatrix generateUpperTriagonalCovarianceMatrix(const std::vector<double>& securitiesStdDevs, const SparseMatrix& factorMatrix)
+{
+	SparseMatrix riskDiagonalMatrix = vectorToDiagonalMatrix(securitiesStdDevs);
+	return multiply(
+		riskDiagonalMatrix,
+		generateUpperTriagonalCorrelationMatrix(factorMatrix),
+		riskDiagonalMatrix
+	);
 }
 
 Constraint getMinimumReturnConstraint(const double minimumReturn, const ListOfSecurities& securities)
@@ -172,7 +183,8 @@ void run(
 
 	const std::vector<std::string> factorNames = securities.getAllFactors();
 	const SparseMatrix factorMatrix = generateFactorMatrix(securities, factorNames);
-	SparseMatrix covarianceMatrix = generateCovarianceMatrix(securities, factorMatrix);
+	SparseMatrix covarianceMatrix = generateUpperTriagonalCovarianceMatrix(
+		getSecurityRisks(securities), factorMatrix);
 
 	std::vector<double> solution = solve(
 		covarianceMatrix,

@@ -105,6 +105,17 @@ SparseMatrix getTranspose(const SparseMatrix& matrix)
 	return transpose;
 }
 
+void applyToAllNonZeroElements(SparseMatrix& matrix, std::function<double(double)> function)
+{
+	for (const std::pair<size_t, std::map<size_t, double> >& row : matrix.matrixElements())
+	{
+		for (const std::pair<size_t, double>& element : row.second)
+		{
+			matrix.setValue(row.first, element.first, function(element.second));
+		}
+	}
+}
+
 SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix)
 {
 	SparseMatrix upperTriangular(matrix.rowCount(), matrix.columnCount());
