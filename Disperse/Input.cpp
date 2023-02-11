@@ -4,7 +4,7 @@
 
 #pragma warning(push, 0)
 #include "../../csvstream/csvstream.h"
-#include "dlib\matrix.h"
+#include "dlib\dlib\matrix.h"
 #pragma warning(pop)
 
 const std::string security_column_name = "Security";
