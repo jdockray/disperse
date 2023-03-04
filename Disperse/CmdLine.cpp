@@ -1,11 +1,8 @@
 #include "CmdLine.hpp"
 
-CmdLineArgs::CmdLineArgs(const unsigned int argc, const char* const argv[])
+CmdLineArgs::CmdLineArgs(const std::vector<std::string>& args)
+	: arguments(args.begin(), args.end())
 {
-	for (unsigned int i = 1; i < argc; i++) // Program name excluded
-	{
-		arguments.push_back(std::string(argv[i]));
-	}
 }
 
 bool CmdLineArgs::getNoArgumentOption(const char option)

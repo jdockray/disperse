@@ -169,6 +169,7 @@
     <ClCompile Include="Constraint.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
+    <ClCompile Include="Optimise.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Matrices.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />
+    <ClInclude Include="Optimise.hpp" />
     <ClInclude Include="Output.hpp" />
     <ClInclude Include="QuickMapping.hpp" />
     <ClInclude Include="Security.hpp" />

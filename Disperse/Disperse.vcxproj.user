@@ -14,7 +14,7 @@
     <LocalDebuggerWorkingDirectory>C:\Users\Joel\Documents\Documents\2022\Documents\April\Optimisation Corrected</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-g "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorGrid.csv" -l "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorList.csv" -f "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorOutput.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\Securities.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\SecurityOutput.csv" 0.5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>optimise -g "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorGrid.csv" -l "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorList.csv" -f "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorOutput.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\Securities.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\SecurityOutput.csv" 0.5</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

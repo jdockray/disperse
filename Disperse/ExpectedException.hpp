@@ -31,7 +31,8 @@ enum class ReturnCode
 	REQUIRED_COLUMN_NOT_FOUND_EXCEPTION = 13,
 	IDENTIFIER_NOT_RECOGNISED_EXCEPTION = 14,
 	INVALID_LIMIT_SUM = 15,
-	INVALID_LIMITS = 16
+	INVALID_LIMITS = 16,
+	INVALID_COMMAND = 17
 };
 
 struct ExpectedException : public std::exception
@@ -169,6 +170,12 @@ class InvalidLimitsException : public ExpectedException
 {
 public:
 	InvalidLimitsException(const std::string& message);
+};
+
+class InvalidCommandException : public ExpectedException
+{
+public:
+	InvalidCommandException(const std::string& inputFileName);
 };
 
 class UnexpectedException : public ExpectedException

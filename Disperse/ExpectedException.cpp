@@ -119,6 +119,10 @@ InvalidLimitsException::InvalidLimitsException(const std::string& message)
 {
 }
 
+InvalidCommandException::InvalidCommandException(const std::string& message)
+	: ExpectedException(message, ReturnCode::INVALID_COMMAND)
+{
+}
 
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)

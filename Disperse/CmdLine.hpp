@@ -6,12 +6,13 @@
 #include <list>
 #include <optional>
 #include <string>
+#include <vector>
 #pragma warning(pop)
 
 class CmdLineArgs
 {
 public:
-	CmdLineArgs(const unsigned int argc, const char* const argv[]);
+	CmdLineArgs(const std::vector<std::string>& args);
 	bool getNoArgumentOption(const char option);
 	std::optional<std::string> getSingleArgumentOption(const char option);
 	std::list<std::string> getMultipleArgumentOption(const char option, const unsigned int length);
