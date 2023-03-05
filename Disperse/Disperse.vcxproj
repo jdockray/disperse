@@ -167,8 +167,10 @@
   <ItemGroup>
     <ClCompile Include="CmdLine.cpp" />
     <ClCompile Include="Constraint.cpp" />
+    <ClCompile Include="CsvStreamSource.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
+    <ClCompile Include="Elements.cpp" />
     <ClCompile Include="Optimise.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -181,6 +183,7 @@
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="Constraint.hpp" />
+    <ClInclude Include="Elements.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />
     <ClInclude Include="Input.hpp" />

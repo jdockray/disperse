@@ -1,6 +1,7 @@
 
 #include "Input.hpp"
 #include "Matrices.hpp"
+#include "Elements.hpp"
 
 #pragma warning(push, 0)
 #include "../../csvstream/csvstream.h"
@@ -66,39 +67,21 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 	return securities;
 }
 
+// Row = Security, Column = Factor
 void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securities)
 {
-	csvstream inputStream(inputFileName);
-	ensureColumnPresent(inputStream, security_column_name, inputFileName);
-	std::map<std::string, std::string> row;
-	while (inputStream >> row)
+	for (const Element& element : getElementsFromGridFile(inputFileName))
 	{
-		if (row.at(security_column_name).length() == 0) continue;
-		Security& security = securities.get(row.at(security_column_name));
-		for (std::string column : inputStream.getheader())
-		{
-			if (column == security_column_name) continue;
-			security.addExposure(column, std::stod(row.at(column)));
-		}
+		securities.get(element.getRow()).addExposure(element.getColumn(), element.getValue());
 	}
 }
 
+// First column / Row = Security, SecondColumn / Column = Factor
 void inputFactorList(const std::string& inputFileName, ListOfSecurities& securities)
 {
-	const std::string factor_column_name = "Factor";
-	const std::string factor_weighting_column_name = "Weighting";
-
-	csvstream inputStream(inputFileName);
-	ensureColumnPresent(inputStream, security_column_name, inputFileName);
-	ensureColumnPresent(inputStream, factor_column_name, inputFileName);
-	ensureColumnPresent(inputStream, factor_weighting_column_name, inputFileName);
-	std::map<std::string, std::string> row;
-	while (inputStream >> row)
+	for (const Element& element : getElementsFromListFile(inputFileName))
 	{
-		const std::string securityIdentifier = row.at(security_column_name);
-		if (securityIdentifier.length() == 0) continue;
-		securities.get(securityIdentifier).addExposure(
-			row.at(factor_column_name), std::stod(row.at(factor_weighting_column_name)));
+		securities.get(element.getRow()).addExposure(element.getColumn(), element.getValue());
 	}
 }
 
