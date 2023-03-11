@@ -70,18 +70,18 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 // Row = Security, Column = Factor
 void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securities)
 {
-	for (const Element& element : getElementsFromGridFile(inputFileName))
+	for (const std::pair<Element, double>& element : getElementsFromGridFile(inputFileName))
 	{
-		securities.get(element.getRow()).addExposure(element.getColumn(), element.getValue());
+		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
 	}
 }
 
 // First column / Row = Security, SecondColumn / Column = Factor
 void inputFactorList(const std::string& inputFileName, ListOfSecurities& securities)
 {
-	for (const Element& element : getElementsFromListFile(inputFileName))
+	for (const std::pair<Element, double>& element : getElementsFromListFile(inputFileName))
 	{
-		securities.get(element.getRow()).addExposure(element.getColumn(), element.getValue());
+		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
 	}
 }
 

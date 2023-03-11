@@ -10,19 +10,17 @@
 class Element
 {
 public:
-	Element(const std::string& row, const std::string& column, double value);
+	Element(const std::string& row, const std::string& column);
 	std::string getRow() const;
 	std::string getColumn() const;
-	double getValue() const;
 
 private:
 	const std::string row;
 	const std::string column;
-	const double value;
 };
 
-std::vector<Element> getElementsFromGridFile(const std::string& inputFileName);
+std::vector<std::pair<Element, double>> getElementsFromGridFile(const std::string& inputFileName);
 
-std::vector<Element> getElementsFromListFile(const std::string& inputFileName);
+std::vector<std::pair<Element, double>> getElementsFromListFile(const std::string& inputFileName);
 
 #endif // DISPERSE_ELEMENTS
