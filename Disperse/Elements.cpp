@@ -1,6 +1,8 @@
 
 #include "Elements.hpp"
+#include "CSVOutput.hpp"
 #include "ExpectedException.hpp"
+#include "Matrices.hpp"
 
 #pragma warning(push, 0)
 #include "../../csvstream/csvstream.h"
@@ -68,4 +70,48 @@ std::vector<std::pair<Element, double>> getElementsFromListFile(const std::strin
 		);
 	}
 	return elements;
+}
+
+void putElementsInListFile(const std::string& outputFileName, const std::vector<std::pair<Element, double>>& elements)
+{
+	CSVOutput csvOutput(outputFileName);
+	csvOutput.writeElement("Row");
+	csvOutput.writeElement("Column");
+	csvOutput.writeElement("Value");
+	csvOutput.finishLine();
+	for (const std::pair<Element, double>& elementPair : elements)
+	{
+		if (elementPair.second != 0)
+		{
+			csvOutput.writeElement(elementPair.first.getRow());
+			csvOutput.writeElement(elementPair.first.getColumn());
+			csvOutput.writeElement(elementPair.second);
+			csvOutput.finishLine();
+		}
+	}
+}
+
+void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
+							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
+{
+	if (rowHeadings.size() != matrix.rowCount() || columnHeadings.size() != matrix.columnCount())
+	{
+		throw UnexpectedException();
+	}
+	CSVOutput csvOutput(outputFileName);
+	csvOutput.writeElement("");
+	for (const std::string& column : columnHeadings)
+	{
+		csvOutput.writeElement(column);
+	}
+	csvOutput.finishLine();
+	for (int rowIndex = 0; rowIndex < matrix.rowCount(); ++rowIndex)
+	{
+		csvOutput.writeElement(rowHeadings.at(rowIndex));
+		for (int columnIndex = 0; columnIndex < matrix.columnCount(); ++columnIndex)
+		{
+			csvOutput.writeElement(matrix.getValue(rowIndex, columnIndex));
+		}
+		csvOutput.finishLine();
+	}
 }
