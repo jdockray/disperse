@@ -91,6 +91,29 @@ void putElementsInListFile(const std::string& outputFileName, const std::vector<
 	}
 }
 
+std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vector<std::string>& rowHeadings,
+	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
+{
+	std::vector<std::pair<Element, double>> elements;
+	for (const std::pair<size_t, std::map<size_t, double>>& row : matrix.matrixElements())
+	{
+		for (const std::pair<size_t, double>& element : row.second)
+		{
+			elements.push_back(std::pair<Element, double>(
+				Element(rowHeadings.at(row.first), columnHeadings.at(element.first)),
+				element.second
+			));
+		}
+	}
+	return elements;
+}
+
+void putElementsInListFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
+	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
+{
+	putElementsInListFile(outputFileName, elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
+}
+
 void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
 							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
@@ -114,4 +137,44 @@ void putElementsInGridFile(const std::string& outputFileName, const std::vector<
 		}
 		csvOutput.finishLine();
 	}
+}
+
+SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
+	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings)
+{
+	if (placeForRowHeadings.size() != 0 || placeForColumnHeadings.size() != 0)
+	{
+		throw UnexpectedException();
+	}
+	std::map<std::string, size_t> rowLookup;
+	std::map<std::string, size_t> columnLookup;
+	for (const std::pair<Element, double>& elementPair : elements)
+	{
+		std::map<std::string, size_t>::const_iterator rowHeading = rowLookup.find(elementPair.first.getRow());
+		if (rowHeading == rowLookup.end())
+		{
+			rowLookup[elementPair.first.getRow()] = placeForRowHeadings.size();
+			placeForRowHeadings.push_back(elementPair.first.getRow());
+		}
+		std::map<std::string, size_t>::const_iterator columnHeading = columnLookup.find(elementPair.first.getColumn());
+		if (columnHeading == columnLookup.end())
+		{
+			columnLookup[elementPair.first.getColumn()] = placeForColumnHeadings.size();
+			placeForColumnHeadings.push_back(elementPair.first.getColumn());
+		}
+	}
+	SparseMatrix matrix(placeForRowHeadings.size(), placeForColumnHeadings.size());
+	for (const std::pair<Element, double>& elementPair : elements)
+	{
+		matrix.setValue(rowLookup[elementPair.first.getRow()], columnLookup[elementPair.first.getColumn()], elementPair.second);
+	}
+	return matrix;
+}
+
+void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::pair<Element, double>>& elements)
+{
+	std::vector<std::string> rowHeadings;
+	std::vector<std::string> columnHeadings;
+	putElementsInGridFile(outputFileName, rowHeadings, columnHeadings,
+		elementMatrixFromVector(elements, rowHeadings, columnHeadings));
 }
