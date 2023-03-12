@@ -87,6 +87,18 @@ SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b)
 	return product;
 }
 
+SparseMatrix multiply(const SparseMatrix& a, double scalar)
+{
+	SparseMatrix result(a.rowCount(), a.columnCount());
+	for (auto const& row : a.matrixElements())
+	{
+		for (auto const& cell : row.second)
+		{
+			result.setValue(row.first, cell.first, cell.second * scalar);
+		}
+	}
+}
+
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c)
 {
 	return multiply(multiply(a, b), c);

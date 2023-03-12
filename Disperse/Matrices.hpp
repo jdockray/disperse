@@ -26,6 +26,7 @@ private:
 };
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);
+SparseMatrix multiply(const SparseMatrix& a, double scalar);
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c);
 SparseMatrix getTranspose(const SparseMatrix& matrix);
 void applyToAllNonZeroElements(SparseMatrix& matrix, std::function<double(double)> function);
