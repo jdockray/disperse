@@ -32,7 +32,8 @@ enum class ReturnCode
 	IDENTIFIER_NOT_RECOGNISED_EXCEPTION = 14,
 	INVALID_LIMIT_SUM = 15,
 	INVALID_LIMITS = 16,
-	INVALID_COMMAND = 17
+	INVALID_COMMAND = 17,
+	EXCESSIVE_SIZE = 18
 };
 
 struct ExpectedException : public std::exception
@@ -176,6 +177,12 @@ class InvalidCommandException : public ExpectedException
 {
 public:
 	InvalidCommandException(const std::string& inputFileName);
+};
+
+class ExcessiveSizeException : public ExpectedException
+{
+public:
+	ExcessiveSizeException(const std::string& message);
 };
 
 class UnexpectedException : public ExpectedException

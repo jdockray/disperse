@@ -124,6 +124,11 @@ InvalidCommandException::InvalidCommandException(const std::string& message)
 {
 }
 
+ExcessiveSizeException::ExcessiveSizeException(const std::string& message)
+	: ExpectedException(message, ReturnCode::EXCESSIVE_SIZE)
+{
+}
+
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)
 {

@@ -9,6 +9,8 @@
 #include <map>
 #pragma warning(pop)
 
+const size_t MATRIX_SIZE_LIMIT = 25000000;
+
 Element::Element(const std::string& row, const std::string& column)
 	: row(row), column(column)
 {
@@ -117,9 +119,16 @@ void putElementsInListFile(const std::string& outputFileName, const std::vector<
 void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
 							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
-	if (rowHeadings.size() != matrix.rowCount() || columnHeadings.size() != matrix.columnCount())
+	const size_t numberOfRows = matrix.rowCount();
+	const size_t numberOfColumns = matrix.columnCount();
+	if (rowHeadings.size() != numberOfRows || columnHeadings.size() != numberOfColumns)
 	{
 		throw UnexpectedException();
+	}
+	if (numberOfRows * numberOfColumns > MATRIX_SIZE_LIMIT)
+	{
+		throw ExcessiveSizeException("Matrix of " + std::to_string(numberOfRows) + " x "
+										+ std::to_string(numberOfColumns) + " exceeds size limit.");
 	}
 	CSVOutput csvOutput(outputFileName);
 	csvOutput.writeElement("");
