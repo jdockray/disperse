@@ -129,6 +129,11 @@ ExcessiveSizeException::ExcessiveSizeException(const std::string& message)
 {
 }
 
+IncompatibleInputArgumentsException::IncompatibleInputArgumentsException(const std::string& message)
+	: ExpectedException(message, ReturnCode::INCOMPATIBLE_INPUT_ARGUMENTS)
+{
+}
+
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)
 {

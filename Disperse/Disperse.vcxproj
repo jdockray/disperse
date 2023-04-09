@@ -166,7 +166,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine.cpp" />
+    <ClCompile Include="CombineFactors.cpp" />
     <ClCompile Include="Constraint.cpp" />
+    <ClCompile Include="CSVOutput.cpp" />
     <ClCompile Include="CsvStreamSource.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="DlibSource.cpp" />
@@ -182,7 +184,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine.hpp" />
+    <ClInclude Include="CombineFactors.hpp" />
     <ClInclude Include="Constraint.hpp" />
+    <ClInclude Include="CSVOutput.hpp" />
     <ClInclude Include="Elements.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />

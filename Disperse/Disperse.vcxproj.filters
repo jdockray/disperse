@@ -57,6 +57,12 @@
     <ClCompile Include="CsvStreamSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CombineFactors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CSVOutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpectedException.hpp">
@@ -93,6 +99,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Elements.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CombineFactors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CSVOutput.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

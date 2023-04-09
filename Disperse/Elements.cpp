@@ -2,7 +2,6 @@
 #include "Elements.hpp"
 #include "CSVOutput.hpp"
 #include "ExpectedException.hpp"
-#include "Matrices.hpp"
 
 #pragma warning(push, 0)
 #include "../../csvstream/csvstream.h"
@@ -151,10 +150,6 @@ void putElementsInGridFile(const std::string& outputFileName, const std::vector<
 SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
 	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings)
 {
-	if (placeForRowHeadings.size() != 0 || placeForColumnHeadings.size() != 0)
-	{
-		throw UnexpectedException();
-	}
 	std::map<std::string, size_t> rowLookup;
 	std::map<std::string, size_t> columnLookup;
 	for (const std::pair<Element, double>& elementPair : elements)

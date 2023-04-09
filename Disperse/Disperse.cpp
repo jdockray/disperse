@@ -1,6 +1,7 @@
 
-#include "ExpectedException.hpp"
+#include "CombineFactors.hpp"
 #include "Optimise.hpp"
+#include "ExpectedException.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -22,6 +23,14 @@ void runCommand(const int argc, const char* const argv[])
 	if (command == "optimise")
 	{
 		runOptimiseCommand(commandArgs);
+	}
+	else if (command == "combine")
+	{
+		runCombineCommand(commandArgs);
+	}
+	else if (command == "multiply")
+	{
+		runMultiplyCommand(commandArgs);
 	}
 	else
 	{

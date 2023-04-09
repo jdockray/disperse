@@ -33,7 +33,8 @@ enum class ReturnCode
 	INVALID_LIMIT_SUM = 15,
 	INVALID_LIMITS = 16,
 	INVALID_COMMAND = 17,
-	EXCESSIVE_SIZE = 18
+	EXCESSIVE_SIZE = 18,
+	INCOMPATIBLE_INPUT_ARGUMENTS = 19
 };
 
 struct ExpectedException : public std::exception
@@ -183,6 +184,12 @@ class ExcessiveSizeException : public ExpectedException
 {
 public:
 	ExcessiveSizeException(const std::string& message);
+};
+
+class IncompatibleInputArgumentsException : public ExpectedException
+{
+public:
+	IncompatibleInputArgumentsException(const std::string& message);
 };
 
 class UnexpectedException : public ExpectedException
