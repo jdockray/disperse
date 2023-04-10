@@ -12,17 +12,20 @@
 class SparseMatrix
 {
 public:
-	SparseMatrix(const size_t rows, const size_t columns);
-	double getValue(const size_t row, const size_t column) const;
-	void setValue(const size_t row, const size_t column, const double value);
-	size_t columnCount() const;
-	size_t rowCount() const;
-	const std::map<size_t, std::map<size_t, double> >& matrixElements() const;
+	SparseMatrix(const std::size_t rows, const std::size_t columns);
+	double getValue(const std::size_t row, const std::size_t column) const;
+	void setValue(const std::size_t row, const std::size_t column, const double value);
+	std::size_t columnCount() const;
+	std::size_t rowCount() const;
+	const std::map<std::size_t, std::map<std::size_t, double> >& matrixElements() const;
 
 private:
-	const size_t numberOfColumns;
-	const size_t numberOfRows;
-	std::map<size_t, std::map<size_t, double> > elements;
+	SparseMatrix(const std::size_t rows, const std::size_t columns,
+		const std::map<std::size_t, std::map<std::size_t, double> >& elements);
+
+	std::size_t numberOfColumns;
+	std::size_t numberOfRows;
+	std::map<std::size_t, std::map<std::size_t, double> > elements;
 };
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);

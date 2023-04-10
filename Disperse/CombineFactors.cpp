@@ -8,6 +8,7 @@
 #include <map>
 #include <sstream>
 #include <memory>
+#include <cassert>
 #pragma warning(pop)
 
 std::vector<std::string> getDelimitedElements(const std::string& delimitedList)
@@ -25,7 +26,7 @@ std::vector<std::string> getDelimitedElements(const std::string& delimitedList)
 
 void addElements(const std::vector<std::pair<Element, double>>& newElements, std::map<Element, double>& elementsToAddTo)
 {
-	for (std::pair<Element, double> element : newElements)
+	for (const std::pair<Element, double>& element : newElements)
 	{
 		elementsToAddTo[element.first] += element.second;
 	}
@@ -90,22 +91,42 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 	}
 	std::vector<std::string> columnHeadings;
 	std::vector<std::string> rowHeadings;
-	std::vector<std::string> joiningAxisHeadings;
-	std::unique_ptr<SparseMatrix> outputMatrix;
+	std::vector<std::string> joiningAxisHeadings1;
+	std::vector<std::string> joiningAxisHeadings2;
+	std::optional<SparseMatrix> outputMatrix;
 	switch (elementSets.size())
 	{
 	case 1:
-		outputMatrix = reset(elementMatrixFromVector(elementSets.at(0), rowHeadings, columnHeadings));
-
+		outputMatrix = elementMatrixFromVector(elementSets.at(0), rowHeadings, columnHeadings);
 	case 2:
-
-
+		outputMatrix = multiply(elementMatrixFromVector(elementSets.at(0), rowHeadings, joiningAxisHeadings1),
+			elementMatrixFromVector(elementSets.at(1), joiningAxisHeadings2, columnHeadings));
+		assert(joiningAxisHeadings1.size() == joiningAxisHeadings2.size());
+		for (std::size_t i = 0; i < joiningAxisHeadings1.size(); ++i)
+		{
+			if (joiningAxisHeadings1[i] != joiningAxisHeadings2[i])
+			{
+				throw IncompatibleInputArgumentsException("Row heading " + std::to_string(i) + " (" + joiningAxisHeadings1[i]
+					+") of matrix A does not match column heading " + std::to_string(i) + " (" + joiningAxisHeadings2[i]
+					+ ") of matrix B.");
+			}
+		}
 	default:
 		throw IncompatibleInputArgumentsException("There must be either 1 or 2 input files.");
 	}
-
-	// To be continued
-	// Matrix code should be modified to return unique pointers to matrices or move assignment and construction
-	// operators should be implemented. Use the rule of five.
+	const std::optional<std::string> scalarToMultiplyBy = cmdLineArgs.getSingleArgumentOption('s');
+	if (scalarToMultiplyBy.has_value())
+	{
+		outputMatrix = multiply(outputMatrix.value(), std::stoi(scalarToMultiplyBy.value()));
+	}
+	const std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
+	if (gridOutputFileName)
+	{
+		putElementsInGridFile(gridOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());
+	}
+	const std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
+	if (listOutputFileName)
+	{
+		putElementsInListFile(listOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());
+	}
 }
-

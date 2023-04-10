@@ -2,19 +2,19 @@
 #include "Constraint.hpp"
 #include "ExpectedException.hpp"
 
-Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities)
+Constraint::Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities)
 	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)
 {
 }
 
-Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities, const double fillWithWeight)
+Constraint::Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities, const double fillWithWeight)
 	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)
 {
 	std::fill(securityWeights.begin(), securityWeights.end(), fillWithWeight);
 }
 
-Constraint::Constraint(const double maximum, const double minimum, const size_t numberOfSecurities,
-	const size_t securityWithNonZeroWeight, const double weightOfSecurity)
+Constraint::Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities,
+	const std::size_t securityWithNonZeroWeight, const double weightOfSecurity)
 	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)
 {
 	securityWeights.at(securityWithNonZeroWeight) = weightOfSecurity;
@@ -45,7 +45,7 @@ double Constraint::getMinimum() const
 	return minimum;
 }
 
-void Constraint::setWeight(const size_t securityIndex, const double multiplier)
+void Constraint::setWeight(const std::size_t securityIndex, const double multiplier)
 {
 	if (securityIndex > securityWeights.size())
 	{
@@ -59,7 +59,7 @@ void Constraint::setAllWeights(const double weight)
 	std::fill(securityWeights.begin(), securityWeights.end(), weight);
 }
 
-double Constraint::getWeight(const size_t securityIndex) const
+double Constraint::getWeight(const std::size_t securityIndex) const
 {
 	return securityWeights.at(securityIndex);
 }

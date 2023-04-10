@@ -78,12 +78,12 @@ public:
 		}
 	}
 
-	const T& at(const size_t index) const
+	const T& at(const std::size_t index) const
 	{
 		return m_objects.at(index);
 	}
 
-	T& at(const size_t index)
+	T& at(const std::size_t index)
 	{
 		return m_objects.at(index);
 	}
@@ -98,7 +98,7 @@ public:
 		return m_objects;
 	}
 
-	size_t size() const
+	std::size_t size() const
 	{
 		return m_objects.size();
 	}
@@ -106,16 +106,16 @@ public:
 private:
 	std::vector<std::string> m_identifiers;
 	std::vector<T> m_objects;
-	std::map<std::string, size_t> m_lookup;
+	std::map<std::string, std::size_t> m_lookup;
 };
 
 template <class T>
 class ListOfObjectsWithMaxAndMinProportions
 {
 public:
-	size_t numberOfConstrainedGroups() const
+	std::size_t numberOfConstrainedGroups() const
 	{
-		size_t count = 0;
+		std::size_t count = 0;
 		for (const T& object : getObjects())
 		{
 			if (object.hasConstrainedProportion()) ++count;

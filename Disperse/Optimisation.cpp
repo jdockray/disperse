@@ -148,13 +148,13 @@ std::vector<double> callOSQPSolve(OSQPWorkspace& osqpWorkspace)
 
 std::vector<double> solve(const SparseMatrix& covarianceMatrix, const std::vector<Constraint>& constraints)
 {
-	const size_t numberOfSecurities = covarianceMatrix.columnCount();
+	const std::size_t numberOfSecurities = covarianceMatrix.columnCount();
 	std::vector<c_float> vectorL;
 	std::vector<c_float> vectorU;
 	SparseMatrix matrixA(constraints.size(), numberOfSecurities);
 	for (const Constraint constraint : constraints)
 	{
-		for (size_t i = 0; i < numberOfSecurities; ++i)
+		for (std::size_t i = 0; i < numberOfSecurities; ++i)
 		{
 			matrixA.setValue(vectorL.size(), i, constraint.getWeight(i));
 		}

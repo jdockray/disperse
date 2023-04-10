@@ -8,7 +8,7 @@
 #include <map>
 #pragma warning(pop)
 
-const size_t MATRIX_SIZE_LIMIT = 25000000;
+const std::size_t MATRIX_SIZE_LIMIT = 25000000;
 
 Element::Element(const std::string& row, const std::string& column)
 	: row(row), column(column)
@@ -25,7 +25,48 @@ std::string Element::getRow() const
 	return row;
 }
 
-void ensureColumnInExpectedPlace(const std::vector<std::string> header, size_t index,
+bool Element::operator==(const Element& other) const
+{
+	return row == other.row && column == other.column;
+}
+
+bool Element::operator!=(const Element& other) const
+{
+	return !operator==(other);
+}
+
+bool Element::operator<(const Element& other) const
+{
+	if (row < other.row)
+	{
+		return true;
+	}
+	else if (row == other.row)
+	{
+		return column < other.column;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Element::operator<=(const Element& other) const
+{
+	return operator<(other) || operator==(other);
+}
+
+bool Element::operator>=(const Element& other) const
+{
+	return !operator<(other);
+}
+
+bool Element::operator>(const Element& other) const
+{
+	return !operator<=(other);
+}
+
+void ensureColumnInExpectedPlace(const std::vector<std::string> header, std::size_t index,
 									const std::string& columnTitle,	const std::string& fileName)
 {
 	if (header.size() >= index || header.at(index) != columnTitle)
@@ -96,9 +137,9 @@ std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vecto
 	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
 	std::vector<std::pair<Element, double>> elements;
-	for (const std::pair<size_t, std::map<size_t, double>>& row : matrix.matrixElements())
+	for (const std::pair<std::size_t, std::map<std::size_t, double>>& row : matrix.matrixElements())
 	{
-		for (const std::pair<size_t, double>& element : row.second)
+		for (const std::pair<std::size_t, double>& element : row.second)
 		{
 			elements.push_back(std::pair<Element, double>(
 				Element(rowHeadings.at(row.first), columnHeadings.at(element.first)),
@@ -118,8 +159,8 @@ void putElementsInListFile(const std::string& outputFileName, const std::vector<
 void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
 							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
-	const size_t numberOfRows = matrix.rowCount();
-	const size_t numberOfColumns = matrix.columnCount();
+	const std::size_t numberOfRows = matrix.rowCount();
+	const std::size_t numberOfColumns = matrix.columnCount();
 	if (rowHeadings.size() != numberOfRows || columnHeadings.size() != numberOfColumns)
 	{
 		throw UnexpectedException();
@@ -150,17 +191,17 @@ void putElementsInGridFile(const std::string& outputFileName, const std::vector<
 SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
 	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings)
 {
-	std::map<std::string, size_t> rowLookup;
-	std::map<std::string, size_t> columnLookup;
+	std::map<std::string, std::size_t> rowLookup;
+	std::map<std::string, std::size_t> columnLookup;
 	for (const std::pair<Element, double>& elementPair : elements)
 	{
-		std::map<std::string, size_t>::const_iterator rowHeading = rowLookup.find(elementPair.first.getRow());
+		std::map<std::string, std::size_t>::const_iterator rowHeading = rowLookup.find(elementPair.first.getRow());
 		if (rowHeading == rowLookup.end())
 		{
 			rowLookup[elementPair.first.getRow()] = placeForRowHeadings.size();
 			placeForRowHeadings.push_back(elementPair.first.getRow());
 		}
-		std::map<std::string, size_t>::const_iterator columnHeading = columnLookup.find(elementPair.first.getColumn());
+		std::map<std::string, std::size_t>::const_iterator columnHeading = columnLookup.find(elementPair.first.getColumn());
 		if (columnHeading == columnLookup.end())
 		{
 			columnLookup[elementPair.first.getColumn()] = placeForColumnHeadings.size();

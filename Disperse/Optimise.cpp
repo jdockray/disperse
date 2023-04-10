@@ -12,10 +12,10 @@
 #pragma warning(pop)
 
 template <class T, class U>
-std::map<U, size_t> generateMappingFromIterable(const T& items)
+std::map<U, std::size_t> generateMappingFromIterable(const T& items)
 {
-	size_t index = 0;
-	std::map<U, size_t> mapping;
+	std::size_t index = 0;
+	std::map<U, std::size_t> mapping;
 	for (const auto& item : items)
 	{
 		mapping[item] = index++;
@@ -25,7 +25,7 @@ std::map<U, size_t> generateMappingFromIterable(const T& items)
 
 SparseMatrix generateFactorMatrix(const ListOfSecurities& securities, const std::vector<std::string> factors)
 {
-	std::map<std::string, size_t> factorMapping = generateMappingFromIterable<std::vector<std::string>, std::string>(factors);
+	std::map<std::string, std::size_t> factorMapping = generateMappingFromIterable<std::vector<std::string>, std::string>(factors);
 	SparseMatrix factorMatrix(securities.size(), factorMapping.size());
 	for (unsigned int i = 0; i < securities.size(); ++i)
 	{
@@ -74,7 +74,7 @@ SparseMatrix generateUpperTriagonalCovarianceMatrix(const std::vector<double>& s
 Constraint getMinimumReturnConstraint(const double minimumReturn, const ListOfSecurities& securities)
 {
 	Constraint mimimumReturnConstraint(INFINITY, minimumReturn, securities.size());
-	for (size_t i = 0; i < securities.size(); ++i)
+	for (std::size_t i = 0; i < securities.size(); ++i)
 	{
 		mimimumReturnConstraint.setWeight(i, securities.at(i).getExpectedReturn());
 	}
@@ -83,7 +83,7 @@ Constraint getMinimumReturnConstraint(const double minimumReturn, const ListOfSe
 
 void addSecurityConstraints(const ListOfSecurities& securities, std::vector<Constraint>& constraints)
 {
-	for (size_t i = 0; i < securities.size(); ++i)
+	for (std::size_t i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
 		constraints.push_back(Constraint(security.getMaxProportion(),
@@ -98,7 +98,7 @@ void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& sec
 		if (group.hasConstrainedProportion())
 		{
 			Constraint groupConstraint(group.getMaxProportion(), group.getMinProportion(), securities.size());
-			for (size_t i = 0; i < securities.size(); ++i)
+			for (std::size_t i = 0; i < securities.size(); ++i)
 			{
 				const Security& security = securities.at(i);
 				if (security.getGroup() == group.getIdentifier())
@@ -124,7 +124,7 @@ std::vector<Constraint> getConstraints(double minimumReturn, const ListOfSecurit
 std::map<std::string, double> getGroupProportions(const ListOfSecurities& securities, const std::vector<double>& solution)
 {
 	std::map<std::string, double> proportions;
-	for (size_t i = 0; i < securities.size(); ++i)
+	for (std::size_t i = 0; i < securities.size(); ++i)
 	{
 		const Security& security = securities.at(i);
 		std::map<std::string, double>::iterator groupEntry

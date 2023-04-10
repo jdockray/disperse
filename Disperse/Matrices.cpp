@@ -1,12 +1,12 @@
 
 #include "Matrices.hpp"
 
-SparseMatrix::SparseMatrix(const size_t rows, const size_t columns)
+SparseMatrix::SparseMatrix(const std::size_t rows, const std::size_t columns)
 	: numberOfRows(rows), numberOfColumns(columns)
 {
 }
 
-double SparseMatrix::getValue(const size_t row, const size_t column) const
+double SparseMatrix::getValue(const std::size_t row, const std::size_t column) const
 {
 	auto matrixRow = elements.find(row);
 	if (matrixRow == elements.end())
@@ -17,7 +17,7 @@ double SparseMatrix::getValue(const size_t row, const size_t column) const
 	return (cell == matrixRow->second.end()) ? 0 : cell->second;
 }
 
-void SparseMatrix::setValue(const size_t row, const size_t column, const double value)
+void SparseMatrix::setValue(const std::size_t row, const std::size_t column, const double value)
 {
 	if (column >= numberOfColumns || row >= numberOfRows)
 	{
@@ -40,24 +40,24 @@ void SparseMatrix::setValue(const size_t row, const size_t column, const double 
 	{
 		if (matrixRow == elements.end())
 		{
-			elements[row] = std::map<size_t, double>();
+			elements[row] = std::map<std::size_t, double>();
 			matrixRow = elements.find(row);
 		}
 		matrixRow->second[column] = value;
 	}
 }
 
-size_t SparseMatrix::columnCount() const
+std::size_t SparseMatrix::columnCount() const
 {
 	return numberOfColumns;
 }
 
-size_t SparseMatrix::rowCount() const
+std::size_t SparseMatrix::rowCount() const
 {
 	return numberOfRows;
 }
 
-const std::map<size_t, std::map<size_t, double> >& SparseMatrix::matrixElements() const
+const std::map<std::size_t, std::map<std::size_t, double> >& SparseMatrix::matrixElements() const
 {
 	return elements;
 }
@@ -97,6 +97,7 @@ SparseMatrix multiply(const SparseMatrix& a, double scalar)
 			result.setValue(row.first, cell.first, cell.second * scalar);
 		}
 	}
+	return result;
 }
 
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c)
@@ -119,9 +120,9 @@ SparseMatrix getTranspose(const SparseMatrix& matrix)
 
 void applyToAllNonZeroElements(SparseMatrix& matrix, std::function<double(double)> function)
 {
-	for (const std::pair<size_t, std::map<size_t, double> >& row : matrix.matrixElements())
+	for (const std::pair<std::size_t, std::map<std::size_t, double> >& row : matrix.matrixElements())
 	{
-		for (const std::pair<size_t, double>& element : row.second)
+		for (const std::pair<std::size_t, double>& element : row.second)
 		{
 			matrix.setValue(row.first, element.first, function(element.second));
 		}
@@ -147,7 +148,7 @@ SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix)
 SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(values.size(), values.size());
-	for (size_t i = 0; i < values.size(); ++i)
+	for (std::size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(i, i, values.at(i));
 	}
@@ -157,7 +158,7 @@ SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values)
 SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(1, values.size());
-	for (size_t i = 0; i < values.size(); ++i)
+	for (std::size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(0, i, values.at(i));
 	}
@@ -167,7 +168,7 @@ SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values)
 SparseMatrix vectorToVerticalMatrix(const std::vector<double>& values)
 {
 	SparseMatrix matrix(values.size(), 1);
-	for (size_t i = 0; i < values.size(); ++i)
+	for (std::size_t i = 0; i < values.size(); ++i)
 	{
 		matrix.setValue(i, 0, values.at(i));
 	}
@@ -181,7 +182,7 @@ std::vector<double> horizontalMatrixToVector(const SparseMatrix& matrix)
 		throw UnexpectedException();
 	}
 	std::vector<double> values(matrix.columnCount());
-	for (size_t i = 0; i < matrix.columnCount(); ++i)
+	for (std::size_t i = 0; i < matrix.columnCount(); ++i)
 	{
 		values.at(i) = matrix.getValue(0, i);
 	}
@@ -195,7 +196,7 @@ std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix)
 		throw UnexpectedException();
 	}
 	std::vector<double> values(matrix.rowCount());
-	for (size_t i = 0; i < matrix.rowCount(); ++i)
+	for (std::size_t i = 0; i < matrix.rowCount(); ++i)
 	{
 		values.at(i) = matrix.getValue(i, 0);
 	}

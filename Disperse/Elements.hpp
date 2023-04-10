@@ -16,6 +16,13 @@ public:
 	std::string getRow() const;
 	std::string getColumn() const;
 
+	bool operator==(const Element& other) const;
+	bool operator!=(const Element& other) const;
+	bool operator<(const Element& other) const;
+	bool operator>(const Element& other) const;
+	bool operator<=(const Element& other) const;
+	bool operator>=(const Element& other) const;
+
 private:
 	const std::string row;
 	const std::string column;
