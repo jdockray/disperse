@@ -69,7 +69,7 @@ bool Element::operator>(const Element& other) const
 void ensureColumnInExpectedPlace(const std::vector<std::string> header, std::size_t index,
 									const std::string& columnTitle,	const std::string& fileName)
 {
-	if (header.size() >= index || header.at(index) != columnTitle)
+	if (index >= header.size() || header.at(index) != columnTitle)
 	{
 		throw RequiredColumnNotFoundException(columnTitle, fileName);
 	}
@@ -82,15 +82,20 @@ std::vector<std::pair<Element, double>> getElementsFromGridFile(const std::strin
 	ensureColumnInExpectedPlace(header, 0, "", inputFileName);
 	std::vector<std::pair<std::string, std::string> > rowValues;
 	std::vector<std::pair<Element, double>> elements;
+	std::string fileContext = "(" + inputFileName + ", ";
 	while (inputStream >> rowValues)
 	{
 		std::vector<std::pair<std::string, std::string>>::const_iterator columnValue = rowValues.begin();
-		std::string row = (columnValue++)->second;
+		std::string row = columnValue->second;
+		std::string rowContext = fileContext + row + ", ";
+		columnValue++;
 		while (columnValue != rowValues.end())
 		{
 			elements.push_back(std::pair<Element, double>(
-				Element(row, columnValue->first), std::stod(columnValue->second))
-			);
+				Element(row, columnValue->first),
+				CouldNotParseNumberException::convert(columnValue->second, rowContext + columnValue->first + ")")
+			));
+			columnValue++;
 		}
 	}
 	return elements;

@@ -48,10 +48,10 @@ struct ExpectedException : public std::exception
 class CouldNotParseNumberException : public ExpectedException
 {
 public:
-	static double convert(const std::string& stringToParse);
+	static double convert(const std::string& stringToParse, const std::string& context = "");
 
 private:
-	CouldNotParseNumberException(const std::string& attemptedToParse);
+	CouldNotParseNumberException(const std::string& attemptedToParse, const std::string& context);
 };
 
 class NegativeRiskException : public ExpectedException

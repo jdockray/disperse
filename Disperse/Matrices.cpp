@@ -67,7 +67,8 @@ SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b)
 	SparseMatrix product(a.rowCount(), b.columnCount());
 	if (a.columnCount() != b.rowCount())
 	{
-		throw UnexpectedException();
+		throw IncompatibleInputArgumentsException("Incompatible matricies for multiplication: Matrix A has "
+			+ std::to_string(a.columnCount()) + " columns but matrix B has " + std::to_string(b.rowCount()) + " rows.");
 	}
 	const SparseMatrix bTransposed = getTranspose(b);
 	for (auto const& matrixARow : a.matrixElements())

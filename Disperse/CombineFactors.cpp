@@ -17,7 +17,7 @@ std::vector<std::string> getDelimitedElements(const std::string& delimitedList)
 	listStream << delimitedList;
 	std::string tempString;
 	std::vector<std::string> list;
-	if (std::getline(listStream, tempString, ':'))
+	while (std::getline(listStream, tempString, ','))
 	{
 		list.push_back(tempString);
 	}
@@ -98,6 +98,7 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 	{
 	case 1:
 		outputMatrix = elementMatrixFromVector(elementSets.at(0), rowHeadings, columnHeadings);
+		break;
 	case 2:
 		outputMatrix = multiply(elementMatrixFromVector(elementSets.at(0), rowHeadings, joiningAxisHeadings1),
 			elementMatrixFromVector(elementSets.at(1), joiningAxisHeadings2, columnHeadings));
@@ -111,6 +112,7 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 					+ ") of matrix B.");
 			}
 		}
+		break;
 	default:
 		throw IncompatibleInputArgumentsException("There must be either 1 or 2 input files.");
 	}

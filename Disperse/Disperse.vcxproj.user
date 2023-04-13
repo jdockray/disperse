@@ -9,12 +9,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-m FactorGrid.csv -l FactorList.csv -f FactorOutput.csv -p GroupOutput.csv Securities.csv SecurityOutput.csv 8.5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>combine -g "C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\EquityMultiplyOut.csv,C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\FixedIncomeMultiplyOut.csv" -i "C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\AllFactorsCombinedOut.csv"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerWorkingDirectory>C:\Users\Joel\Documents\Documents\2022\Documents\April\Optimisation Corrected</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>optimise -g "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorGrid.csv" -l "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorList.csv" -f "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\FactorOutput.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\Securities.csv" "C:\Users\Joel\Documents\Documents\2021\Documents\January\DisperseTest\SecurityOutput.csv" 0.5</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>combine -g "C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\EquityMultiplyOut.csv,C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\FixedIncomeMultiplyOut.csv" -i "C:\Users\Joel\Documents\Documents\2023\Documents\April\Processing\AllFactorsCombinedOut.csv"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

@@ -58,13 +58,13 @@ int main(int argc, char* argv[])
 		runCatchingGlobalExceptions(argc, argv);
 		returnCode = ReturnCode::SUCCESS;
 	}
-	catch (ExpectedException ex)
+	catch (const ExpectedException& ex)
 	{
 		std::cerr << ex.errorMessage;
 		returnCode = ex.returnCode;
 	}
 #ifndef _DEBUG
-	catch (...)
+	catch (const std::exception&)
 	{
 		UnexpectedException unexpectedException;
 		std::cerr << unexpectedException.errorMessage;

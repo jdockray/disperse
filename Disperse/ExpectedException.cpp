@@ -1,7 +1,7 @@
 #include "ExpectedException.hpp"
 #include "Security.hpp"
 
-double CouldNotParseNumberException::convert(const std::string &stringToParse)
+double CouldNotParseNumberException::convert(const std::string &stringToParse, const std::string& context)
 {
 	try
 	{
@@ -9,17 +9,17 @@ double CouldNotParseNumberException::convert(const std::string &stringToParse)
 	}
 	catch (std::invalid_argument ex)
 	{
-		throw CouldNotParseNumberException(stringToParse);
+		throw CouldNotParseNumberException(stringToParse, context);
 	}
 	catch (std::out_of_range ex)
 	{
-		throw CouldNotParseNumberException(stringToParse);
+		throw CouldNotParseNumberException(stringToParse, context);
 	}
 
 }
 
-CouldNotParseNumberException::CouldNotParseNumberException(const std::string& attemptedToParse)
-	: ExpectedException("The string " + attemptedToParse + " could not be converted to a number.", ReturnCode::COULD_NOT_PARSE_NUMBER_EXCEPTION)
+CouldNotParseNumberException::CouldNotParseNumberException(const std::string& attemptedToParse, const std::string& context)
+	: ExpectedException("The string " + attemptedToParse + " could not be converted to a number. " + context, ReturnCode::COULD_NOT_PARSE_NUMBER_EXCEPTION)
 {
 }
 
