@@ -1,0 +1,12 @@
+[submodule "ThirdParty/qdldl/qdldl"]
+	path = ThirdParty/qdldl/qdldl
+	url = https://github.com/oxfordcontrol/qdldl.git
+[submodule "ThirdParty/csvstream/csvstream"]
+	path = ThirdParty/csvstream/csvstream
+	url = https://github.com/awdeorio/csvstream.git
+[submodule "ThirdParty/dlib/dlib"]
+	path = ThirdParty/dlib/dlib
+	url = https://github.com/davisking/dlib.git
+[submodule "ThirdParty/osqp/osqp"]
+	path = ThirdParty/osqp/osqp
+	url = https://github.com/oxfordcontrol/osqp.git
