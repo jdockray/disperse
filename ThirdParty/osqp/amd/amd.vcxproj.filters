@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{21bd684e-478e-47cb-9d43-8b9487fcd247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2b8061ec-a591-433e-aebe-dea025dfb2a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\osqp\lin_sys\direct\qdldl\amd\include\amd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\osqp\lin_sys\direct\qdldl\amd\include\amd_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\osqp\lin_sys\direct\qdldl\amd\include\SuiteSparse_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_aat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_control.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_defaults.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_info.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_order.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_post_tree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_postorder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_preprocess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\amd_valid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\lin_sys\direct\qdldl\amd\src\SuiteSparse_config.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

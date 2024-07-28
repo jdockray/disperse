@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="qdldl\include\qdldl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qdldl_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qdldl_version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{ca9b202f-89c9-408f-b373-a008cc09d7b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{3472cada-7659-46b8-a30d-c11f1c2afc70}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="qdldl\src\qdldl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\osqp\osqp\lin_sys\direct\qdldl\qdldl_interface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

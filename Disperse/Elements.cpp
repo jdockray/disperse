@@ -4,7 +4,7 @@
 #include "ExpectedException.hpp"
 
 #pragma warning(push, 0)
-#include "../../csvstream/csvstream.h"
+#include "csvstream\csvstream\csvstream.hpp"
 #include <map>
 #pragma warning(pop)
 

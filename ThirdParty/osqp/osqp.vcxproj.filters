@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6d5ea804-a965-46a8-99c7-270adfc78237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{a188d26a-3a1b-4831-bc89-9f33ba3740e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="osqp\src\auxil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\cs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\ctrlc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\error.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\kkt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\lin_alg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\lin_sys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\osqp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\polish.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\proj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\scaling.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="osqp\src\util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="osqp\include\auxil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\cs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\ctrlc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\glob_opts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\kkt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\lin_alg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\lin_sys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\osqp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\polish.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\proj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\scaling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osqp\include\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

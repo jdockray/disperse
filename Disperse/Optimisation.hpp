@@ -8,8 +8,8 @@
 #include "Constraint.hpp"
 
 #pragma warning(push, 0)
-#include "dlib\dlib\matrix.h"
-#include "osqp\include\osqp.h"
+#include "dlib\dlib\dlib\matrix.h"
+#include "osqp\osqp\include\osqp.h"
 #include <vector>
 #include <map>
 #pragma warning(pop)
