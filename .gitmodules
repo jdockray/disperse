@@ -1,6 +1,6 @@
 [submodule "ThirdParty/qdldl/qdldl"]
 	path = ThirdParty/qdldl/qdldl
-	url = https://github.com/oxfordcontrol/qdldl.git
+	url = https://github.com/osqp/qdldl.git
 [submodule "ThirdParty/csvstream/csvstream"]
 	path = ThirdParty/csvstream/csvstream
 	url = https://github.com/awdeorio/csvstream.git
@@ -9,4 +9,4 @@
 	url = https://github.com/davisking/dlib.git
 [submodule "ThirdParty/osqp/osqp"]
 	path = ThirdParty/osqp/osqp
-	url = https://github.com/oxfordcontrol/osqp.git
+	url = https://github.com/osqp/osqp.git
