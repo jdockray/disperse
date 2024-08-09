@@ -182,10 +182,10 @@ void putElementsInGridFile(const std::string& outputFileName, const std::vector<
 		csvOutput.writeElement(column);
 	}
 	csvOutput.finishLine();
-	for (int rowIndex = 0; rowIndex < matrix.rowCount(); ++rowIndex)
+	for (unsigned int rowIndex = 0; rowIndex < matrix.rowCount(); ++rowIndex)
 	{
 		csvOutput.writeElement(rowHeadings.at(rowIndex));
-		for (int columnIndex = 0; columnIndex < matrix.columnCount(); ++columnIndex)
+		for (unsigned int columnIndex = 0; columnIndex < matrix.columnCount(); ++columnIndex)
 		{
 			csvOutput.writeElement(matrix.getValue(rowIndex, columnIndex));
 		}

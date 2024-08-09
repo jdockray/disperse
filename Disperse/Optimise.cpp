@@ -54,7 +54,7 @@ SparseMatrix generateUpperTriagonalCorrelationMatrix(const SparseMatrix& factorM
 	applyToAllNonZeroElements(sqRootedFactorMatrix, [](double(x)) { return sqrt(x); });
 	SparseMatrix correlationMatrix = multiply(sqRootedFactorMatrix, getTranspose(sqRootedFactorMatrix));
 	SparseMatrix upperTriagonalCorrelationMatrix = upperTriangularMatrix(correlationMatrix);
-	for (int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
+	for (unsigned int i = 0; i < upperTriagonalCorrelationMatrix.rowCount(); ++i)
 	{
 		upperTriagonalCorrelationMatrix.setValue(i, i, 1);
 	}

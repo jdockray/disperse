@@ -101,7 +101,7 @@ std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(
 	osqpData.A = &cscA;
 
 	// q is not needed so a zero-filled array is used
-	std::vector<c_float> vectorQ(osqpData.n, 0.0);
+	std::vector<c_float> vectorQ(static_cast<unsigned int>(osqpData.n), 0.0);
 	osqpData.q = vectorQ.data();
 
 	osqpData.l = const_cast<c_float*>(vectorL.data());

@@ -18,7 +18,7 @@ void outputAllocations(
 	csvOutput.writeElement("Asset");
 	csvOutput.writeElement("Allocation");
 	csvOutput.finishLine();
-	for (int i = 0; i < allocations.size(); ++i)
+	for (unsigned int i = 0; i < allocations.size(); ++i)
 	{
 		csvOutput.writeElement(securityIdentifiers.at(i));
 		csvOutput.writeElement(allocations.at(i));
@@ -40,7 +40,7 @@ void outputFactorExposures(
 	csvOutput.writeElement("Factor");
 	csvOutput.writeElement("Exposure");
 	csvOutput.finishLine();
-	for (int i = 0; i < allocations.size(); ++i)
+	for (unsigned int i = 0; i < allocations.size(); ++i)
 	{
 		csvOutput.writeElement(factorNames.at(i));
 		csvOutput.writeElement(allocations.at(i));
@@ -58,7 +58,7 @@ void outputGroupProportions(
 	csvOutput.writeElement("Group");
 	csvOutput.writeElement("Proportion");
 	csvOutput.finishLine();
-	for (int i = 0; i < groupNames.size(); ++i)
+	for (unsigned int i = 0; i < groupNames.size(); ++i)
 	{
 		const std::string groupName = groupNames.at(i);
 		csvOutput.writeElement(groupName);
