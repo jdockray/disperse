@@ -175,6 +175,7 @@
     <ClCompile Include="CSVOutput.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="Elements.cpp" />
+    <ClCompile Include="Help.cpp" />
     <ClCompile Include="Optimise.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Elements.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />
+    <ClInclude Include="Help.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />

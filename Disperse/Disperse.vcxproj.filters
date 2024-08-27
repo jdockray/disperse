@@ -57,6 +57,9 @@
     <ClCompile Include="CSVOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Help.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpectedException.hpp">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CSVOutput.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

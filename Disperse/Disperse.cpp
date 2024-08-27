@@ -2,6 +2,7 @@
 #include "CombineFactors.hpp"
 #include "Optimise.hpp"
 #include "ExpectedException.hpp"
+#include "Help.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -12,29 +13,33 @@
 
 void runCommand(const int argc, const char* const argv[])
 {
-	MissingArgumentException::verifyTrue(argc > 1, "You must specify a command.");
+	MissingArgumentException::verifyTrue(argc > 1, "You must specify a command. Type 'Disperse.exe help' for usage.");
 	const std::string command(argv[1]);
 	std::vector<std::string> commandArgs;
 	commandArgs.reserve(argc - 2);
-	for (int i = 2; i < argc; ++i)
+	for (int i = 2; i < argc; ++i) // i signed to match argc
 	{
 		commandArgs.push_back(std::string(argv[i]));
 	}
-	if (command == "optimise")
-	{
-		runOptimiseCommand(commandArgs);
-	}
-	else if (command == "combine")
+	if (command == "combine")
 	{
 		runCombineCommand(commandArgs);
+	}
+	else if (command == "help")
+	{
+		runHelpCommand(commandArgs);
 	}
 	else if (command == "multiply")
 	{
 		runMultiplyCommand(commandArgs);
 	}
+	else if (command == "optimise")
+	{
+		runOptimiseCommand(commandArgs);
+	}
 	else
 	{
-		throw InvalidCommandException("The command " + command + " is not recognised.");
+		throw InvalidCommandException("The command " + command + " is not recognised. Type 'Disperse.exe help' for usage.");
 	}
 }
 

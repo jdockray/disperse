@@ -36,7 +36,7 @@ void runCombineCommand(const std::vector<std::string>& args)
 {
 	CmdLineArgs cmdLineArgs(args);
 	std::map<Element, double> elements;
-	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('g');
+	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('m');
 	if (gridInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
@@ -73,7 +73,7 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 {
 	CmdLineArgs cmdLineArgs(args);
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
-	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('g');
+	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('m');
 	if (gridInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
