@@ -90,8 +90,8 @@ ListOfGroups inputGroups(const std::string& groupInputFileName)
 	ListOfGroups groups;
 
 	const std::string group_column_name = "Group";
-	const std::string group_minimum_column_name = "Minimum";
-	const std::string group_maximum_column_name = "Maximum";
+	const std::string group_minimum_column_name = "Min";
+	const std::string group_maximum_column_name = "Max";
 
 	csvstream inputStream(groupInputFileName);
 	ensureColumnPresent(inputStream, group_column_name, groupInputFileName);
