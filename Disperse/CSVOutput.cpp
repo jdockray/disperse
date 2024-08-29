@@ -9,7 +9,7 @@ CSVOutput::CSVOutput(std::string fileName)
 		m_outputStream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		m_outputStream.open(m_fileName, std::ios_base::out);
 	}
-	catch (std::ios_base::failure)
+	catch (const std::ios_base::failure&)
 	{
 		throw OutputFileException(m_fileName);
 	}
@@ -22,7 +22,7 @@ void CSVOutput::writeElement(double number)
 	{
 		m_outputStream << number;
 	}
-	catch (std::ios_base::failure)
+	catch (const std::ios_base::failure&)
 	{
 		throw OutputFileException(m_fileName);
 	}
@@ -35,7 +35,7 @@ void CSVOutput::writeElement(std::string text)
 	{
 		m_outputStream << "\"" << text << "\"";
 	}
-	catch (std::ios_base::failure)
+	catch (const std::ios_base::failure&)
 	{
 		throw OutputFileException(m_fileName);
 	}
@@ -47,7 +47,7 @@ void CSVOutput::finishLine()
 	{
 		m_outputStream << std::endl;
 	}
-	catch (std::ios_base::failure)
+	catch (const std::ios_base::failure&)
 	{
 		throw OutputFileException(m_fileName);
 	}
@@ -62,7 +62,7 @@ void CSVOutput::insertCommaIfNecessary()
 		{
 			m_outputStream << ",";
 		}
-		catch (std::ios_base::failure)
+		catch (const std::ios_base::failure&)
 		{
 			throw OutputFileException(m_fileName);
 		}

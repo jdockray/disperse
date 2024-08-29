@@ -7,11 +7,11 @@ double CouldNotParseNumberException::convert(const std::string &stringToParse, c
 	{
 		return std::stof(stringToParse);
 	}
-	catch (std::invalid_argument ex)
+	catch (const std::invalid_argument&)
 	{
 		throw CouldNotParseNumberException(stringToParse, context);
 	}
-	catch (std::out_of_range ex)
+	catch (const std::out_of_range&)
 	{
 		throw CouldNotParseNumberException(stringToParse, context);
 	}
@@ -134,7 +134,13 @@ IncompatibleInputArgumentsException::IncompatibleInputArgumentsException(const s
 {
 }
 
+CSVStreamException::CSVStreamException(const csvstream_exception& exception)
+	: ExpectedException(std::string(exception.what()), ReturnCode::CSV_STREAM_EXCEPTION)
+{
+}
+
 ExpectedException::ExpectedException(const std::string& errorMessage, const ReturnCode returnCode)
 	: errorMessage(errorMessage), returnCode(returnCode)
 {
 }
+

@@ -3,6 +3,7 @@
 #define DISPERSE_EXPECTED_EXCEPTION
 
 #pragma warning(push, 0)
+#include "csvstream\csvstream\csvstream.hpp"
 #include <exception>
 #include <stdexcept>
 #include <vector>
@@ -34,7 +35,8 @@ enum class ReturnCode
 	INVALID_LIMITS = 16,
 	INVALID_COMMAND = 17,
 	EXCESSIVE_SIZE = 18,
-	INCOMPATIBLE_INPUT_ARGUMENTS = 19
+	INCOMPATIBLE_INPUT_ARGUMENTS = 19,
+	CSV_STREAM_EXCEPTION = 20
 };
 
 struct ExpectedException : public std::exception
@@ -196,6 +198,12 @@ class UnexpectedException : public ExpectedException
 {
 public:
 	UnexpectedException();
+};
+
+class CSVStreamException : public ExpectedException
+{
+public:
+	CSVStreamException(const csvstream_exception& exception);
 };
 
 #endif // #ifndef DISPERSE_EXPECTED_EXCEPTION

@@ -49,9 +49,12 @@ void runCatchingGlobalExceptions(const int argc, const char* const argv[])
 	{
 		runCommand(argc, argv);
 	}
-	catch (std::bad_alloc)
+	catch (const std::bad_alloc&)
 	{
 		throw InsufficientMemoryException();
+	}
+	catch (const csvstream_exception& ex) {
+		throw CSVStreamException(ex);
 	}
 }
 

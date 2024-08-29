@@ -58,7 +58,7 @@ public:
 		{
 			return at(m_lookup.at(identifier));
 		}
-		catch (std::out_of_range error)
+		catch (const std::out_of_range&)
 		{
 			throw IdentifierNotRecognisedException(identifier);
 		}
@@ -71,7 +71,7 @@ public:
 			{
 				return at(m_lookup.at(identifier));
 			}
-			catch (std::out_of_range error)
+			catch (const std::out_of_range&)
 			{
 				throw IdentifierNotRecognisedException(identifier);
 			}
