@@ -1,0 +1,20 @@
+
+This is a portfolio optimisation program that accepts as input a list of securities with expected returns
+and risks and a correlation matrix and returns the weightings that will deliver a minimum return for the
+lowest overall risk.
+
+Usage: Disperse.exe [command] [command specific arguments]
+it by another matrix and/or a scalar before outputing it in grid or list format.
+
+Commands:
+optimise - Perform an optimisation
+multiply - Multiply matrices or multiply a matrix by a scalar
+combine  - Combine matrices (full outer join), adding the values of shared matrix elements
+help     - Display general help or help on a particular command.
+For more information run 'Disperse.exe help [command]'.
+
+Data is input and output via CSV files.
+There are two supported formats for matrices:
+    Grid - A full 2D matrix with row and column labels as you might find in a spreadsheet
+    List - A sparse 2D matrix with non-zero elements recorded using three columns: row label, column label, value
+

@@ -1,0 +1,16 @@
+
+Take a matrix of grid or list format (see general help) and optionally, multiply
+it by another matrix and/or a scalar before outputing it in grid or list format.
+
+Usage examples:
+    Disperse.exe multiply -m GridA.csv,GridB.csv -r GridAB.csv
+    Disperse.exe multiply -l ListA.csv,ListB.csv -i ListAB.csv
+    Disperse.exe multiply -m Raw.csv -s 0.5 -r Scaled.csv
+    Disperse.exe multiply -m Grid.csv -i List.csv
+
+Options:
+    -m Input matrix/matrices as grid CSV file(s), one file name or two separated by a comma
+    -l Input matrix/matrices as list(s) of non-zero matrix elements, one file name or two separated by a comma
+    -s Multiply by scalar
+    -r Output matrix as grid CSV file
+    -i Output matrix as list of non-zero matrix elements

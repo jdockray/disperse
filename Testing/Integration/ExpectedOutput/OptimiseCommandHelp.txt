@@ -1,0 +1,33 @@
+
+Take a list of securities with expected returns, variances and correlations and a minimum target return
+and generate the portfolio with the minimum predicted variance that will generate the expected return
+
+Usage:    Disperse.exe optimise [optional arguments] [securities input file] [securities output file] [minimum expected return]
+The securities input file should be a CSV containing the securities which can be included in the optimised portfolio.
+It should have columns:
+    'Security' - An identifier of the security such as the ISIN or name (required)
+    'Expected' - The expected return (optional, default 0)
+    'Risk'     - A value proportional to the risk, such as the standard deviation of annual returns (optional, default 0)
+    'Min'      - The minimum weighting the security can have in the final portfolio (optional, default 0)
+    'Max'      - The maximum weighting the security can have in the final portfolio (optional, default 1)
+    'Group'    - An optional group name, allowing minimum and maximum weightings for some securities and thus also portfolio parts
+The minimum expected return should be a number of the same units as the 'Expected' column of the securities input file.
+
+Usage examples:
+    Disperse.exe optimise -p OutputFactorWeightings.csv IndependentSecurities.csv OutputPortfolio.csv 7.0
+    Disperse.exe optimise -m CorrelationMatrix.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 7.0
+    Disperse.exe optimise -m CorrelationMatrix.csv -g ISAandPensionGroups.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 5.0
+    Disperse.exe optimise -m CorrelationMatrix.csv -l FundOverlap.csv Securities.csv OutputPortfolio.csv 5.0
+
+Optional arguments:
+    -m Input security full correlation matrix as a CSV file(s)
+    -l Input security sparse correlation matrix as a list of non-zero matrix elements
+    -g Input file name listing groups mentioned in the securities file with their minimum and maximum weights in the generated portfolio
+    -f Output file name for the weightings of each factor in the optimised portfolio
+    -p Output file name for the weighting of each group in the optimised portfolio
+If used, the full correlation matrix CSV file should have column and row headings that are the securitiy names.
+If both - m or -l are supplied, the values of shared elements are added. Correlation matrix values must be between 0 and 1.
+The group input file (if supplied) should be a CSV file with headings:
+    'Group' - An identifier of the group as used in the security file
+    'Min'   - The minimum proportion of the portfolio that can be occupied by securities labelled with the group (optional, default 0)
+    'Max'   - The maximum proportion of the portfolio that can be occupied by securities labelled with the group (optional, default 1)
