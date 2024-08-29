@@ -119,7 +119,7 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 	const std::optional<std::string> scalarToMultiplyBy = cmdLineArgs.getSingleArgumentOption('s');
 	if (scalarToMultiplyBy.has_value())
 	{
-		outputMatrix = multiply(outputMatrix.value(), std::stoi(scalarToMultiplyBy.value()));
+		outputMatrix = multiply(outputMatrix.value(), std::stod(scalarToMultiplyBy.value()));
 	}
 	const std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 	if (gridOutputFileName)
