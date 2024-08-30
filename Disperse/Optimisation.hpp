@@ -14,6 +14,9 @@
 #include <map>
 #pragma warning(pop)
 
+const unsigned int TOLERANCE_DECIMAL_PLACES = 3;
+const double ROUNDING_MULTIPLIER = std::pow(10.0, TOLERANCE_DECIMAL_PLACES);
+
 enum class OSQPErrorStatus
 {
 	SUCCESS = 0,

@@ -1,6 +1,18 @@
 
 #include "Optimisation.hpp"
 
+OSQPSettings getSettings()
+{
+	OSQPSettings osqp_settings;
+	osqp_set_default_settings(&osqp_settings);
+	osqp_settings.max_iter = static_cast<c_int>(ROUNDING_MULTIPLIER * 100); // maximum iterations to take
+	osqp_settings.eps_abs = static_cast<c_float>(0.1 / ROUNDING_MULTIPLIER); // Absolute convergence tolerance
+	osqp_settings.eps_rel = osqp_settings.eps_abs; // Relative convergence tolerance
+	return osqp_settings;
+}
+
+const OSQPSettings OSQP_SETTINGS = getSettings();
+
 SafeCSC::SafeCSC(const SparseMatrix& matrix)
 {
 	SparseMatrix transposed = getTranspose(matrix);
@@ -38,13 +50,6 @@ void WorkspaceDeleter::operator()(OSQPWorkspace* pOsqpWorkspace)
 	}
 }
 
-OSQPSettings getSettings()
-{
-	OSQPSettings osqp_settings;
-	osqp_set_default_settings(&osqp_settings);
-	return osqp_settings;
-}
-
 void checkErrorStatus(OSQPErrorStatus errorStatus)
 {
 	switch (errorStatus)
@@ -67,9 +72,8 @@ void checkErrorStatus(OSQPErrorStatus errorStatus)
 
 std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> callOSQPSetup(OSQPData& osqpData)
 {
-	static const OSQPSettings osqp_settings = getSettings();
-	OSQPWorkspace* pOsqpWorkspace = NULL;
-	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &osqp_settings)));
+	OSQPWorkspace* pOsqpWorkspace = nullptr;
+	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &OSQP_SETTINGS)));
 	if (!pOsqpWorkspace)
 	{
 		throw UnexpectedException();

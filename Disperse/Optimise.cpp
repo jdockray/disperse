@@ -11,6 +11,22 @@
 #include <fstream>
 #pragma warning(pop)
 
+double roundToOptimisationTolerance(double value)
+{
+	return std::round(value * ROUNDING_MULTIPLIER) / ROUNDING_MULTIPLIER;
+}
+
+std::vector<double> roundToOptimisationTolerance(const std::vector<double>& values)
+{
+	std::vector<double> roundedValues;
+	roundedValues.reserve(values.size());
+	for (double value : values)
+	{
+		roundedValues.push_back(roundToOptimisationTolerance(value));
+	}
+	return roundedValues;
+}
+
 template <class T, class U>
 std::map<U, std::size_t> generateMappingFromIterable(const T& items)
 {
@@ -153,6 +169,8 @@ void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& r
 	}
 }
 
+const std::string RISK_OUTPUT_STRING = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
+
 void run(
 	const std::string& inputFileName,
 	const std::string& securityOutputFileName,
@@ -188,16 +206,16 @@ void run(
 		getConstraints(minimumReturn, securities, groups)
 	);
 
-	printf("Risk: %f", std::sqrt(getSingleValue(
+	printf(RISK_OUTPUT_STRING.c_str(), roundToOptimisationTolerance(std::sqrt(getSingleValue(
 		multiply(vectorToHorizontalMatrix(solution), covarianceMatrix, vectorToVerticalMatrix(solution)))
-	));
+	)));
 
-	outputAllocations(securities.getIdentifiers(), solution, securityOutputFileName);
+	outputAllocations(securities.getIdentifiers(), roundToOptimisationTolerance(solution), securityOutputFileName);
 	if (factorOutputFileName.has_value())
 	{
 		outputFactorExposures(
 			factorNames,
-			horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix)),
+			roundToOptimisationTolerance(horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix))),
 			factorOutputFileName.value()
 		);
 	}
