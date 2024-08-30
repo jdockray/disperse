@@ -29,7 +29,7 @@ Optional arguments:
 A risk factor matrix indicates the proportion of the variablility in the value of the securities explained by
 independent risk factors.
 The sum of the risk factors for a security must be less than or equal to 1.
-The risk factor matrix is multiplied by itself to generate a security correlation matrix.
+The risk factor matrix is multiplied by its conjugate transpose to generate a security correlation matrix.
 The total risk of each security (standard deviation of returns) from the security CSV table is then
 used to turn this correlation matrix into the covariance matrix used in the optimisation.
 

@@ -77,7 +77,7 @@ void printOptimiseCommandHelp(std::ostream& out)
 	out << "A risk factor matrix indicates the proportion of the variablility in the value of the securities explained by" << std::endl;
 	out << "independent risk factors." << std::endl;
 	out << "The sum of the risk factors for a security must be less than or equal to 1." << std::endl;
-	out << "The risk factor matrix is multiplied by itself to generate a security correlation matrix." << std::endl;
+	out << "The risk factor matrix is multiplied by its conjugate transpose to generate a security correlation matrix." << std::endl;
 	out << "The total risk of each security (standard deviation of returns) from the security CSV table is then" << std::endl;
 	out << "used to turn this correlation matrix into the covariance matrix used in the optimisation." << std::endl;
 	out << std::endl;
