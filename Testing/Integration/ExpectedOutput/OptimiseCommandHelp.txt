@@ -1,5 +1,5 @@
 
-Take a list of securities with expected returns, variances and correlations and a minimum target return
+Take a list of securities with expected returns, variances and risk factors and a minimum target return
 and generate the portfolio with the minimum predicted variance that will generate the expected return
 
 Usage:    Disperse.exe optimise [optional arguments] [securities input file] [securities output file] [minimum expected return]
@@ -15,18 +15,31 @@ The minimum expected return should be a number of the same units as the 'Expecte
 
 Usage examples:
     Disperse.exe optimise -p OutputFactorWeightings.csv IndependentSecurities.csv OutputPortfolio.csv 7.0
-    Disperse.exe optimise -m CorrelationMatrix.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 7.0
-    Disperse.exe optimise -m CorrelationMatrix.csv -g ISAandPensionGroups.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 5.0
-    Disperse.exe optimise -m CorrelationMatrix.csv -l FundOverlap.csv Securities.csv OutputPortfolio.csv 5.0
+    Disperse.exe optimise -m RiskFactors.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 7.0
+    Disperse.exe optimise -m RiskFactors.csv -g ISAandPensionGroups.csv -p OutputFactorWeightings.csv Securities.csv OutputPortfolio.csv 5.0
+    Disperse.exe optimise -m RiskFactors.csv -l FundOverlap.csv Securities.csv OutputPortfolio.csv 5.0
 
 Optional arguments:
-    -m Input security full correlation matrix as a CSV file(s)
-    -l Input security sparse correlation matrix as a list of non-zero matrix elements
+    -m Input security full risk matrix as a CSV file(s)
+    -l Input security sparse risk matrix as a list of non-zero matrix elements
     -g Input file name listing groups mentioned in the securities file with their minimum and maximum weights in the generated portfolio
     -f Output file name for the weightings of each factor in the optimised portfolio
     -p Output file name for the weighting of each group in the optimised portfolio
-If used, the full correlation matrix CSV file should have column and row headings that are the securitiy names.
-If both - m or -l are supplied, the values of shared elements are added. Correlation matrix values must be between 0 and 1.
+
+A risk factor matrix indicates the proportion of the variablility in the value of the securities explained by
+independent risk factors.
+The sum of the risk factors for a security must be less than or equal to 1.
+The risk factor matrix is multiplied by itself to generate a security correlation matrix.
+The total risk of each security (standard deviation of returns) from the security CSV table is then
+used to turn this correlation matrix into the covariance matrix used in the optimisation.
+
+See the general help ('Disperse.exe help') for details of full and sparse matrices.
+A full risk factor matrix should have row headings corresponding to the security names and
+column headings corresponding to independent risk factors.
+A sparse risk factor matrix should have the security in the first column, the risk factor in the second
+and the correlation in the third. There must be headings 'Row', 'Column' and 'Value' respectively.
+If both -m and -l are supplied, the values of shared elements are added.
+
 The group input file (if supplied) should be a CSV file with headings:
     'Group' - An identifier of the group as used in the security file
     'Min'   - The minimum proportion of the portfolio that can be occupied by securities labelled with the group (optional, default 0)
