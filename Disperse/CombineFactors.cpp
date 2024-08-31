@@ -34,6 +34,7 @@ void addElements(const std::vector<std::pair<Element, double>>& newElements, std
 
 void runCombineCommand(const std::vector<std::string>& args)
 {
+	const std::string DEFAULT_MARKET_RISK_NAME = "Market";
 	CmdLineArgs cmdLineArgs(args);
 	std::map<Element, double> elements;
 	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('m');
@@ -52,8 +53,19 @@ void runCombineCommand(const std::vector<std::string>& args)
 			addElements(getElementsFromListFile(fileName), elements);
 		}
 	}
+	std::optional<std::string> marketRiskString = cmdLineArgs.getSingleArgumentOption('a');
+	if (marketRiskString.has_value()) {
+		double marketRisk = CouldNotParseNumberException::convert(marketRiskString.value());
+		std::string marketRiskName = cmdLineArgs.getSingleArgumentOption('b').value_or(DEFAULT_MARKET_RISK_NAME);
+		std::map<Element, double> additionalMarketRiskElements;
+		for (const std::pair<Element, double>& element : elements)
+		{
+			additionalMarketRiskElements[Element(element.first.getRow(), marketRiskName)] = marketRisk;
+		}
+		elements.insert(additionalMarketRiskElements.begin(), additionalMarketRiskElements.end());
+	}
 	std::vector<std::pair<Element, double>> pairs;
-	for (std::pair<Element, double> element : elements)
+	for (const std::pair<Element, double>& element : elements)
 	{
 		pairs.push_back(element);
 	}

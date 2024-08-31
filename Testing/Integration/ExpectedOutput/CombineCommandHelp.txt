@@ -12,3 +12,5 @@ Options:
     -l Input matrix/matrices as list(s) of non-zero matrix elements, one file name or two separated by a comma
     -r Output matrix as grid CSV file
     -i Output matrix as list of non-zero matrix elements
+    -a Add a column with all values set to this value (intended to be for a shared, global, market risk)
+    -b Give a column created with -a the this heading (rather than the default)

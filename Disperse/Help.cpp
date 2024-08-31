@@ -16,6 +16,8 @@ void printCombineCommandHelp(std::ostream& out) {
 	out << "    -l Input matrix/matrices as list(s) of non-zero matrix elements, one file name or two separated by a comma" << std::endl;
 	out << "    -r Output matrix as grid CSV file" << std::endl;
 	out << "    -i Output matrix as list of non-zero matrix elements" << std::endl;
+	out << "    -a Add a column with all values set to this value (intended to be for a shared, global, market risk)" << std::endl;
+	out << "    -b Give a column created with -a the this heading (rather than the default)" << std::endl;
 }
 
 void printHelpCommandHelp(std::ostream& out) {

@@ -19,12 +19,16 @@ You might find reading the output files helpful.
 ## Typical usage
 
 The subsequent commands show data manipulation to generate a risk matrix followed by an optimisation.
+
 The risk matrix (generated using 'multiply' and 'combine' here) indicates the proportion of the variability in each security explained by each of independent risk factors. The optimise command multiplies the risk factor matrix by its conjugate transpose to generate a positive semidefinite security correlation matrix. The total risk associated with each security (the standard deviation of its returns) is used to convert this correlation matrix into a covariance matrix.
+
+In this example the variation of fund returns is modelled to be 85% global market risk, 10% industry-specific risk and 5% within category risk.
 
 <pre>
     Disperse.exe multiply -m <a href="Input\FundRegionWeightings.csv">Input\FundRegionWeightings.csv</a>,<a href="Input\RegionSectorWeightings.csv">Input\RegionSectorWeightings.csv</a> -r <a href="ExpectedOutput\FundSectorWeightings.csv">Output\FundSectorWeightings.csv</a>
-    Disperse.exe multiply -m <a href="Input\FundSectorWeightings.csv">Input\FundSectorWeightings.csv</a> -s 0.9 -r <a href="ExpectedOutput\FundSectorExposures.csv">Output\FundSectorExposures.csv</a>
-    Disperse.exe combine -m <a href="Input\FundSectorExposures.csv">Input\FundSectorExposures.csv</a> -l <a href="Input\ShareOverlap.csv">Input\ShareOverlap.csv</a> -r <a href="ExpectedOutput\CombinedExposures.csv">Output\CombinedExposures.csv</a>
+    Disperse.exe multiply -m <a href="Input\FundSectorWeightings.csv">Input\FundSectorWeightings.csv</a> -s 0.1 -r <a href="ExpectedOutput\FundSectorEffect.csv">Output\FundSectorEffect.csv</a>
+    Disperse.exe multiply -l <a href="Input\ShareOverlap.csv">Input\ShareOverlap.csv</a> -s 0.05 -r <a href="ExpectedOutput\ShareOverlapEffect.csv">Output\ShareOverlapEffect.csv</a>
+    Disperse.exe combine -m <a href="Input\FundSectorEffect.csv">Input\FundSectorEffect.csv</a>,<a href="Input\ShareOverlapEffect.csv">Input\ShareOverlapEffect.csv</a> -a 0.85 -r <a href="ExpectedOutput\CombinedExposures.csv">Output\CombinedExposures.csv</a>
     Disperse.exe optimise -m <a href="Input\CombinedExposures.csv">Input\CombinedExposures.csv</a> -f <a href="ExpectedOutput\OutputFactorWeightings.csv">Output\OutputFactorWeightings.csv</a> <a href="Input\EquityFunds.csv">Input\EquityFunds.csv</a> <a href="ExpectedOutput\OutputPortfolio.csv">Output\OutputPortfolio.csv</a> 0.09 ><a href="ExpectedOutput\OptimisationOut.txt">Output\OptimisationOut.txt</a>
 </pre>
 

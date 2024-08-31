@@ -6,8 +6,9 @@ Disperse.exe help multiply >Output\MultiplyCommandHelp.txt
 Disperse.exe help optimise >Output\OptimiseCommandHelp.txt
 
 Disperse.exe multiply -m Input\FundRegionWeightings.csv,Input\RegionSectorWeightings.csv -r Output\FundSectorWeightings.csv
-Disperse.exe multiply -m Input\FundSectorWeightings.csv -s 0.9 -r Output\FundSectorExposures.csv
-Disperse.exe combine -m Input\FundSectorExposures.csv -l Input\ShareOverlap.csv -r Output\CombinedExposures.csv
+Disperse.exe multiply -m Input\FundSectorWeightings.csv -s 0.1 -r Output\FundSectorEffect.csv
+Disperse.exe multiply -l Input\ShareOverlap.csv -s 0.05 -r Output\ShareOverlapEffect.csv
+Disperse.exe combine -m Input\FundSectorEffect.csv,Input\ShareOverlapEffect.csv -a 0.85 -r Output\CombinedExposures.csv
 Disperse.exe optimise -m Input\CombinedExposures.csv -f Output\OutputFactorWeightings.csv Input\EquityFunds.csv Output\OutputPortfolio.csv 0.09 >Output\OptimisationOut.txt
 
 Disperse.exe optimise Input\TestSecurities1.csv Output\IndependentMinVolatilityPortfolio.csv 0 >Output\IndependentMinVolatilityPortfolioOut.txt
