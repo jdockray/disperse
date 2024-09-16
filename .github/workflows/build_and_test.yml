@@ -9,6 +9,7 @@ on:
 env:
   SOLUTION_LOCATION: Disperse
   SOLUTION_FILE_NAME: Disperse.sln
+  EXECUTABLE_NAME: Disperse.exe
 
 permissions:
   contents: read
@@ -29,3 +30,9 @@ jobs:
     - name: Build
       working-directory: ${{env.SOLUTION_LOCATION}}
       run: msbuild /m /p:Platform=x64 /p:Configuration=Release ${{env.SOLUTION_FILE_NAME}}
+
+    - name: Upload built binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.EXECUTABLE_NAME}}
+          path: ${{env.SOLUTION_LOCATION}}/x64/Release/${{env.EXECUTABLE_NAME}}
