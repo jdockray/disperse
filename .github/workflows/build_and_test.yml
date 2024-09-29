@@ -10,7 +10,7 @@ env:
   SOLUTION_LOCATION: Disperse
   SOLUTION_FILE_NAME: Disperse.sln
   EXECUTABLE_NAME: Disperse.exe
-  TEST_LOCATION: Testing
+  TEST_LOCATION: Testing/Integration
   TEST_COMMAND: Test.bat
 
 permissions:
