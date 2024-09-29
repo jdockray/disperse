@@ -1,18 +1,19 @@
 "Factor","Exposure"
-"Communications",0.036
-"Consumer discretionary",0.063
-"Consumer staples",0.02
-"Energy",0.116
-"Financial",0.17
-"Healthcare",0.095
-"Industrial",0.138
-"MSBC Holdings",0.004
-"Macrosoft",0.005
-"Materials",0.047
-"Property",0.027
-"Technology",0.071
-"Utilities",0.052
-"jShares Min Volatility ETF Acc residual",0.034
-"KP Norman Dev Wrld Lrg Cap Eq Acc residual",0.032
-"Saturn Glbl Managed Equity Fund Acc residual",0.018
-"Cash residual",0.071
+"Communications",0.004
+"Consumer discretionary",0.007
+"Consumer staples",0.002
+"Energy",0.013
+"Financial",0.019
+"Healthcare",0.01
+"Industrial",0.015
+"MSBC Holdings",0
+"Macrosoft",0
+"Market",0.785
+"Materials",0.005
+"Property",0.003
+"Technology",0.008
+"Utilities",0.006
+"jShares Min Volatility ETF Acc residual",0.019
+"KP Norman Dev Wrld Lrg Cap Eq Acc residual",0.019
+"Saturn Glbl Managed Equity Fund Acc residual",0.009
+"Cash residual",0.076
