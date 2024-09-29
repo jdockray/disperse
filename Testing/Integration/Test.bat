@@ -15,4 +15,4 @@ Disperse.exe optimise Input\TestSecurities1.csv Output\IndependentMinVolatilityP
 Disperse.exe optimise -l Input\AandBPerfectCorrelation.csv Input\TestSecurities2.csv Output\TwoFundsCorrelatedPortfolio.csv 0 >Output\TwoFundsCorrelatedPortfolioOut.txt
 Disperse.exe optimise -g Input\GroupRestriction.csv Input\TestSecurities1.csv Output\GroupRestrictionPortfolio.csv 0 >Output\GroupRestrictionPortfolioOut.txt
 
-git diff Output ExpectedOutput
+git diff --no-index Output ExpectedOutput
