@@ -1,4 +1,6 @@
 
+*** Incorrect text to break test ***
+
 This is a portfolio optimisation program that accepts as input a list of securities with expected returns
 and risks and a risk factor matrix and returns the weightings that will deliver a minimum return for the
 lowest overall risk.
