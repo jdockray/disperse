@@ -11,7 +11,7 @@ env:
   SOLUTION_FILE_NAME: Disperse.sln
   EXECUTABLE_NAME: Disperse.exe
   TEST_LOCATION: Testing/Integration
-  TEST_COMMAND: Test.bat
+  TEST_COMMAND: ./Test.bat
 
 permissions:
   contents: read
@@ -55,4 +55,4 @@ jobs:
         
     - name: Run tests
       working-directory: ${{env.TEST_LOCATION}}
-      run: ${{env.TEST_LOCATION}}/${{env.TEST_COMMAND}}
+      run: ${{env.TEST_COMMAND}}
