@@ -10,6 +10,8 @@ env:
   SOLUTION_LOCATION: Disperse
   SOLUTION_FILE_NAME: Disperse.sln
   EXECUTABLE_NAME: Disperse.exe
+  TEST_LOCATION: Testing
+  TEST_COMMAND: Test.bat
 
 permissions:
   contents: read
@@ -36,3 +38,20 @@ jobs:
       with:
         name: ${{env.EXECUTABLE_NAME}}
         path: ${{env.SOLUTION_LOCATION}}/x64/Release/${{env.EXECUTABLE_NAME}}
+
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Retrieve built binary
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{env.EXECUTABLE_NAME}}
+        path: ${{env.TEST_LOCATION}}
+        
+    - name: Run tests
+      working-directory: ${{env.TEST_LOCATION}}
+      run: ${{env.TEST_COMMAND}}
