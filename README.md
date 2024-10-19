@@ -1,15 +1,54 @@
 # disperse
 
-A C++ Windows console portfolio optimisation program. The [OSQP quadratic programming solver](https://osqp.org/) is used to determine the asset allocation with the lowest volatility for a specified minimum expected return.
+Disperse is a C++ console financial portfolio optimisation program for Windows. It attempts to determine the asset allocation (the proportion of a portfolio which should be attributed to each of a selection of possible investments) that has the lowest volatility (price variation with time) while still achieving a specified minimum expected return (such as 6% a year). For those familiar with this area, it performs classic mean-variance portfolio optimisation but the asset covariance matrix is calculated using a factor model. The optimisation is performed using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
 
-I have used this program to assist with the rebalancing of my global equity portfolio so code quality has always been important. However, it has always been intended to be for my own personal use and I never expected anyone to see the code when I started. It lacks the comments and tests that should be present in professional software but I believe it still demonstrates the pride I take in writing decent code, even when nobody is watching.
+I wrote this software for my own personal use, never expecting anyone to see the code when I started. It consequently lacks the comments and tests that should be present in professional software.
 
-## Third Party Attribution
+## Introduction
+
+This software accepts as input a list of securities (potential investments), with, for each asset:
+- an expected return, $\mu$ e.g. 1.07 (7% return).
+- the expected return volatility, $\sigma$, the standard deviation of the value of the security. (See Wikipedia [here](https://en.wikipedia.org/wiki/Quadratic_programming).)
+- estimates of the proportion of the variation attributable to each of a set of independent factors (exposures), $\sqrt{f_{ij}}$, which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account to explain the remaining variance.
+
+The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
+
+$$\boldsymbol{\Sigma} = diag(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}diag(\boldsymbol{\sigma})$$
+where $\boldsymbol{\Sigma}$ is the asset covariance matrix,\
+$diag(\boldsymbol{\sigma})$ is the diagonal matrix of the vector of standard deviations,\
+$\boldsymbol{\sigma} = (\sigma_1, \sigma_2, ..., \sigma_N)$
+and $\boldsymbol{F}$ is a matrix defined by this formula, where $f_{ij}$ is the square root of the relative change in price of security i in response to a change in factor j. For example, if factor j changes by $x$ percent and the price of security i changes by $2x$ percent, then $f_{ij}$ would be $\sqrt{2}$. These values are the square roots of the values in the input exposure matrix described above.
+
+$\boldsymbol{F^\mathrm{T}F}$ is the correlation matrix suggested by the factor weightings with diagonal elements of 1, and multiplying by the standard deviation diagonal matrix at the start and end produces the covariance matrix, $\boldsymbol{\Sigma}$, where the diagonal elements correspond to the variances of the assets. Calculating the covariance matrix in this way ensures that it fulfils the mathematical requirements of a valid covariance matrix, specifically, that it is square, symmetrical and [positive semi-definite](https://en.wikipedia.org/wiki/Definite_matrix), as required by the subsequent optimisation.
+
+How the user derives the expected returns and standard deviation of returns is left up to them, but the intention is that they use robust values that reflect the considerable uncertainty associated with the prediction of financial market returns. I have previously used the SSRI (Synthetic Risk Reward Indicator) as a stable indicator of the risk level of mutual funds and assumed [arbitrage pricing theory (APT)](https://en.wikipedia.org/wiki/Arbitrage_pricing_theory) when predicting the return, meaning that the expected return is assumed to correlate with the riskiness of the asset. The factor exposures could be used to estimate the return based on the [Capital Asset Pricing Model](https://en.wikipedia.org/wiki/Capital_asset_pricing_model).
+
+The expected returns and covariance matrix are used to find the optimal portfolio as in classical mean-variance optimisation where the risk is minimised subject to achieving a minimum target return.
+
+From p25 of Fabozzi (2007) [Robust Portfolio Optimization and Management](https://www.amazon.co.uk/Robust-Portfolio-Optimization-Management-Fabozzi/dp/047192122X), Wiley and Sons, Hoboken, New Jersey:
+
+minimise $w^\mathrm{T}\boldsymbol{\Sigma}w$ (Minimise the price variance)\
+subject to\
+$w^\mathrm{T}\boldsymbol{\mu}\geq\mu_0$ (The target return being achieved)\
+$\sum_{i}$=1 (All of the portfolio must be allocated)\
+$w_i \geq 0$ for all i (No short selling)
+
+The program also allows additional constraints to be placed on the proportion of the portfolio assigned to particular securities or groups of securities. 
+
+A risk-free asset is useful to achieve optimal portfolios at low volatilities (portfolios on the [capital market line](https://en.wikipedia.org/wiki/Efficient_frontier)).
+
+## Usage
+
+This program is run from the command line, specifying input CSV (comma separated variable) files. In addition to facilitating the optimisation, it provides operations useful to generate the factor matrix.
+
+For example usage please see my tests [here](Testing/Integration/README.md).
+
+## Third-Party Attribution
 
 ### OSQP
 Copyright (c) 2019 Bartolomeo Stellato, Goran Banjac, Paul Goulart, Stephen Boyd
 
-This work would not be possible without the [Operator Splitting solver for Quadratic Programs (OSQP)](https://osqp.org/) (Oxford Univerity).
+This work would not be possible without the [Operator Splitting solver for Quadratic Programs (OSQP)](https://osqp.org/) (Oxford University).
 
 The algorithm is described in this paper:
 Stellato, B., Banjac, G., Goulart, P., Bemporad, A. and Boyd, S. (2020) [OSQP: an operator splitting solver for quadratic programs](https://doi.org/10.1007/s12532-020-00179-2), 12(4), 637-672.
@@ -23,7 +62,7 @@ OSQP includes the external modules AMD and QDLDL (below) along with other softwa
 ### AMD
 Copyright (c) 1996-2015, Timothy A. Davis, Patrick R. Amestoy, and Iain S. Duff.
 
-AMD (built by my "amd" Visual Studio project) is a third party library [included in the OSQP respository](https://github.com/osqp/osqp/tree/c7de4a6748e31be0b91a2cac2eb51625c89ca380/algebra/_common/lin_sys/qdldl/amd). AMD is licensed under the [3-clause BSD License](https://github.com/osqp/osqp/blob/c7de4a6748e31be0b91a2cac2eb51625c89ca380/algebra/_common/lin_sys/qdldl/amd/LICENSE).
+AMD (built by my "amd" Visual Studio project) is a third-party library [included in the OSQP repository](https://github.com/osqp/osqp/tree/c7de4a6748e31be0b91a2cac2eb51625c89ca380/algebra/_common/lin_sys/qdldl/amd). AMD is licensed under the [3-clause BSD License](https://github.com/osqp/osqp/blob/c7de4a6748e31be0b91a2cac2eb51625c89ca380/algebra/_common/lin_sys/qdldl/amd/LICENSE).
 
 ### QDLDL
 Copyright (c) 1996-2015, Timothy A. Davis, Patrick R. Amestoy, and Iain S. Duff.
@@ -39,10 +78,6 @@ In order to use OSQP, I have used [dlib](http://dlib.net/) by including [the sou
 Copyright (c) Andrew DeOrio <awdeorio@umich.edu>
 
 I have also used [csvstream](https://github.com/awdeorio/csvstream), "an easy-to-use CSV file parser for C++" by [Andrew DeOrio](http://andrewdeorio.com), who works at the University of Michigan. This uses the [MIT License](https://github.com/awdeorio/csvstream/blob/59b85c01d39e46dc1a126430f279379aeb6fca11/LICENSE) and the repository (with its licence) is included in mine as a submodule.
-
-## Usage
-
-TO DO
 
 ## Licence
 
