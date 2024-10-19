@@ -8,7 +8,7 @@ I wrote this software for my own personal use, never expecting anyone to see the
 
 This software accepts as input a list of securities (potential investments), with, for each asset:
 - an expected return, $\mu$ e.g. 1.07 (7% return).
-- the expected return volatility, $\sigma$, the standard deviation of the value of the security. (See Wikipedia [here](https://en.wikipedia.org/wiki/Quadratic_programming).)
+- the expected return volatility, $\sigma$, the standard deviation of the value of the security. (See Wikipedia [here](https://en.wikipedia.org/wiki/Modern_portfolio_theory).)
 - estimates of the proportion of the variation attributable to each of a set of independent factors (exposures), $\sqrt{f_{ij}}$, which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account to explain the remaining variance.
 
 The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
@@ -36,6 +36,12 @@ $w_i \geq 0$ for all i (No short selling)
 The program also allows additional constraints to be placed on the proportion of the portfolio assigned to particular securities or groups of securities. 
 
 A risk-free asset is useful to achieve optimal portfolios at low volatilities (portfolios on the [capital market line](https://en.wikipedia.org/wiki/Efficient_frontier)).
+
+## Interesting code
+
+* [Main entry point](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Disperse.cpp#L61)
+* [Calling OSQP](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Optimisation.cpp#L169)
+* [SparseMatrix class definition](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Matrices.hpp#L12)
 
 ## Usage
 
