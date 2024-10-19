@@ -9,13 +9,13 @@ I wrote this software for my own personal use, never expecting anyone to see the
 This software accepts as input a list of securities (potential investments), with, for each asset:
 - an expected return, $\mu$ e.g. 1.07 (7% return).
 - the expected return volatility, $\sigma$, the standard deviation of the value of the security. (See Wikipedia [here](https://en.wikipedia.org/wiki/Modern_portfolio_theory).)
-- estimates of the proportion of the variation attributable to each of a set of independent factors (exposures), $\sqrt{f_{ij}}$, which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account to explain the remaining variance.
+- estimates of the proportion of the variation attributable to each of a set of independent factors (exposures), $\mathrm{sqrt}(f_{ij})$, which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account to explain the remaining variance.
 
 The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
 
-$$\boldsymbol{\Sigma} = diag(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}diag(\boldsymbol{\sigma})$$
+$\boldsymbol{\Sigma} = \mathrm{diag}(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}\mathrm{diag}(\boldsymbol{\sigma})$\
 where $\boldsymbol{\Sigma}$ is the asset covariance matrix,\
-$diag(\boldsymbol{\sigma})$ is the diagonal matrix of the vector of standard deviations,\
+$\mathrm{diag}(\boldsymbol{\sigma})$ is the diagonal matrix of the vector of standard deviations,\
 $\boldsymbol{\sigma} = (\sigma_1, \sigma_2, ..., \sigma_N)$
 and $\boldsymbol{F}$ is a matrix defined by this formula, where $f_{ij}$ is the square root of the relative change in price of security i in response to a change in factor j. For example, if factor j changes by $x$ percent and the price of security i changes by $2x$ percent, then $f_{ij}$ would be $\sqrt{2}$. These values are the square roots of the values in the input exposure matrix described above.
 
