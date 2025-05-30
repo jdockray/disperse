@@ -121,29 +121,25 @@ void printGeneralHelp(std::ostream& out)
 	out << "" << std::endl;
 }
 
-void runHelpCommand(const std::vector<std::string>& args) {
-	if (args.size() == 0) {
-		printGeneralHelp(std::cout);
-		return;
-	}
-	std::string command = args[0]; // A command for which help is requested
-	if (command == "combine")
+void printHelpForCommand(const std::string& commandForWhichHelpIsRequested, std::ostream& out)
+{
+	if (commandForWhichHelpIsRequested == "combine")
 	{
-		printCombineCommandHelp(std::cout);
+		printCombineCommandHelp(out);
 	}
-	else if (command == "help")
+	else if (commandForWhichHelpIsRequested == "help")
 	{
-		printHelpCommandHelp(std::cout);
+		printHelpCommandHelp(out);
 	}
-	else if (command == "multiply")
+	else if (commandForWhichHelpIsRequested == "multiply")
 	{
-		printMultiplyCommandHelp(std::cout);
+		printMultiplyCommandHelp(out);
 	}
-	else if (command == "optimise")
+	else if (commandForWhichHelpIsRequested == "optimise")
 	{
-		printOptimiseCommandHelp(std::cout);
+		printOptimiseCommandHelp(out);
 	}
 	else {
-		printGeneralHelp(std::cout);
+		printGeneralHelp(out);
 	}
 }

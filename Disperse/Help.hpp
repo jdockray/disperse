@@ -7,6 +7,7 @@
 #include <string>
 #pragma warning(pop)
 
-void runHelpCommand(const std::vector<std::string>& args); void printGeneralHelp(std::ostream& out);
+void printHelpForCommand(const std::string& commandForWhichHelpIsRequested, std::ostream& out);
+void printGeneralHelp(std::ostream& out);
 
 #endif // DISPERSE_HELP

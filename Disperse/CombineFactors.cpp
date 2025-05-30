@@ -1,6 +1,5 @@
 
 #include "CombineFactors.hpp"
-#include "CmdLine.hpp"
 #include "Elements.hpp"
 #include "ExpectedException.hpp"
 
@@ -32,12 +31,11 @@ void addElements(const std::vector<std::pair<Element, double>>& newElements, std
 	}
 }
 
-void runCombineCommand(const std::vector<std::string>& args)
+void runCombineCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
+	const std::optional<std::string>& marketRiskString, const std::string& marketRiskName, const std::optional<std::string>& gridOutputFileName,
+	const std::optional<std::string>& listOutputFileName)
 {
-	const std::string DEFAULT_MARKET_RISK_NAME = "Market";
-	CmdLineArgs cmdLineArgs(args);
 	std::map<Element, double> elements;
-	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('m');
 	if (gridInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
@@ -45,7 +43,6 @@ void runCombineCommand(const std::vector<std::string>& args)
 			addElements(getElementsFromGridFile(fileName), elements);
 		}
 	}
-	const std::optional<std::string> listInputFileNameString = cmdLineArgs.getSingleArgumentOption('l');
 	if (listInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(listInputFileNameString.value()))
@@ -53,10 +50,8 @@ void runCombineCommand(const std::vector<std::string>& args)
 			addElements(getElementsFromListFile(fileName), elements);
 		}
 	}
-	std::optional<std::string> marketRiskString = cmdLineArgs.getSingleArgumentOption('a');
 	if (marketRiskString.has_value()) {
 		double marketRisk = CouldNotParseNumberException::convert(marketRiskString.value());
-		std::string marketRiskName = cmdLineArgs.getSingleArgumentOption('b').value_or(DEFAULT_MARKET_RISK_NAME);
 		std::map<Element, double> additionalMarketRiskElements;
 		for (const std::pair<Element, double>& element : elements)
 		{
@@ -69,23 +64,20 @@ void runCombineCommand(const std::vector<std::string>& args)
 	{
 		pairs.push_back(element);
 	}
-	const std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 	if (gridOutputFileName)
 	{
 		putElementsInGridFile(gridOutputFileName.value(), pairs);
 	}
-	const std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
 	if (listOutputFileName)
 	{
 		putElementsInListFile(listOutputFileName.value(), pairs);
 	}
 }
 
-void runMultiplyCommand(const std::vector<std::string>& args)
+void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
+	const std::optional<std::string>& scalarToMultiplyBy, const std::optional<std::string>& gridOutputFileName, const std::optional<std::string>& listOutputFileName)
 {
-	CmdLineArgs cmdLineArgs(args);
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
-	const std::optional<std::string> gridInputFileNameString = cmdLineArgs.getSingleArgumentOption('m');
 	if (gridInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
@@ -93,7 +85,6 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 			elementSets.push_back(getElementsFromGridFile(fileName));
 		}
 	}
-	const std::optional<std::string> listInputFileNameString = cmdLineArgs.getSingleArgumentOption('l');
 	if (listInputFileNameString)
 	{
 		for (const std::string& fileName : getDelimitedElements(listInputFileNameString.value()))
@@ -128,17 +119,14 @@ void runMultiplyCommand(const std::vector<std::string>& args)
 	default:
 		throw IncompatibleInputArgumentsException("There must be either 1 or 2 input files.");
 	}
-	const std::optional<std::string> scalarToMultiplyBy = cmdLineArgs.getSingleArgumentOption('s');
 	if (scalarToMultiplyBy.has_value())
 	{
 		outputMatrix = multiply(outputMatrix.value(), std::stod(scalarToMultiplyBy.value()));
 	}
-	const std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 	if (gridOutputFileName)
 	{
 		putElementsInGridFile(gridOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());
 	}
-	const std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
 	if (listOutputFileName)
 	{
 		putElementsInListFile(listOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());

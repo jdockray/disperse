@@ -1,7 +1,6 @@
 #include "Input.hpp"
 #include "Output.hpp"
 #include "ExpectedException.hpp"
-#include "CmdLine.hpp"
 #include "Optimisation.hpp"
 #include "Constraint.hpp"
 #include "Group.hpp"
@@ -171,7 +170,7 @@ void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& r
 
 const std::string RISK_OUTPUT_STRING = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
 
-void run(
+void runOptimiseCommand(
 	const std::string& inputFileName,
 	const std::string& securityOutputFileName,
 	const double minimumReturn,
@@ -229,20 +228,3 @@ void run(
 	}
 }
 
-void runOptimiseCommand(const std::vector<std::string>& args)
-{
-	CmdLineArgs cmdLineArgs(args);
-	const std::optional<std::string> factorGridFileName = cmdLineArgs.getSingleArgumentOption('m');
-	const std::optional<std::string> factorListFileName = cmdLineArgs.getSingleArgumentOption('l');
-	const std::optional<std::string> factorOutputFileName = cmdLineArgs.getSingleArgumentOption('f');
-	const std::optional<std::string> groupInputFileName = cmdLineArgs.getSingleArgumentOption('g');
-	const std::optional<std::string> groupOutputFileName = cmdLineArgs.getSingleArgumentOption('p');
-	const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
-	MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3, "There are not enough positional command line arguments.");
-	std::list<std::string>::const_iterator position = requiredArgs.begin();
-	std::string inputFileName = *position;
-	std::string securityOutputFileName = *(++position);
-	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-	run(inputFileName, securityOutputFileName, minimumReturn, factorGridFileName, factorListFileName,
-		factorOutputFileName, groupInputFileName, groupOutputFileName);
-}
