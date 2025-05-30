@@ -37,12 +37,6 @@ The program also allows additional constraints to be placed on the proportion of
 
 A risk-free asset is useful to achieve optimal portfolios at low volatilities (portfolios on the [capital market line](https://en.wikipedia.org/wiki/Efficient_frontier)).
 
-## Interesting code
-
-* [Main entry point](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Disperse.cpp#L61)
-* [Calling OSQP](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Optimisation.cpp#L169)
-* [SparseMatrix class definition](https://github.com/jdockray/disperse/blob/0e081a9558556759cead71b57f8fa6a6f83cea92/Disperse/Matrices.hpp#L12)
-
 ## Usage
 
 This program is run from the command line, specifying input CSV (comma separated variable) files. In addition to facilitating the optimisation, it provides operations useful to generate the factor matrix.
