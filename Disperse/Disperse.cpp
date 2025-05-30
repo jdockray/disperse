@@ -25,25 +25,27 @@ void runCommand(const int argc, const char* const argv[])
 	CmdLineArgs cmdLineArgs(commandArgs);
 	if (command == "combine")
 	{
-		std::vector<std::unique_ptr<CSVInput>> csvInputs;
-
+		std::vector<std::unique_ptr<CSVInput>> gridCSVInputs;
 		std::vector<std::reference_wrapper<AbstractInput>> gridInputs;
 		std::optional<std::string> gridInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('m');
 		if (gridInputFileNamesCommaDelimited) {
 			std::vector<std::string> gridInputFiles = getDelimitedElements(gridInputFileNamesCommaDelimited.value());
+			gridCSVInputs.reserve(gridInputFiles.size()); // To prevent relocation as elements are added
 			for (const std::string& gridInputFile : gridInputFiles) {
-				csvInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
-				gridInputs.push_back(*csvInputs.back());
+				gridCSVInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
+				gridInputs.push_back(*gridCSVInputs.back()); // Relies on no relocation of gridCSVInputs
 			}
 		}
 
+		std::vector<std::unique_ptr<CSVInput>> listCSVInputs;
 		std::vector<std::reference_wrapper<AbstractInput>> listInputs;
 		std::optional<std::string> listInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('l');
 		if (listInputFileNamesCommaDelimited) {
 			std::vector<std::string> listInputFiles = getDelimitedElements(listInputFileNamesCommaDelimited.value());
+			listCSVInputs.reserve(listInputFiles.size()); // To prevent relocation as elements are added
 			for (const std::string& listInputFile : listInputFiles) {
-				csvInputs.push_back(std::make_unique<CSVInput>(listInputFile));
-				listInputs.push_back(*csvInputs.back());
+				listCSVInputs.push_back(std::make_unique<CSVInput>(listInputFile));
+				listInputs.push_back(*listCSVInputs.back()); // Relies on no relocation of listCSVInputs
 			}
 		}
 
@@ -75,25 +77,27 @@ void runCommand(const int argc, const char* const argv[])
 	}
 	else if (command == "multiply")
 	{
-		std::vector<std::unique_ptr<CSVInput>> csvInputs;
-
+		std::vector<std::unique_ptr<CSVInput>> gridCSVInputs;
 		std::vector<std::reference_wrapper<AbstractInput>> gridInputs;
 		std::optional<std::string> gridInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('m');
 		if (gridInputFileNamesCommaDelimited) {
 			std::vector<std::string> gridInputFiles = getDelimitedElements(gridInputFileNamesCommaDelimited.value());
+			gridCSVInputs.reserve(gridInputFiles.size()); // To prevent relocation as elements are added
 			for (const std::string& gridInputFile : gridInputFiles) {
-				csvInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
-				gridInputs.push_back(*csvInputs.back());
+				gridCSVInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
+				gridInputs.push_back(*gridCSVInputs.back()); // Relies on no relocation of gridCSVInputs
 			}
 		}
 
+		std::vector<std::unique_ptr<CSVInput>> listCSVInputs;
 		std::vector<std::reference_wrapper<AbstractInput>> listInputs;
 		std::optional<std::string> listInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('l');
 		if (listInputFileNamesCommaDelimited) {
 			std::vector<std::string> listInputFiles = getDelimitedElements(listInputFileNamesCommaDelimited.value());
+			listCSVInputs.reserve(listInputFiles.size()); // To prevent relocation as elements are added
 			for (const std::string& listInputFile : listInputFiles) {
-				csvInputs.push_back(std::make_unique<CSVInput>(listInputFile));
-				listInputs.push_back(*csvInputs.back());
+				listCSVInputs.push_back(std::make_unique<CSVInput>(listInputFile));
+				listInputs.push_back(*listCSVInputs.back()); // Relies on no relocation of listCSVInputs
 			}
 		}
 		std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');

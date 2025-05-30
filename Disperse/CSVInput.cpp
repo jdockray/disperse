@@ -22,12 +22,16 @@ std::vector<std::string> CSVInput::getHeader() const {
 
 std::map<std::string, std::string> CSVInput::readEntryAsMap() {
 	std::map<std::string, std::string> row;
-	inputStream >> row;
+	if (!(inputStream >> row)) {
+		row.clear();
+	}
 	return row;
 }
 
 std::vector<std::pair<std::string, std::string> > CSVInput::readEntryAsPairVector() {
 	std::vector<std::pair<std::string, std::string> > values;
-	inputStream >> values;
+	if (!(inputStream >> values)) {
+		values.clear();
+	}
 	return values;
 }
