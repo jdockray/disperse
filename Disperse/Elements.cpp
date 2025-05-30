@@ -1,10 +1,10 @@
 
 #include "Elements.hpp"
+#include "CSVInput.hpp"
 #include "CSVOutput.hpp"
 #include "ExpectedException.hpp"
 
 #pragma warning(push, 0)
-#include "csvstream\csvstream\csvstream.hpp"
 #include <map>
 #pragma warning(pop)
 
@@ -75,15 +75,14 @@ void ensureColumnInExpectedPlace(const std::vector<std::string> header, std::siz
 	}
 }
 
-std::vector<std::pair<Element, double>> getElementsFromGridFile(const std::string& inputFileName)
+std::vector<std::pair<Element, double>> getElementsFromGridFile(AbstractInput& input)
 {
-	csvstream inputStream(inputFileName);
-	std::vector<std::string> header = inputStream.getheader();
-	ensureColumnInExpectedPlace(header, 0, "", inputFileName);
-	std::vector<std::pair<std::string, std::string> > rowValues;
+	std::vector<std::string> header = input.getHeader();
+	ensureColumnInExpectedPlace(header, 0, "", input.getName());
 	std::vector<std::pair<Element, double>> elements;
-	std::string fileContext = "(" + inputFileName + ", ";
-	while (inputStream >> rowValues)
+	std::string fileContext = "(" + input.getName() + ", ";
+	std::vector<std::pair<std::string, std::string> > rowValues = input.readEntryAsPairVector();
+	while (!rowValues.empty()) // Checks if vector is empty
 	{
 		std::vector<std::pair<std::string, std::string>>::const_iterator columnValue = rowValues.begin();
 		std::string row = columnValue->second;
@@ -97,29 +96,30 @@ std::vector<std::pair<Element, double>> getElementsFromGridFile(const std::strin
 			));
 			columnValue++;
 		}
+		rowValues = input.readEntryAsPairVector();
 	}
 	return elements;
 }
 
-std::vector<std::pair<Element, double>> getElementsFromListFile(const std::string& inputFileName)
+std::vector<std::pair<Element, double>> getElementsFromListFile(AbstractInput& input)
 {
-	csvstream inputStream(inputFileName);
-	std::vector<std::string> header = inputStream.getheader();
-	ensureColumnInExpectedPlace(header, 0, "Row", inputFileName);
-	ensureColumnInExpectedPlace(header, 1, "Column", inputFileName);
-	ensureColumnInExpectedPlace(header, 2, "Value", inputFileName);
-	std::vector<std::pair<std::string, std::string> > rowValues;
+	std::vector<std::string> header = input.getHeader();
+	ensureColumnInExpectedPlace(header, 0, "Row", input.getName());
+	ensureColumnInExpectedPlace(header, 1, "Column", input.getName());
+	ensureColumnInExpectedPlace(header, 2, "Value", input.getName());
+	std::vector<std::pair<std::string, std::string> > rowValues = input.readEntryAsPairVector();
 	std::vector<std::pair<Element, double>> elements;
-	while (inputStream >> rowValues)
+	while (!rowValues.empty()) // While vector is not empty
 	{
 		elements.push_back(std::pair<Element, double>(
 			Element(rowValues.at(0).second, rowValues.at(1).second), std::stod(rowValues.at(2).second))
 		);
+		rowValues = input.readEntryAsPairVector();
 	}
 	return elements;
 }
 
-void putElementsInListFile(AbstractCSVOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
+void putElementsInListFile(AbstractOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
 {
 	csvOutput.writeElement("Row");
 	csvOutput.writeElement("Column");
@@ -154,13 +154,13 @@ std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vecto
 	return elements;
 }
 
-void putElementsInListFile(AbstractCSVOutput& csvOutput, const std::vector<std::string>& rowHeadings,
+void putElementsInListFile(AbstractOutput& csvOutput, const std::vector<std::string>& rowHeadings,
 	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
 	putElementsInListFile(csvOutput, elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
 }
 
-void putElementsInGridFile(AbstractCSVOutput& csvOutput, const std::vector<std::string>& rowHeadings,
+void putElementsInGridFile(AbstractOutput& csvOutput, const std::vector<std::string>& rowHeadings,
 							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
 	const std::size_t numberOfRows = matrix.rowCount();
@@ -219,7 +219,7 @@ SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double
 	return matrix;
 }
 
-void putElementsInGridFile(AbstractCSVOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
+void putElementsInGridFile(AbstractOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
 {
 	std::vector<std::string> rowHeadings;
 	std::vector<std::string> columnHeadings;

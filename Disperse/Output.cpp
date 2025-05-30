@@ -7,7 +7,7 @@
 void outputAllocations(
 	const std::vector<std::string>& securityIdentifiers,
 	const std::vector<double>& allocations,
-	AbstractCSVOutput& csvOutput
+	AbstractOutput& csvOutput
 )
 {
 	if (securityIdentifiers.size() != allocations.size())
@@ -28,7 +28,7 @@ void outputAllocations(
 void outputFactorExposures(
 	const std::vector<std::string>& factorNames,
 	const std::vector<double>& allocations,
-	AbstractCSVOutput& csvOutput
+	AbstractOutput& csvOutput
 )
 {
 	if (factorNames.size() != allocations.size())
@@ -49,7 +49,7 @@ void outputFactorExposures(
 void outputGroupProportions(
 	const std::vector<std::string> groupNames,
 	const std::map<std::string, double>& groupProportions,
-	AbstractCSVOutput& csvOutput
+	AbstractOutput& csvOutput
 )
 {
 	csvOutput.writeElement("Group");

@@ -25,6 +25,28 @@ void runCommand(const int argc, const char* const argv[])
 	CmdLineArgs cmdLineArgs(commandArgs);
 	if (command == "combine")
 	{
+		std::vector<std::unique_ptr<CSVInput>> csvInputs;
+
+		std::vector<std::reference_wrapper<AbstractInput>> gridInputs;
+		std::optional<std::string> gridInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('m');
+		if (gridInputFileNamesCommaDelimited) {
+			std::vector<std::string> gridInputFiles = getDelimitedElements(gridInputFileNamesCommaDelimited.value());
+			for (const std::string& gridInputFile : gridInputFiles) {
+				csvInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
+				gridInputs.push_back(*csvInputs.back());
+			}
+		}
+
+		std::vector<std::reference_wrapper<AbstractInput>> listInputs;
+		std::optional<std::string> listInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('l');
+		if (listInputFileNamesCommaDelimited) {
+			std::vector<std::string> listInputFiles = getDelimitedElements(listInputFileNamesCommaDelimited.value());
+			for (const std::string& listInputFile : listInputFiles) {
+				csvInputs.push_back(std::make_unique<CSVInput>(listInputFile));
+				listInputs.push_back(*csvInputs.back());
+			}
+		}
+
 		const std::string default_market_risk_name = "Market";
 		std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 		std::unique_ptr<CSVOutput> gridOutput;
@@ -36,8 +58,9 @@ void runCommand(const int argc, const char* const argv[])
 		if (listOutputFileName) {
 			listOutput = std::make_unique<CSVOutput>(listOutputFileName.value());
 		}
-		runCombineCommand(cmdLineArgs.getSingleArgumentOption('m'), cmdLineArgs.getSingleArgumentOption('l'), cmdLineArgs.getSingleArgumentOption('a'),
-			cmdLineArgs.getSingleArgumentOption('b').value_or(default_market_risk_name), gridOutput.get(), listOutput.get());
+		double additionalMarketRisk = CouldNotParseNumberException::convert(cmdLineArgs.getSingleArgumentOption('a').value_or("0"));
+		runCombineCommand(gridInputs, listInputs, additionalMarketRisk, cmdLineArgs.getSingleArgumentOption('b').value_or(default_market_risk_name),
+			gridOutput.get(), listOutput.get());
 	}
 	else if (command == "help")
 	{	
@@ -52,6 +75,27 @@ void runCommand(const int argc, const char* const argv[])
 	}
 	else if (command == "multiply")
 	{
+		std::vector<std::unique_ptr<CSVInput>> csvInputs;
+
+		std::vector<std::reference_wrapper<AbstractInput>> gridInputs;
+		std::optional<std::string> gridInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('m');
+		if (gridInputFileNamesCommaDelimited) {
+			std::vector<std::string> gridInputFiles = getDelimitedElements(gridInputFileNamesCommaDelimited.value());
+			for (const std::string& gridInputFile : gridInputFiles) {
+				csvInputs.push_back(std::make_unique<CSVInput>(gridInputFile));
+				gridInputs.push_back(*csvInputs.back());
+			}
+		}
+
+		std::vector<std::reference_wrapper<AbstractInput>> listInputs;
+		std::optional<std::string> listInputFileNamesCommaDelimited = cmdLineArgs.getSingleArgumentOption('l');
+		if (listInputFileNamesCommaDelimited) {
+			std::vector<std::string> listInputFiles = getDelimitedElements(listInputFileNamesCommaDelimited.value());
+			for (const std::string& listInputFile : listInputFiles) {
+				csvInputs.push_back(std::make_unique<CSVInput>(listInputFile));
+				listInputs.push_back(*csvInputs.back());
+			}
+		}
 		std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 		std::unique_ptr<CSVOutput> gridOutput;
 		if (gridOutputFileName) {
@@ -62,8 +106,8 @@ void runCommand(const int argc, const char* const argv[])
 		if (listOutputFileName) {
 			listOutput = std::make_unique<CSVOutput>(listOutputFileName.value());
 		}
-		runMultiplyCommand(cmdLineArgs.getSingleArgumentOption('m'), cmdLineArgs.getSingleArgumentOption('l'),
-			cmdLineArgs.getSingleArgumentOption('s'), gridOutput.get(), listOutput.get());
+		double scalarToMultiplyBy = CouldNotParseNumberException::convert(cmdLineArgs.getSingleArgumentOption('s').value_or("1"));
+		runMultiplyCommand(gridInputs, listInputs, scalarToMultiplyBy, gridOutput.get(), listOutput.get());
 	}
 	else if (command == "optimise")
 	{
@@ -73,9 +117,21 @@ void runCommand(const int argc, const char* const argv[])
 		const std::optional<std::string> groupInputFileName = cmdLineArgs.getSingleArgumentOption('g');
 		const std::optional<std::string> groupOutputFileName = cmdLineArgs.getSingleArgumentOption('p');
 		const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
+		std::unique_ptr<CSVInput> factorGridInput;
+		if (factorGridFileName) {
+			factorGridInput = std::make_unique<CSVInput>(factorGridFileName.value());
+		}
+		std::unique_ptr<CSVInput> factorListInput;
+		if (factorListFileName) {
+			factorListInput = std::make_unique<CSVInput>(factorListFileName.value());
+		}
 		std::unique_ptr<CSVOutput> factorOutput;
 		if (factorOutputFileName) {
 			factorOutput = std::make_unique<CSVOutput>(factorOutputFileName.value());
+		}
+		std::unique_ptr<CSVInput> groupInput;
+		if (groupInputFileName) {
+			groupInput = std::make_unique<CSVInput>(groupInputFileName.value());
 		}
 		std::unique_ptr<CSVOutput> groupOutput;
 		if (groupOutputFileName) {
@@ -83,11 +139,12 @@ void runCommand(const int argc, const char* const argv[])
 		}
 		MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3, "There are not enough positional command line arguments.");
 		std::list<std::string>::const_iterator position = requiredArgs.begin();
-		std::string inputFileName = *position;
+		CSVInput input(*position);
 		CSVOutput securityOutput = CSVOutput(*(++position));
 		double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-		runOptimiseCommand(inputFileName, securityOutput, minimumReturn, factorGridFileName, factorListFileName,
-			factorOutput.get(), groupInputFileName, groupOutput.get());
+
+		runOptimiseCommand(input, securityOutput, minimumReturn, factorGridInput.get(), factorListInput.get(), factorOutput.get(),
+			groupInput.get(), groupOutput.get());
 	}
 	else
 	{

@@ -31,30 +31,24 @@ void addElements(const std::vector<std::pair<Element, double>>& newElements, std
 	}
 }
 
-void runCombineCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& marketRiskString, const std::string& marketRiskName, AbstractCSVOutput* gridOutput, AbstractCSVOutput* listOutput)
+void runCombineCommand(std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
+	std::vector<std::reference_wrapper<AbstractInput>>& listInputs, double additionalMarketRisk,
+	const std::string& marketRiskName, AbstractOutput* gridOutput, AbstractOutput* listOutput)
 {
 	std::map<Element, double> elements;
-	if (gridInputFileNameString)
+	for (AbstractInput& gridInput : gridInputs)
 	{
-		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
-		{
-			addElements(getElementsFromGridFile(fileName), elements);
-		}
+		addElements(getElementsFromGridFile(gridInput), elements);
 	}
-	if (listInputFileNameString)
+	for (AbstractInput& listInput : listInputs)
 	{
-		for (const std::string& fileName : getDelimitedElements(listInputFileNameString.value()))
-		{
-			addElements(getElementsFromListFile(fileName), elements);
-		}
+		addElements(getElementsFromListFile(listInput), elements);
 	}
-	if (marketRiskString.has_value()) {
-		double marketRisk = CouldNotParseNumberException::convert(marketRiskString.value());
+	if (additionalMarketRisk != 0) {
 		std::map<Element, double> additionalMarketRiskElements;
 		for (const std::pair<Element, double>& element : elements)
 		{
-			additionalMarketRiskElements[Element(element.first.getRow(), marketRiskName)] = marketRisk;
+			additionalMarketRiskElements[Element(element.first.getRow(), marketRiskName)] = additionalMarketRisk;
 		}
 		elements.insert(additionalMarketRiskElements.begin(), additionalMarketRiskElements.end());
 	}
@@ -73,23 +67,18 @@ void runCombineCommand(const std::optional<std::string>& gridInputFileNameString
 	}
 }
 
-void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& scalarToMultiplyBy, AbstractCSVOutput* gridOutput, AbstractCSVOutput* listOutput)
+void runMultiplyCommand(std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
+	std::vector<std::reference_wrapper<AbstractInput>>& listInputs, double scalarToMultiplyBy, AbstractOutput* gridOutput,
+	AbstractOutput* listOutput)
 {
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
-	if (gridInputFileNameString)
+	for (AbstractInput& gridInput : gridInputs)
 	{
-		for (const std::string& fileName : getDelimitedElements(gridInputFileNameString.value()))
-		{
-			elementSets.push_back(getElementsFromGridFile(fileName));
-		}
+		elementSets.push_back(getElementsFromGridFile(gridInput));
 	}
-	if (listInputFileNameString)
+	for (AbstractInput& listInput : listInputs)
 	{
-		for (const std::string& fileName : getDelimitedElements(listInputFileNameString.value()))
-		{
-			elementSets.push_back(getElementsFromListFile(fileName));
-		}
+		elementSets.push_back(getElementsFromListFile(listInput));
 	}
 	std::vector<std::string> columnHeadings;
 	std::vector<std::string> rowHeadings;
@@ -118,9 +107,9 @@ void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameStrin
 	default:
 		throw IncompatibleInputArgumentsException("There must be either 1 or 2 input files.");
 	}
-	if (scalarToMultiplyBy.has_value())
+	if (scalarToMultiplyBy != 1.0)
 	{
-		outputMatrix = multiply(outputMatrix.value(), std::stod(scalarToMultiplyBy.value()));
+		outputMatrix = multiply(outputMatrix.value(), scalarToMultiplyBy);
 	}
 	if (gridOutput)
 	{

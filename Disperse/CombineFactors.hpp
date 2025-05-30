@@ -3,6 +3,7 @@
 #ifndef COMBINE_FACTORS
 #define COMBINE_FACTORS
 
+#include "CSVInput.hpp"
 #include "CSVOutput.hpp"
 
 #pragma warning(push, 0)
@@ -11,11 +12,23 @@
 #include <string>
 #pragma warning(pop)
 
-void runCombineCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& marketRiskString, const std::string& marketRiskName, AbstractCSVOutput* gridOutput,
-	AbstractCSVOutput* listOutput);
+std::vector<std::string> getDelimitedElements(const std::string& delimitedList);
 
-void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& scalarToMultiplyBy, AbstractCSVOutput* gridOutput, AbstractCSVOutput* listOutput);
+void runCombineCommand(
+	std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
+	std::vector<std::reference_wrapper<AbstractInput>>& listInputs,
+	double additionalMarketRisk,
+	const std::string& marketRiskName,
+	AbstractOutput* gridOutput,
+	AbstractOutput* listOutput
+);
+
+void runMultiplyCommand(
+	std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
+	std::vector<std::reference_wrapper<AbstractInput>>& listInputs,
+	double scalarToMultiplyBy,
+	AbstractOutput* gridOutput,
+	AbstractOutput* listOutput
+);
 
 #endif // #ifndef COMBINE_FACTORS

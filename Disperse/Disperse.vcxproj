@@ -172,6 +172,7 @@
     <ClCompile Include="CmdLine.cpp" />
     <ClCompile Include="CombineFactors.cpp" />
     <ClCompile Include="Constraint.cpp" />
+    <ClCompile Include="CSVInput.cpp" />
     <ClCompile Include="CSVOutput.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="Elements.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="CombineFactors.hpp" />
     <ClInclude Include="Constraint.hpp" />
+    <ClInclude Include="CSVInput.hpp" />
     <ClInclude Include="CSVOutput.hpp" />
     <ClInclude Include="Elements.hpp" />
     <ClInclude Include="ExpectedException.hpp" />

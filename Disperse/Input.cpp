@@ -1,26 +1,25 @@
 
 #include "Input.hpp"
+#include "CSVInput.hpp"
 #include "Matrices.hpp"
 #include "Elements.hpp"
 
 #pragma warning(push, 0)
-#include "csvstream\csvstream\csvstream.hpp"
 #include "dlib\dlib\dlib\matrix.h"
 #pragma warning(pop)
 
 const std::string security_column_name = "Security";
 
-void ensureColumnPresent(const csvstream& inputStream, const std::string& columnName,
-	const std::string& fileName) // File name for reporting
+void ensureColumnPresent(AbstractInput& input, const std::string& columnName)
 {
-	const std::vector headers = inputStream.getheader();
+	const std::vector headers = input.getHeader();
 	if (std::find(headers.begin(), headers.end(), columnName) == headers.end())
 	{
-		throw RequiredColumnNotFoundException(columnName, fileName);
+		throw RequiredColumnNotFoundException(columnName, input.getName());
 	}
 }
 
-ListOfSecurities inputSecurities(const std::string& inputFileName)
+ListOfSecurities inputSecurities(AbstractInput& input)
 {
 	const std::string expected_return_column_name = "Expected";
 	const std::string risk_column_name = "Risk";
@@ -28,11 +27,10 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 	const std::string maximum_allocation_column_name = "Max";
 	const std::string group_column_name = "Group";
 
-	csvstream inputStream(inputFileName);
-	ensureColumnPresent(inputStream, security_column_name, inputFileName);
+	ensureColumnPresent(input, security_column_name);
 	ListOfSecurities securities;
-	std::map<std::string, std::string> row;
-	while (inputStream >> row)
+	std::map<std::string, std::string> row = input.readEntryAsMap();
+	while (!row.empty()) // Checks if map is empty
 	{
 		if (row.at(security_column_name).length() == 0) continue;
 		Security security(row.at(security_column_name));
@@ -62,30 +60,31 @@ ListOfSecurities inputSecurities(const std::string& inputFileName)
 			security.setGroup(groupColumn->second);
 		}
 		securities.add(security);
+		row = input.readEntryAsMap();
 	}
 	securities.verifyProportions();
 	return securities;
 }
 
 // Row = Security, Column = Factor
-void inputFactorGrid(const std::string& inputFileName, ListOfSecurities& securities)
+void inputFactorGrid(AbstractInput& input, ListOfSecurities& securities)
 {
-	for (const std::pair<Element, double>& element : getElementsFromGridFile(inputFileName))
+	for (const std::pair<Element, double>& element : getElementsFromGridFile(input))
 	{
 		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
 	}
 }
 
 // First column / Row = Security, SecondColumn / Column = Factor
-void inputFactorList(const std::string& inputFileName, ListOfSecurities& securities)
+void inputFactorList(AbstractInput& input, ListOfSecurities& securities)
 {
-	for (const std::pair<Element, double>& element : getElementsFromListFile(inputFileName))
+	for (const std::pair<Element, double>& element : getElementsFromListFile(input))
 	{
 		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
 	}
 }
 
-ListOfGroups inputGroups(const std::string& groupInputFileName)
+ListOfGroups inputGroups(AbstractInput& groupInput)
 {
 	ListOfGroups groups;
 
@@ -93,11 +92,10 @@ ListOfGroups inputGroups(const std::string& groupInputFileName)
 	const std::string group_minimum_column_name = "Min";
 	const std::string group_maximum_column_name = "Max";
 
-	csvstream inputStream(groupInputFileName);
-	ensureColumnPresent(inputStream, group_column_name, groupInputFileName);
+	ensureColumnPresent(groupInput, group_column_name);
 
-	std::map<std::string, std::string> row;
-	while (inputStream >> row)
+	std::map<std::string, std::string> row = groupInput.readEntryAsMap();
+	while (!row.empty()) // Tests if map is empty
 	{
 		const std::string groupIdentifier = row.at(group_column_name);
 		if (groupIdentifier.length() == 0) continue;
@@ -115,6 +113,7 @@ ListOfGroups inputGroups(const std::string& groupInputFileName)
 		}
 		
 		groups.add(group);
+		row = groupInput.readEntryAsMap();
 	}
 	return groups;
 }

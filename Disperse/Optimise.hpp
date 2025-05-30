@@ -11,14 +11,14 @@
 #pragma warning(pop)
 
 void runOptimiseCommand(
-	const std::string& inputFileName,
-	AbstractCSVOutput& securityOutput,
-	const double minimumReturn,
-	const std::optional<std::string> factorGridFileName = std::optional<std::string>(),
-	const std::optional<std::string> factorListFileName = std::optional<std::string>(),
-	AbstractCSVOutput* factorOutput = nullptr,
-	const std::optional<std::string> groupInputFileName = std::optional<std::string>(),
-	AbstractCSVOutput* groupOutput = nullptr
+	AbstractInput& securityInput,
+	AbstractOutput& securityOutput,
+	double minimumReturn,
+	AbstractInput* factorGridInput = nullptr,
+	AbstractInput* factorListInput = nullptr,
+	AbstractOutput* factorOutput = nullptr,
+	AbstractInput* groupInput = nullptr,
+	AbstractOutput* groupOutput = nullptr
 );
 
 #endif // DISPERSE_ELEMENTS

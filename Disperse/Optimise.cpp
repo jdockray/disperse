@@ -1,3 +1,6 @@
+
+#include "CSVInput.hpp"
+#include "CSVOutput.hpp"
 #include "Input.hpp"
 #include "Output.hpp"
 #include "ExpectedException.hpp"
@@ -170,29 +173,20 @@ void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& r
 
 const std::string RISK_OUTPUT_STRING = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
 
-void runOptimiseCommand(
-	const std::string& inputFileName,
-	AbstractCSVOutput& securityOutput,
-	const double minimumReturn,
-	const std::optional<std::string> factorGridFileName = std::optional<std::string>(),
-	const std::optional<std::string> factorListFileName = std::optional<std::string>(),
-	AbstractCSVOutput* factorOutput = nullptr,
-	const std::optional<std::string> groupInputFileName = std::optional<std::string>(),
-	AbstractCSVOutput* groupOutput = nullptr)
+void runOptimiseCommand(AbstractInput& securityInput, AbstractOutput& securityOutput, double minimumReturn, AbstractInput* factorGridInput,
+	AbstractInput* factorListInput,	AbstractOutput* factorOutput, AbstractInput* groupInput, AbstractOutput* groupOutput)
 {
-	ListOfSecurities securities = inputSecurities(inputFileName);
-	if (factorGridFileName.has_value())
+	ListOfSecurities securities = inputSecurities(securityInput);
+	if (factorGridInput)
 	{
-		inputFactorGrid(factorGridFileName.value(), securities);
+		inputFactorGrid(*factorGridInput, securities);
 	}
-	if (factorListFileName.has_value())
+	if (factorListInput)
 	{
-		inputFactorList(factorListFileName.value(), securities);
+		inputFactorList(*factorListInput, securities);
 	}
 
-	ListOfGroups groups = groupInputFileName.has_value()
-		? inputGroups(groupInputFileName.value())
-		: ListOfGroups();
+	ListOfGroups groups = groupInput ? inputGroups(*groupInput) : ListOfGroups();
 	ensureAllGroupsPresent(groups, securities.getAllGroups());
 
 	const std::vector<std::string> factorNames = securities.getAllFactors();

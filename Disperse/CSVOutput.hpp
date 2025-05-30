@@ -9,14 +9,14 @@
 #include <fstream>
 #pragma warning(pop)
 
-class AbstractCSVOutput {
+class AbstractOutput {
 public:
 	virtual void writeElement(double number) = 0;
 	virtual void writeElement(std::string text) = 0;
 	virtual void finishLine() = 0;
 };
 
-class CSVOutput : public AbstractCSVOutput
+class CSVOutput : public AbstractOutput
 {
 public:
 	CSVOutput(const std::string& fileName);
@@ -30,6 +30,10 @@ private:
 	bool firstOnLine;
 
 	void insertCommaIfNecessary();
+
+	// Prevent copying
+	CSVOutput(const CSVOutput& other) = delete;
+	CSVOutput& operator=(const CSVOutput& other) = delete;
 };
 
 #endif // CSV_OUTPUT
