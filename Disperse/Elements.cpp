@@ -119,9 +119,8 @@ std::vector<std::pair<Element, double>> getElementsFromListFile(const std::strin
 	return elements;
 }
 
-void putElementsInListFile(const std::string& outputFileName, const std::vector<std::pair<Element, double>>& elements)
+void putElementsInListFile(AbstractCSVOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
 {
-	CSVOutput csvOutput(outputFileName);
 	csvOutput.writeElement("Row");
 	csvOutput.writeElement("Column");
 	csvOutput.writeElement("Value");
@@ -155,13 +154,13 @@ std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vecto
 	return elements;
 }
 
-void putElementsInListFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
+void putElementsInListFile(AbstractCSVOutput& csvOutput, const std::vector<std::string>& rowHeadings,
 	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
-	putElementsInListFile(outputFileName, elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
+	putElementsInListFile(csvOutput, elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
 }
 
-void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::string>& rowHeadings,
+void putElementsInGridFile(AbstractCSVOutput& csvOutput, const std::vector<std::string>& rowHeadings,
 							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
 	const std::size_t numberOfRows = matrix.rowCount();
@@ -175,7 +174,6 @@ void putElementsInGridFile(const std::string& outputFileName, const std::vector<
 		throw ExcessiveSizeException("Matrix of " + std::to_string(numberOfRows) + " x "
 										+ std::to_string(numberOfColumns) + " exceeds size limit.");
 	}
-	CSVOutput csvOutput(outputFileName);
 	csvOutput.writeElement("");
 	for (const std::string& column : columnHeadings)
 	{
@@ -221,10 +219,10 @@ SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double
 	return matrix;
 }
 
-void putElementsInGridFile(const std::string& outputFileName, const std::vector<std::pair<Element, double>>& elements)
+void putElementsInGridFile(AbstractCSVOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
 {
 	std::vector<std::string> rowHeadings;
 	std::vector<std::string> columnHeadings;
-	putElementsInGridFile(outputFileName, rowHeadings, columnHeadings,
+	putElementsInGridFile(csvOutput, rowHeadings, columnHeadings,
 		elementMatrixFromVector(elements, rowHeadings, columnHeadings));
 }

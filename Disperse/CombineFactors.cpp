@@ -32,8 +32,7 @@ void addElements(const std::vector<std::pair<Element, double>>& newElements, std
 }
 
 void runCombineCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& marketRiskString, const std::string& marketRiskName, const std::optional<std::string>& gridOutputFileName,
-	const std::optional<std::string>& listOutputFileName)
+	const std::optional<std::string>& marketRiskString, const std::string& marketRiskName, AbstractCSVOutput* gridOutput, AbstractCSVOutput* listOutput)
 {
 	std::map<Element, double> elements;
 	if (gridInputFileNameString)
@@ -64,18 +63,18 @@ void runCombineCommand(const std::optional<std::string>& gridInputFileNameString
 	{
 		pairs.push_back(element);
 	}
-	if (gridOutputFileName)
+	if (gridOutput)
 	{
-		putElementsInGridFile(gridOutputFileName.value(), pairs);
+		putElementsInGridFile(*gridOutput, pairs);
 	}
-	if (listOutputFileName)
+	if (listOutput)
 	{
-		putElementsInListFile(listOutputFileName.value(), pairs);
+		putElementsInListFile(*listOutput, pairs);
 	}
 }
 
 void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameString, const std::optional<std::string>& listInputFileNameString,
-	const std::optional<std::string>& scalarToMultiplyBy, const std::optional<std::string>& gridOutputFileName, const std::optional<std::string>& listOutputFileName)
+	const std::optional<std::string>& scalarToMultiplyBy, AbstractCSVOutput* gridOutput, AbstractCSVOutput* listOutput)
 {
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
 	if (gridInputFileNameString)
@@ -123,12 +122,12 @@ void runMultiplyCommand(const std::optional<std::string>& gridInputFileNameStrin
 	{
 		outputMatrix = multiply(outputMatrix.value(), std::stod(scalarToMultiplyBy.value()));
 	}
-	if (gridOutputFileName)
+	if (gridOutput)
 	{
-		putElementsInGridFile(gridOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());
+		putElementsInGridFile(*gridOutput, rowHeadings, columnHeadings, outputMatrix.value());
 	}
-	if (listOutputFileName)
+	if (listOutput)
 	{
-		putElementsInListFile(listOutputFileName.value(), rowHeadings, columnHeadings, outputMatrix.value());
+		putElementsInListFile(*listOutput, rowHeadings, columnHeadings, outputMatrix.value());
 	}
 }

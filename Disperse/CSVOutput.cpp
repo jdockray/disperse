@@ -1,7 +1,7 @@
 
 #include "CSVOutput.hpp"
 
-CSVOutput::CSVOutput(std::string fileName)
+CSVOutput::CSVOutput(const std::string& fileName)
 	: m_fileName(fileName), firstOnLine(true)
 {
 	try

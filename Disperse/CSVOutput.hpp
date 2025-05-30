@@ -9,13 +9,20 @@
 #include <fstream>
 #pragma warning(pop)
 
-class CSVOutput
+class AbstractCSVOutput {
+public:
+	virtual void writeElement(double number) = 0;
+	virtual void writeElement(std::string text) = 0;
+	virtual void finishLine() = 0;
+};
+
+class CSVOutput : public AbstractCSVOutput
 {
 public:
-	CSVOutput(std::string fileName);
-	void writeElement(double number);
-	void writeElement(std::string text);
-	void finishLine();
+	CSVOutput(const std::string& fileName);
+	virtual void writeElement(double number);
+	virtual void writeElement(std::string text);
+	virtual void finishLine();
 
 private:
 	const std::string m_fileName;

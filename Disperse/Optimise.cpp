@@ -172,13 +172,13 @@ const std::string RISK_OUTPUT_STRING = "Risk: %." + std::to_string(TOLERANCE_DEC
 
 void runOptimiseCommand(
 	const std::string& inputFileName,
-	const std::string& securityOutputFileName,
+	AbstractCSVOutput& securityOutput,
 	const double minimumReturn,
 	const std::optional<std::string> factorGridFileName = std::optional<std::string>(),
 	const std::optional<std::string> factorListFileName = std::optional<std::string>(),
-	const std::optional<std::string> factorOutputFileName = std::optional<std::string>(),
+	AbstractCSVOutput* factorOutput = nullptr,
 	const std::optional<std::string> groupInputFileName = std::optional<std::string>(),
-	const std::optional<std::string> groupOutputFileName = std::optional<std::string>())
+	AbstractCSVOutput* groupOutput = nullptr)
 {
 	ListOfSecurities securities = inputSecurities(inputFileName);
 	if (factorGridFileName.has_value())
@@ -209,21 +209,21 @@ void runOptimiseCommand(
 		multiply(vectorToHorizontalMatrix(solution), covarianceMatrix, vectorToVerticalMatrix(solution)))
 	)));
 
-	outputAllocations(securities.getIdentifiers(), roundToOptimisationTolerance(solution), securityOutputFileName);
-	if (factorOutputFileName.has_value())
+	outputAllocations(securities.getIdentifiers(), roundToOptimisationTolerance(solution), securityOutput);
+	if (factorOutput)
 	{
 		outputFactorExposures(
 			factorNames,
 			roundToOptimisationTolerance(horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix))),
-			factorOutputFileName.value()
+			*factorOutput
 		);
 	}
-	if (groupOutputFileName.has_value())
+	if (groupOutput)
 	{
 		outputGroupProportions(
 			groups.getIdentifiers(),
 			getGroupProportions(securities, solution),
-			groupOutputFileName.value()
+			*groupOutput
 		);
 	}
 }

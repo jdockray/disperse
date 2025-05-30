@@ -26,9 +26,18 @@ void runCommand(const int argc, const char* const argv[])
 	if (command == "combine")
 	{
 		const std::string default_market_risk_name = "Market";
+		std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
+		std::unique_ptr<CSVOutput> gridOutput;
+		if (gridOutputFileName) {
+			gridOutput = std::make_unique<CSVOutput>(gridOutputFileName.value());
+		}
+		std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
+		std::unique_ptr<CSVOutput> listOutput;
+		if (listOutputFileName) {
+			listOutput = std::make_unique<CSVOutput>(listOutputFileName.value());
+		}
 		runCombineCommand(cmdLineArgs.getSingleArgumentOption('m'), cmdLineArgs.getSingleArgumentOption('l'), cmdLineArgs.getSingleArgumentOption('a'),
-			cmdLineArgs.getSingleArgumentOption('b').value_or(default_market_risk_name), cmdLineArgs.getSingleArgumentOption('r'),
-			cmdLineArgs.getSingleArgumentOption('i'));
+			cmdLineArgs.getSingleArgumentOption('b').value_or(default_market_risk_name), gridOutput.get(), listOutput.get());
 	}
 	else if (command == "help")
 	{	
@@ -43,8 +52,18 @@ void runCommand(const int argc, const char* const argv[])
 	}
 	else if (command == "multiply")
 	{
-		runMultiplyCommand(cmdLineArgs.getSingleArgumentOption('m'), cmdLineArgs.getSingleArgumentOption('l'), cmdLineArgs.getSingleArgumentOption('s'),
-			cmdLineArgs.getSingleArgumentOption('r'), cmdLineArgs.getSingleArgumentOption('i'));
+		std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
+		std::unique_ptr<CSVOutput> gridOutput;
+		if (gridOutputFileName) {
+			gridOutput = std::make_unique<CSVOutput>(gridOutputFileName.value());
+		}
+		std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
+		std::unique_ptr<CSVOutput> listOutput;
+		if (listOutputFileName) {
+			listOutput = std::make_unique<CSVOutput>(listOutputFileName.value());
+		}
+		runMultiplyCommand(cmdLineArgs.getSingleArgumentOption('m'), cmdLineArgs.getSingleArgumentOption('l'),
+			cmdLineArgs.getSingleArgumentOption('s'), gridOutput.get(), listOutput.get());
 	}
 	else if (command == "optimise")
 	{
@@ -54,13 +73,21 @@ void runCommand(const int argc, const char* const argv[])
 		const std::optional<std::string> groupInputFileName = cmdLineArgs.getSingleArgumentOption('g');
 		const std::optional<std::string> groupOutputFileName = cmdLineArgs.getSingleArgumentOption('p');
 		const std::list<std::string>& requiredArgs = cmdLineArgs.remainingArguments();
+		std::unique_ptr<CSVOutput> factorOutput;
+		if (factorOutputFileName) {
+			factorOutput = std::make_unique<CSVOutput>(factorOutputFileName.value());
+		}
+		std::unique_ptr<CSVOutput> groupOutput;
+		if (groupOutputFileName) {
+			groupOutput = std::make_unique<CSVOutput>(groupOutputFileName.value());
+		}
 		MissingArgumentException::verifyListLengthSufficient(requiredArgs, 3, "There are not enough positional command line arguments.");
 		std::list<std::string>::const_iterator position = requiredArgs.begin();
 		std::string inputFileName = *position;
-		std::string securityOutputFileName = *(++position);
+		CSVOutput securityOutput = CSVOutput(*(++position));
 		double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-		runOptimiseCommand(inputFileName, securityOutputFileName, minimumReturn, factorGridFileName, factorListFileName,
-			factorOutputFileName, groupInputFileName, groupOutputFileName);
+		runOptimiseCommand(inputFileName, securityOutput, minimumReturn, factorGridFileName, factorListFileName,
+			factorOutput.get(), groupInputFileName, groupOutput.get());
 	}
 	else
 	{

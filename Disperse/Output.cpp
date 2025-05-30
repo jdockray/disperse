@@ -7,14 +7,13 @@
 void outputAllocations(
 	const std::vector<std::string>& securityIdentifiers,
 	const std::vector<double>& allocations,
-	const std::string& outputFileName
+	AbstractCSVOutput& csvOutput
 )
 {
 	if (securityIdentifiers.size() != allocations.size())
 	{
 		throw UnexpectedException();
 	}
-	CSVOutput csvOutput(outputFileName);
 	csvOutput.writeElement("Asset");
 	csvOutput.writeElement("Allocation");
 	csvOutput.finishLine();
@@ -29,14 +28,13 @@ void outputAllocations(
 void outputFactorExposures(
 	const std::vector<std::string>& factorNames,
 	const std::vector<double>& allocations,
-	const std::string& outputFileName
+	AbstractCSVOutput& csvOutput
 )
 {
 	if (factorNames.size() != allocations.size())
 	{
 		throw UnexpectedException();
 	}
-	CSVOutput csvOutput(outputFileName);
 	csvOutput.writeElement("Factor");
 	csvOutput.writeElement("Exposure");
 	csvOutput.finishLine();
@@ -51,10 +49,9 @@ void outputFactorExposures(
 void outputGroupProportions(
 	const std::vector<std::string> groupNames,
 	const std::map<std::string, double>& groupProportions,
-	const std::string& groupOutputFileName
+	AbstractCSVOutput& csvOutput
 )
 {
-	CSVOutput csvOutput(groupOutputFileName);
 	csvOutput.writeElement("Group");
 	csvOutput.writeElement("Proportion");
 	csvOutput.finishLine();
