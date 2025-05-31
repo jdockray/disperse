@@ -2,8 +2,6 @@
 
 Disperse is a C++ console financial portfolio optimisation program for Windows. It attempts to determine the asset allocation (the proportion of a portfolio which should be attributed to each of a selection of possible investments) that has the lowest volatility (price variation with time) while still achieving a specified minimum expected return (such as 6% a year). For those familiar with this area, it performs classic mean-variance portfolio optimisation but the asset covariance matrix is calculated using a factor model. The optimisation is performed using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
 
-I wrote this software for my own personal use, never expecting anyone to see the code when I started. It consequently lacks the comments and tests that should be present in professional software.
-
 ## Introduction
 
 This software accepts as input a list of securities (potential investments), with, for each asset:
