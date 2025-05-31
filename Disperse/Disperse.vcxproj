@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArgumentUnpacking.cpp" />
     <ClCompile Include="CmdLine.cpp" />
     <ClCompile Include="CombineFactors.cpp" />
     <ClCompile Include="Constraint.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Security.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArgumentUnpacking.hpp" />
     <ClInclude Include="CmdLine.hpp" />
     <ClInclude Include="CombineFactors.hpp" />
     <ClInclude Include="Constraint.hpp" />
