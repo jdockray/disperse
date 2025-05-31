@@ -17,8 +17,7 @@ public:
 	virtual void writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) = 0;
 };
 
-class ListFileWriter : public IWriter
-{
+class ListFileWriter : public IWriter {
 public:
 	ListFileWriter(IOutput& output);
 	virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);
@@ -30,8 +29,7 @@ private:
 		const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix);
 };
 
-class GridFileWriter : public IWriter
-{
+class GridFileWriter : public IWriter {
 public:
 	GridFileWriter(IOutput& output);
 	virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);

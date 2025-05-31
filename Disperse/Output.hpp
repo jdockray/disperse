@@ -16,8 +16,7 @@ public:
 	virtual void finishLine() = 0;
 };
 
-class CSVOutput : public IOutput
-{
+class CSVOutput : public IOutput {
 public:
 	CSVOutput(const std::string& fileName);
 	virtual void writeElement(double number);

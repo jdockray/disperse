@@ -26,8 +26,7 @@ void printHelpCommandHelp(std::ostream& out) {
 	out << "Usage: Disperse.exe help [command]" << std::endl;
 }
 
-void printMultiplyCommandHelp(std::ostream& out)
-{
+void printMultiplyCommandHelp(std::ostream& out) {
 	out << std::endl;
 	out << "Take a matrix of grid or list format (see general help) and optionally, multiply" << std::endl;
 	out << "it by another matrix and/or a scalar before outputing it in grid or list format." << std::endl;
@@ -46,8 +45,7 @@ void printMultiplyCommandHelp(std::ostream& out)
 	out << "    -i Output matrix as list of non-zero matrix elements" << std::endl;
 }
 
-void printOptimiseCommandHelp(std::ostream& out)
-{
+void printOptimiseCommandHelp(std::ostream& out) {
 	out << std::endl;
 	out << "Take a list of securities with expected returns, variances and risk factors and a minimum target return" << std::endl;
 	out << "and generate the portfolio with the minimum predicted variance that will generate the expected return" << std::endl;
@@ -96,8 +94,7 @@ void printOptimiseCommandHelp(std::ostream& out)
 	out << "    'Max'   - The maximum proportion of the portfolio that can be occupied by securities labelled with the group (optional, default 1)" << std::endl;
 }
 
-void printGeneralHelp(std::ostream& out)
-{
+void printGeneralHelp(std::ostream& out) {
 	out << std::endl;
 	out << "This is a portfolio optimisation program that accepts as input a list of securities with expected returns" << std::endl;
 	out << "and risks and a risk factor matrix and returns the weightings that will deliver a minimum return for the" << std::endl;
@@ -121,22 +118,17 @@ void printGeneralHelp(std::ostream& out)
 	out << "" << std::endl;
 }
 
-void printHelpForCommand(const std::string& commandForWhichHelpIsRequested, std::ostream& out)
-{
-	if (commandForWhichHelpIsRequested == "combine")
-	{
+void printHelpForCommand(const std::string& commandForWhichHelpIsRequested, std::ostream& out) {
+	if (commandForWhichHelpIsRequested == "combine") {
 		printCombineCommandHelp(out);
 	}
-	else if (commandForWhichHelpIsRequested == "help")
-	{
+	else if (commandForWhichHelpIsRequested == "help") {
 		printHelpCommandHelp(out);
 	}
-	else if (commandForWhichHelpIsRequested == "multiply")
-	{
+	else if (commandForWhichHelpIsRequested == "multiply") {
 		printMultiplyCommandHelp(out);
 	}
-	else if (commandForWhichHelpIsRequested == "optimise")
-	{
+	else if (commandForWhichHelpIsRequested == "optimise") {
 		printOptimiseCommandHelp(out);
 	}
 	else {

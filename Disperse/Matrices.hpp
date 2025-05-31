@@ -9,8 +9,7 @@
 #include <functional>
 #pragma warning(pop)
 
-class SparseMatrix
-{
+class SparseMatrix {
 public:
 	SparseMatrix(const std::size_t rows, const std::size_t columns);
 	double getValue(const std::size_t row, const std::size_t column) const;

@@ -9,8 +9,7 @@
 #include <vector>
 #pragma warning(pop)
 
-class CmdLineArgs
-{
+class CmdLineArgs {
 public:
 	CmdLineArgs(const std::vector<std::string>& args);
 	bool getNoArgumentOption(const char option);

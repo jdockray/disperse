@@ -11,8 +11,7 @@
 #include <vector>
 #pragma warning(pop)
 
-class Element
-{
+class Element {
 public:
 	Element(const std::string& row, const std::string& column);
 	std::string getRow() const;

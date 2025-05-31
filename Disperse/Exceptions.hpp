@@ -14,8 +14,7 @@
 #include <optional>
 #pragma warning(pop)
 
-enum class ReturnCode
-{
+enum class ReturnCode {
 	SUCCESS = 0,
 	UNEXPECTED_EXCEPTION = 1,
 	MISSING_ARGUMENT_EXCEPTION = 2,
@@ -39,16 +38,14 @@ enum class ReturnCode
 	CSV_STREAM_EXCEPTION = 20
 };
 
-struct ExpectedException : public std::exception
-{
+struct ExpectedException : public std::exception {
 	ExpectedException(const std::string& errorMessage, const ReturnCode returnCode);
 
 	const std::string errorMessage;
 	const ReturnCode returnCode;
 };
 
-class CouldNotParseNumberException : public ExpectedException
-{
+class CouldNotParseNumberException : public ExpectedException {
 public:
 	static double convert(const std::string& stringToParse, const std::string& context = "");
 
@@ -56,8 +53,7 @@ private:
 	CouldNotParseNumberException(const std::string& attemptedToParse, const std::string& context);
 };
 
-class NegativeRiskException : public ExpectedException
-{
+class NegativeRiskException : public ExpectedException {
 public:
 	static void verify(const double risk, const std::string& securityIdentifier);
 
@@ -65,58 +61,49 @@ private:
 	NegativeRiskException(const double risk, const std::string& securityIdentifier);
 };
 
-class InvalidHoldingLimitsException : public ExpectedException
-{
+class InvalidHoldingLimitsException : public ExpectedException {
 public:
 	InvalidHoldingLimitsException(const std::string& message);
 };
 
-class IOException : public ExpectedException
-{
+class IOException : public ExpectedException {
 public:
 	IOException();
 };
 
-class InputFileException : public ExpectedException
-{
+class InputFileException : public ExpectedException {
 public:
 	InputFileException(const std::string& inputFileName);
 };
 
-class OutputFileException : public ExpectedException
-{
+class OutputFileException : public ExpectedException {
 public:
 	OutputFileException(const std::string& outputFileName);
 };
 
-class MissingArgumentException : public ExpectedException
-{
+class MissingArgumentException : public ExpectedException {
 public:
 	static void verifyTrue(bool expectedTrue, std::string message);
 
 	template<typename T>
-	static T verifyAndGetValue(const std::optional<T>& expectedFilled, const std::string message)
-	{
+	static T verifyAndGetValue(const std::optional<T>& expectedFilled, const std::string message) {
 		verifyTrue(expectedFilled.has_value(), message);
 		return expectedFilled.value();
 	}
 
 	template<typename T>
 	static void verifyListLengthSufficient(const std::list<T> list, const unsigned int minimumLength,
-		const std::string message)
-	{
+		const std::string message) {
 		verifyTrue(list.size() >= minimumLength, message);
 	}
 
 	MissingArgumentException(std::string message);
 };
 
-class RepeatedSpecificationOfVariableException : public ExpectedException
-{
+class RepeatedSpecificationOfVariableException : public ExpectedException {
 public:
 	template <typename T>
-	static void verifyNotSet(const std::optional<T>& optionalWhichShouldBeUnset, const std::string& variableDescription)
-	{
+	static void verifyNotSet(const std::optional<T>& optionalWhichShouldBeUnset, const std::string& variableDescription) {
 		verifyNotSet(optionalWhichShouldBeUnset.has_value(), variableDescription);
 	}
 
@@ -124,8 +111,7 @@ public:
 	static void verifyNotSet(
 		const T element,
 		const std::map<T, U> mapWhichShouldNotContainElement,
-		const std::string variableDescription)
-	{
+		const std::string variableDescription) {
 		verifyNotSet(mapWhichShouldNotContainElement.find(element) != mapWhichShouldNotContainElement.end(), variableDescription);
 	}
 
@@ -134,74 +120,62 @@ private:
 	RepeatedSpecificationOfVariableException(std::string variableDescription);
 };
 
-class SolverInitialisationException : public ExpectedException
-{
+class SolverInitialisationException : public ExpectedException {
 public:
 	SolverInitialisationException();
 };
 
-class InsufficientMemoryException : public ExpectedException
-{
+class InsufficientMemoryException : public ExpectedException {
 public:
 	InsufficientMemoryException();
 };
 
-class OptimisationInterruptedException : public ExpectedException
-{
+class OptimisationInterruptedException : public ExpectedException {
 public:
 	OptimisationInterruptedException();
 };
 
-class RequiredColumnNotFoundException : public ExpectedException
-{
+class RequiredColumnNotFoundException : public ExpectedException {
 public:
 	RequiredColumnNotFoundException(std::string columnName, std::string fileName);
 };
 
-class IdentifierNotRecognisedException : public ExpectedException
-{
+class IdentifierNotRecognisedException : public ExpectedException {
 public:
 	IdentifierNotRecognisedException(std::string identifier);
 };
 
-class InvalidLimitSumException : public ExpectedException
-{
+class InvalidLimitSumException : public ExpectedException {
 public:
 	InvalidLimitSumException();
 };
 
-class InvalidLimitsException : public ExpectedException
-{
+class InvalidLimitsException : public ExpectedException {
 public:
 	InvalidLimitsException(const std::string& message);
 };
 
-class InvalidCommandException : public ExpectedException
-{
+class InvalidCommandException : public ExpectedException {
 public:
 	InvalidCommandException(const std::string& inputFileName);
 };
 
-class ExcessiveSizeException : public ExpectedException
-{
+class ExcessiveSizeException : public ExpectedException {
 public:
 	ExcessiveSizeException(const std::string& message);
 };
 
-class IncompatibleInputArgumentsException : public ExpectedException
-{
+class IncompatibleInputArgumentsException : public ExpectedException {
 public:
 	IncompatibleInputArgumentsException(const std::string& message);
 };
 
-class UnexpectedException : public ExpectedException
-{
+class UnexpectedException : public ExpectedException {
 public:
 	UnexpectedException();
 };
 
-class CSVStreamException : public ExpectedException
-{
+class CSVStreamException : public ExpectedException {
 public:
 	CSVStreamException(const csvstream_exception& exception);
 };

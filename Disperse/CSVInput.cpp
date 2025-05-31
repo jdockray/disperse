@@ -8,8 +8,7 @@
 #pragma warning(pop)
 
 CSVInput::CSVInput(const std::string& inputFileName)
-	: inputFileName(inputFileName), inputStream(inputFileName)
-{
+	: inputFileName(inputFileName), inputStream(inputFileName) {
 }
 
 std::string CSVInput::getName() const {

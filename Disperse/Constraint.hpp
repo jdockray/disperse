@@ -6,8 +6,7 @@
 #include <vector>
 #pragma warning(pop)
 
-class Constraint
-{
+class Constraint {
 public:
 	Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities);
 	Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities, const double fillWithWeight);

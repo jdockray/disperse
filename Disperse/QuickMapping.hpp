@@ -10,8 +10,7 @@
 
 #include "Exceptions.hpp"
 
-class IdentifiedObject
-{
+class IdentifiedObject {
 public:
 	IdentifiedObject(const std::string& identifier);
 	std::string getIdentifier() const;
@@ -20,8 +19,7 @@ private:
 	std::string m_identifier;
 };
 
-class ObjectWithMaxAndMinProportions
-{
+class ObjectWithMaxAndMinProportions {
 public:
 	ObjectWithMaxAndMinProportions();
 	ObjectWithMaxAndMinProportions(const double maxProportion, const double minProportion);
@@ -40,66 +38,53 @@ private:
 };
 
 template <class T>
-class IdentifiedObjectList
-{
+class IdentifiedObjectList {
 	static_assert(std::is_base_of<IdentifiedObject, T>::value);
 
 public:
-	void add(const T& element)
-	{
+	void add(const T& element) {
 		m_identifiers.push_back(element.getIdentifier());
 		m_lookup[element.getIdentifier()] = m_objects.size();
 		m_objects.push_back(element);
 	}
 
-	const T& get(const std::string& identifier) const
-	{
-		try
-		{
+	const T& get(const std::string& identifier) const {
+		try {
 			return at(m_lookup.at(identifier));
 		}
-		catch (const std::out_of_range&)
-		{
+		catch (const std::out_of_range&) {
 			throw IdentifierNotRecognisedException(identifier);
 		}
 	}
 
-	T& get(const std::string& identifier)
-	{
+	T& get(const std::string& identifier) {
 		{
-			try
-			{
+			try {
 				return at(m_lookup.at(identifier));
 			}
-			catch (const std::out_of_range&)
-			{
+			catch (const std::out_of_range&) {
 				throw IdentifierNotRecognisedException(identifier);
 			}
 		}
 	}
 
-	const T& at(const std::size_t index) const
-	{
+	const T& at(const std::size_t index) const {
 		return m_objects.at(index);
 	}
 
-	T& at(const std::size_t index)
-	{
+	T& at(const std::size_t index) {
 		return m_objects.at(index);
 	}
 
-	const std::vector<std::string> getIdentifiers() const
-	{
+	const std::vector<std::string> getIdentifiers() const {
 		return m_identifiers;
 	}
 
-	const std::vector<T>& getObjects() const
-	{
+	const std::vector<T>& getObjects() const {
 		return m_objects;
 	}
 
-	std::size_t size() const
-	{
+	std::size_t size() const {
 		return m_objects.size();
 	}
 
@@ -110,34 +95,27 @@ private:
 };
 
 template <class T>
-class ListOfObjectsWithMaxAndMinProportions
-{
+class ListOfObjectsWithMaxAndMinProportions {
 public:
-	std::size_t numberOfConstrainedGroups() const
-	{
+	std::size_t numberOfConstrainedGroups() const {
 		std::size_t count = 0;
-		for (const T& object : getObjects())
-		{
+		for (const T& object : getObjects()) {
 			if (object.hasConstrainedProportion()) ++count;
 		}
 		return count;
 	}
-	
-	void verifyProportions() const
-	{
+
+	void verifyProportions() const {
 		double sumOfMaxima = 0;
 		double sumOfMinima = 0;
-		for (const T& object : getObjects())
-		{
+		for (const T& object : getObjects()) {
 			sumOfMaxima += object.getMaxProportion();
 			sumOfMinima += object.getMinProportion();
 		}
-		if (sumOfMaxima < 1)
-		{
+		if (sumOfMaxima < 1) {
 			throw InvalidLimitsException("The maximum proportions add up to less than 100%");
 		}
-		if (sumOfMinima > 1)
-		{
+		if (sumOfMinima > 1) {
 			throw InvalidLimitsException("The minimum proportions add up to more than 100%");
 		}
 	}

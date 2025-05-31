@@ -7,8 +7,7 @@
 #include <string>
 #pragma warning(pop)
 
-void runCommand(const int argc, const char* const argv[])
-{
+void runCommand(const int argc, const char* const argv[]) {
 	MissingArgumentException::verifyTrue(argc > 1, "You must specify a command. Type 'Disperse.exe help' for usage.");
 	const std::string command(argv[1]);
 	std::vector<std::string> commandArgs;
@@ -17,36 +16,28 @@ void runCommand(const int argc, const char* const argv[])
 	{
 		commandArgs.push_back(std::string(argv[i]));
 	}
-	if (command == "combine")
-	{
+	if (command == "combine") {
 		callCombineCommand(commandArgs);
 	}
-	else if (command == "help")
-	{	
+	else if (command == "help") {
 		callHelpCommand(commandArgs);
 	}
-	else if (command == "multiply")
-	{
+	else if (command == "multiply") {
 		callMultiplyCommand(commandArgs);
 	}
-	else if (command == "optimise")
-	{
+	else if (command == "optimise") {
 		callOptimiseCommand(commandArgs);
 	}
-	else
-	{
+	else {
 		throw InvalidCommandException("The command " + command + " is not recognised. Type 'Disperse.exe help' for usage.");
 	}
 }
 
-void runCatchingGlobalExceptions(const int argc, const char* const argv[])
-{
-	try
-	{
+void runCatchingGlobalExceptions(const int argc, const char* const argv[]) {
+	try {
 		runCommand(argc, argv);
 	}
-	catch (const std::bad_alloc&)
-	{
+	catch (const std::bad_alloc&) {
 		throw InsufficientMemoryException();
 	}
 	catch (const csvstream_exception& ex) {
@@ -54,22 +45,18 @@ void runCatchingGlobalExceptions(const int argc, const char* const argv[])
 	}
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	ReturnCode returnCode = ReturnCode::UNEXPECTED_EXCEPTION;
-	try
-	{
+	try {
 		runCatchingGlobalExceptions(argc, argv);
 		returnCode = ReturnCode::SUCCESS;
 	}
-	catch (const ExpectedException& ex)
-	{
+	catch (const ExpectedException& ex) {
 		std::cerr << ex.errorMessage;
 		returnCode = ex.returnCode;
 	}
 #ifndef _DEBUG
-	catch (const std::exception&)
-	{
+	catch (const std::exception&) {
 		UnexpectedException unexpectedException;
 		std::cerr << unexpectedException.errorMessage;
 	}

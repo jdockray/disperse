@@ -7,11 +7,10 @@
 #include <optional>
 #pragma warning(pop)
 
-class Security : public IdentifiedObject, public ObjectWithMaxAndMinProportions
-{
+class Security : public IdentifiedObject, public ObjectWithMaxAndMinProportions {
 public:
 	Security(const std::string& identifier);
-	
+
 	void setExpectedReturn(const double expectedReturn);
 	double getExpectedReturn() const;
 	void setRisk(const double risk);
@@ -35,8 +34,7 @@ private:
 	double remainingExposure; // To avoid repeated lookup
 };
 
-class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security>
-{
+class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security> {
 public:
 	const std::vector<Security>& getObjects() const;
 	std::vector<std::string> getAllFactors() const;

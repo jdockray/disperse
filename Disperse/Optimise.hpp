@@ -18,8 +18,7 @@ struct OptimisationResult {
 	OptimisationResult(const std::vector<double>& allocations, double resultingRisk, const std::vector<std::string> factorNames,
 		const std::vector<double>& resultingFactorExposures, const std::map<std::string, double>& proportionsInEachGroup)
 		: allocations(allocations), resultingRisk(resultingRisk), factorNames(factorNames),
-		resultingFactorExposures(resultingFactorExposures),	proportionsInEachGroup(proportionsInEachGroup)
-	{
+		resultingFactorExposures(resultingFactorExposures), proportionsInEachGroup(proportionsInEachGroup) {
 	}
 
 	const std::vector<double> allocations;

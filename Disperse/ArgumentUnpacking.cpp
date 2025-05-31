@@ -9,8 +9,7 @@
 static const std::string default_market_risk_name = "Market";
 static OptimisationCode optimisationCode;
 
-void callCombineCommand(const std::vector<std::string>& commandArgs)
-{
+void callCombineCommand(const std::vector<std::string>& commandArgs) {
 	CmdLineArgs cmdLineArgs(commandArgs);
 	std::vector<std::string> gridInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('m').value_or(""));
 	std::vector<std::string> listInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('l').value_or(""));
@@ -18,24 +17,20 @@ void callCombineCommand(const std::vector<std::string>& commandArgs)
 	std::string marketRiskName = cmdLineArgs.getSingleArgumentOption('b').value_or(default_market_risk_name);
 	std::optional<std::string> gridOutputFileName = cmdLineArgs.getSingleArgumentOption('r');
 	std::optional<std::string> listOutputFileName = cmdLineArgs.getSingleArgumentOption('i');
-	runCombineCommand(gridInputFiles, listInputFiles, additionalMarketRisk, marketRiskName,	gridOutputFileName, listOutputFileName);
+	runCombineCommand(gridInputFiles, listInputFiles, additionalMarketRisk, marketRiskName, gridOutputFileName, listOutputFileName);
 }
 
-void callHelpCommand(const std::vector<std::string>& commandArgs)
-{
+void callHelpCommand(const std::vector<std::string>& commandArgs) {
 	CmdLineArgs cmdLineArgs(commandArgs);
-	if (cmdLineArgs.remainingArguments().empty())
-	{
+	if (cmdLineArgs.remainingArguments().empty()) {
 		printGeneralHelp(std::cout);
 	}
-	else
-	{
+	else {
 		printHelpForCommand(cmdLineArgs.remainingArguments().front(), std::cout);
 	}
 }
 
-void callMultiplyCommand(const std::vector<std::string>& commandArgs)
-{
+void callMultiplyCommand(const std::vector<std::string>& commandArgs) {
 	CmdLineArgs cmdLineArgs(commandArgs);
 	std::vector<std::string> gridInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('m').value_or(""));
 	std::vector<std::string> listInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('l').value_or(""));
@@ -45,8 +40,7 @@ void callMultiplyCommand(const std::vector<std::string>& commandArgs)
 	runMultiplyCommand(gridInputFiles, listInputFiles, scalarToMultiplyBy, gridOutputFileName, listOutputFileName);
 }
 
-void callOptimiseCommand(const std::vector<std::string>& commandArgs)
-{
+void callOptimiseCommand(const std::vector<std::string>& commandArgs) {
 	CmdLineArgs cmdLineArgs(commandArgs);
 	const std::optional<std::string> factorGridInput = cmdLineArgs.getSingleArgumentOption('m');
 	const std::optional<std::string> factorListInput = cmdLineArgs.getSingleArgumentOption('l');

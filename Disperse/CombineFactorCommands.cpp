@@ -4,22 +4,18 @@
 #include "Elements.hpp"
 #include "ElementWriters.hpp"
 
-void addElements(const std::vector<std::pair<Element, double>>& newElements, std::map<Element, double>& elementsToAddTo)
-{
-	for (const std::pair<Element, double>& element : newElements)
-	{
+void addElements(const std::vector<std::pair<Element, double>>& newElements, std::map<Element, double>& elementsToAddTo) {
+	for (const std::pair<Element, double>& element : newElements) {
 		elementsToAddTo[element.first] += element.second;
 	}
 }
 
-std::vector<std::string> getDelimitedElements(const std::string& delimitedList)
-{
+std::vector<std::string> getDelimitedElements(const std::string& delimitedList) {
 	std::stringstream listStream;
 	listStream << delimitedList;
 	std::string tempString;
 	std::vector<std::string> list;
-	while (std::getline(listStream, tempString, ','))
-	{
+	while (std::getline(listStream, tempString, ',')) {
 		list.push_back(tempString);
 	}
 	return list;
@@ -32,32 +28,27 @@ void runCombineCommand(
 	const std::string& marketRiskName,
 	const std::optional<std::string>& gridOutputFile,
 	const std::optional<std::string>& listOutputFile
-)
-{
+) {
 	std::map<Element, double> elements;
-	for (const std::string& gridInputFile : gridInputFiles)
-	{
+	for (const std::string& gridInputFile : gridInputFiles) {
 		CSVInput input(gridInputFile);
 		addElements(getElementsFromGridFile(input), elements);
 	}
-	for (const std::string& listInputFile : listInputFiles)
-	{
+	for (const std::string& listInputFile : listInputFiles) {
 		CSVInput input(listInputFile);
 		addElements(getElementsFromListFile(input), elements);
 	}
 	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;
 	std::unique_ptr<GridFileWriter> gridFileWriter;
-	if (gridOutputFile)
-	{
+	if (gridOutputFile) {
 		gridOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
 		gridFileWriter = std::make_unique<GridFileWriter>(*gridOutput);
 		outputs.push_back(*gridFileWriter);
 	}
 	std::unique_ptr<CSVOutput> listOutput;
 	std::unique_ptr<ListFileWriter> listFileWriter;
-	if (listOutputFile)
-	{
+	if (listOutputFile) {
 		listOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
 		listFileWriter = std::make_unique<ListFileWriter>(*listOutput);
 		outputs.push_back(*listFileWriter);
@@ -71,32 +62,27 @@ void runMultiplyCommand(
 	double scalarToMultiplyBy,
 	const std::optional<std::string>& gridOutputFile,
 	const std::optional<std::string>& listOutputFile
-)
-{
+) {
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
-	for (const std::string& gridInputFile : gridInputFiles)
-	{
+	for (const std::string& gridInputFile : gridInputFiles) {
 		CSVInput input(gridInputFile);
 		elementSets.push_back(getElementsFromGridFile(input));
 	}
-	for (const std::string& listInputFile : listInputFiles)
-	{
+	for (const std::string& listInputFile : listInputFiles) {
 		CSVInput input(listInputFile);
 		elementSets.push_back(getElementsFromListFile(input));
 	}
 	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;
 	std::unique_ptr<GridFileWriter> gridFileWriter;
-	if (gridOutputFile)
-	{
+	if (gridOutputFile) {
 		gridOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
 		gridFileWriter = std::make_unique<GridFileWriter>(*gridOutput);
 		outputs.push_back(*gridFileWriter);
 	}
 	std::unique_ptr<CSVOutput> listOutput;
 	std::unique_ptr<ListFileWriter> listFileWriter;
-	if (listOutputFile)
-	{
+	if (listOutputFile) {
 		listOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
 		listFileWriter = std::make_unique<ListFileWriter>(*listOutput);
 		outputs.push_back(*listFileWriter);

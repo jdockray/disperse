@@ -15,17 +15,14 @@ double runOptimiseCommand(
 	const std::optional<std::string>& factorOutputFile,
 	const std::optional<std::string>& groupInputFile,
 	const std::optional<std::string>& groupOutputFile
-)
-{
+) {
 	CSVInput securityInput(securityInputFile);
 	SecurityListBuilder securityListBuilder(securityInput);
-	if (factorGridInputFile)
-	{
+	if (factorGridInputFile) {
 		CSVInput factorGridInput(factorGridInputFile.value());
 		securityListBuilder.loadFactorsFromGrid(factorGridInput);
 	}
-	if (factorListInputFile)
-	{
+	if (factorListInputFile) {
 		CSVInput factorListInput(factorListInputFile.value());
 		securityListBuilder.loadFactorsFromList(factorListInput);
 	}
@@ -37,7 +34,7 @@ double runOptimiseCommand(
 	std::unique_ptr<CSVOutput> groupOutput;
 	if (groupOutputFile) {
 		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
-	}	
+	}
 	OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
 	CSVOutput securityOutput(securityOutputFile);
 	AllocationOutputWriter(securityOutput).outputAllocations(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);

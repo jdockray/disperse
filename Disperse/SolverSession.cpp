@@ -1,8 +1,7 @@
 
 #include "SolverSession.hpp"
 
-enum class OSQPSolverStatus
-{
+enum class OSQPSolverStatus {
 	SOLVED = OSQP_SOLVED,
 	SOLVED_INACCURATE = OSQP_SOLVED_INACCURATE,
 	MAX_ITER_REACHED = OSQP_MAX_ITER_REACHED,
@@ -15,8 +14,7 @@ enum class OSQPSolverStatus
 	NON_CVX = OSQP_NON_CVX
 };
 
-enum class OSQPErrorStatus
-{
+enum class OSQPErrorStatus {
 	SUCCESS = 0,
 	DATA_VALIDATION_ERROR = OSQP_DATA_VALIDATION_ERROR,
 	SETTINGS_VALIDATION_ERROR = OSQP_SETTINGS_VALIDATION_ERROR,
@@ -27,10 +25,8 @@ enum class OSQPErrorStatus
 	WORKSPACE_NOT_INIT_ERROR = OSQP_WORKSPACE_NOT_INIT_ERROR
 };
 
-void checkErrorStatus(OSQPErrorStatus errorStatus)
-{
-	switch (errorStatus)
-	{
+void checkErrorStatus(OSQPErrorStatus errorStatus) {
+	switch (errorStatus) {
 	case OSQPErrorStatus::SUCCESS:
 		return;
 	case OSQPErrorStatus::MEM_ALLOC_ERROR:
@@ -47,10 +43,8 @@ void checkErrorStatus(OSQPErrorStatus errorStatus)
 	}
 }
 
-void checkSolverStatus(OSQPSolverStatus status)
-{
-	switch (status)
-	{
+void checkSolverStatus(OSQPSolverStatus status) {
+	switch (status) {
 	case OSQPSolverStatus::SOLVED_INACCURATE:
 	case OSQPSolverStatus::MAX_ITER_REACHED:
 		// Solution accepted in release mode but we must also test that results are acceptable in debug mode
@@ -72,25 +66,20 @@ void checkSolverStatus(OSQPSolverStatus status)
 	}
 }
 
-OSQPSession::OSQPSession(OSQPData& osqpData, const OSQPSettings& osqp_settings)
-{
+OSQPSession::OSQPSession(OSQPData& osqpData, const OSQPSettings& osqp_settings) {
 	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_setup(&pOsqpWorkspace, &osqpData, &osqp_settings)));
-	if (!pOsqpWorkspace)
-	{
+	if (!pOsqpWorkspace) {
 		throw UnexpectedException();
 	}
 }
 
-std::vector<double> OSQPSession::callOSQPSolve()
-{
+std::vector<double> OSQPSession::callOSQPSolve() {
 	checkErrorStatus(static_cast<OSQPErrorStatus>(osqp_solve(pOsqpWorkspace)));
-	if (!pOsqpWorkspace->info)
-	{
+	if (!pOsqpWorkspace->info) {
 		throw UnexpectedException();
 	}
 	checkSolverStatus(static_cast<OSQPSolverStatus>(pOsqpWorkspace->info->status_val));
-	if (!pOsqpWorkspace->solution || !pOsqpWorkspace->solution->x)
-	{
+	if (!pOsqpWorkspace->solution || !pOsqpWorkspace->solution->x) {
 		throw UnexpectedException();
 	}
 	return std::vector<double>(pOsqpWorkspace->solution->x, pOsqpWorkspace->solution->x + pOsqpWorkspace->data->n);
