@@ -2,20 +2,13 @@
 #ifndef DISPERSE_INPUT
 #define DISPERSE_INPUT
 
+#include "CSVInput.hpp"
 #include "Security.hpp"
 #include "Group.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
 #pragma warning(pop)
-
-class IInput {
-public:
-	virtual std::string getName() const = 0;
-	virtual std::vector<std::string> getHeader() const = 0;
-	virtual std::map<std::string, std::string> readEntryAsMap() = 0;
-	virtual std::vector<std::pair<std::string, std::string> > readEntryAsPairVector() = 0;
-};
 
 class SecurityListBuilder {
 public:

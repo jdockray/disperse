@@ -3,6 +3,7 @@
 #include "OptimiseCommand.hpp"
 
 void runOptimiseCommand(
+	IOptimisationCode& optimisationCode,
 	const std::string& securityInputFile,
 	const std::string& securityOutputFile,
 	double minimumReturn,
@@ -38,6 +39,6 @@ void runOptimiseCommand(
 	if (groupOutputFile) {
 		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
 	}	
-	runOptimisation(securityListBuilder.getSecurityList(), securityOutput, minimumReturn, factorOutput.get(),
-		groupInput.get(), groupOutput.get());
+	optimisationCode.runOptimisation(securityListBuilder.getSecurityList(), securityOutput, minimumReturn,
+		factorOutput.get(),	groupInput.get(), groupOutput.get());
 }

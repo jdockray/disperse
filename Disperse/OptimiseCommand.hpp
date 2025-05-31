@@ -2,6 +2,8 @@
 #ifndef DISPERSE_OPTIMISE_COMMAND
 #define DISPERSE_OPTIMISE_COMMAND
 
+#include "Optimise.hpp"
+
 #pragma warning(push, 0)
 #include <optional>
 #include <vector>
@@ -9,6 +11,7 @@
 #pragma warning(pop)
 
 void runOptimiseCommand(
+	IOptimisationCode& optimisationCode,
 	const std::string& securityInputFile,
 	const std::string& securityOutputFile,
 	double minimumReturn,

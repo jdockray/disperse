@@ -7,6 +7,7 @@
 #include "Help.hpp"
 
 static const std::string default_market_risk_name = "Market";
+static OptimisationCode optimisationCode;
 
 void callCombineCommand(const std::vector<std::string>& commandArgs)
 {
@@ -58,6 +59,6 @@ void callOptimiseCommand(const std::vector<std::string>& commandArgs)
 	const std::string& securityInputFileName = *position;
 	const std::string& securityOutputFileName = *(++position);
 	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-	runOptimiseCommand(securityInputFileName, securityOutputFileName, minimumReturn, factorGridInput, factorListInput, factorOutputFile,
-		groupInputFile, groupOutputFile);
+	runOptimiseCommand(optimisationCode, securityInputFileName, securityOutputFileName, minimumReturn, factorGridInput, factorListInput,
+		factorOutputFile, groupInputFile, groupOutputFile);
 }
