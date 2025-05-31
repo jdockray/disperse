@@ -13,7 +13,7 @@ This software accepts as input a list of securities (potential investments), wit
 
 The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
 
-$\boldsymbol{\Sigma} = \mathrm{diag}(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}\mathrm{diag}(\boldsymbol{\sigma})$\
+$\boldsymbol{\Sigma} = \mathrm{diag}(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}\mathrm{diag}(\boldsymbol{\sigma})$ \
 where $\boldsymbol{\Sigma}$ is the asset covariance matrix,\
 $\mathrm{diag}(\boldsymbol{\sigma})$ is the diagonal matrix of the vector of standard deviations,\
 $\boldsymbol{\sigma} = (\sigma_1, \sigma_2, ..., \sigma_N)$
