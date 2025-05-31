@@ -29,6 +29,15 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
+    - name: Set up NuGet
+      uses: nuget/setup-nuget@v2
+      with:
+        nuget-version: '5.x'
+
+    - name: Restore NuGet packages
+      working-directory: ${{env.SOLUTION_LOCATION}}    
+      run: nuget restore ${{env.SOLUTION_FILE_NAME}}
+
     - name: Build
       working-directory: ${{env.SOLUTION_LOCATION}}
       run: msbuild /m /p:Platform=x64 /p:Configuration=Release ${{env.SOLUTION_FILE_NAME}}
