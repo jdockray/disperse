@@ -30,7 +30,7 @@
     <ClCompile Include="Output.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SecurityListBuilder.cpp">
+    <ClCompile Include="ListBuilders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Optimisation.cpp">
@@ -92,7 +92,7 @@
     <ClInclude Include="Output.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SecurityListBuilder.hpp">
+    <ClInclude Include="ListBuilders.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrices.hpp">

@@ -1,7 +1,7 @@
 
 #include "CSVInput.hpp"
 #include "CSVOutput.hpp"
-#include "SecurityListBuilder.hpp"
+#include "ListBuilders.hpp"
 #include "Optimise.hpp"
 #include "Output.hpp"
 #include "ExpectedException.hpp"
@@ -23,22 +23,6 @@ std::map<U, std::size_t> generateMappingFromIterable(const T& items)
 		mapping[item] = index++;
 	}
 	return mapping;
-}
-
-double OptimisationCode::roundToOptimisationTolerance(double value)
-{
-	return std::round(value * ROUNDING_MULTIPLIER) / ROUNDING_MULTIPLIER;
-}
-
-std::vector<double> OptimisationCode::roundToOptimisationTolerance(const std::vector<double>& values)
-{
-	std::vector<double> roundedValues;
-	roundedValues.reserve(values.size());
-	for (double value : values)
-	{
-		roundedValues.push_back(roundToOptimisationTolerance(value));
-	}
-	return roundedValues;
 }
 
 SparseMatrix OptimisationCode::generateFactorMatrix(const ListOfSecurities& securities, const std::vector<std::string> factors)
@@ -171,12 +155,8 @@ void OptimisationCode::ensureAllGroupsPresent(ListOfGroups& groups, const std::s
 	}
 }
 
-void OptimisationCode::runOptimisation(const ListOfSecurities& securities, IOutput& securityOutput, double minimumReturn,
-	IOutput* factorOutput, IInput* groupInput, IOutput* groupOutput)
+OptimisationResult OptimisationCode::runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups)
 {
-	static const std::string risk_output_string = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
-
-	ListOfGroups groups = groupInput ? inputGroups(*groupInput) : ListOfGroups();
 	ensureAllGroupsPresent(groups, securities.getAllGroups());
 
 	const std::vector<std::string> factorNames = securities.getAllFactors();
@@ -189,26 +169,13 @@ void OptimisationCode::runOptimisation(const ListOfSecurities& securities, IOutp
 		getConstraints(minimumReturn, securities, groups)
 	);
 
-	printf(risk_output_string.c_str(), roundToOptimisationTolerance(std::sqrt(getSingleValue(
-		multiply(vectorToHorizontalMatrix(solution), covarianceMatrix, vectorToVerticalMatrix(solution)))
-	)));
-
-	outputAllocations(securities.getIdentifiers(), roundToOptimisationTolerance(solution), securityOutput);
-	if (factorOutput)
-	{
-		outputFactorExposures(
-			factorNames,
-			roundToOptimisationTolerance(horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix))),
-			*factorOutput
-		);
-	}
-	if (groupOutput)
-	{
-		outputGroupProportions(
-			groups.getIdentifiers(),
-			getGroupProportions(securities, solution),
-			*groupOutput
-		);
-	}
+	return OptimisationResult(
+		roundToOptimisationTolerance(solution), // Allocations
+		roundToOptimisationTolerance(std::sqrt(getSingleValue(
+			multiply(vectorToHorizontalMatrix(solution), covarianceMatrix, vectorToVerticalMatrix(solution))) // Resulting risk
+		)),
+		factorNames,
+		roundToOptimisationTolerance(horizontalMatrixToVector(multiply(vectorToHorizontalMatrix(solution), factorMatrix))), // Exposures to each factor
+		getGroupProportions(securities, solution) // Resulting proportion in each group
+	);
 }
-

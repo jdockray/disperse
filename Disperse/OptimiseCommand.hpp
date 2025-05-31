@@ -10,7 +10,7 @@
 #include <string>
 #pragma warning(pop)
 
-void runOptimiseCommand(
+double runOptimiseCommand(
 	IOptimisationCode& optimisationCode,
 	const std::string& securityInputFile,
 	const std::string& securityOutputFile,

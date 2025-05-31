@@ -1,8 +1,9 @@
 
 #include "Optimise.hpp"
 #include "OptimiseCommand.hpp"
+#include "Output.hpp"
 
-void runOptimiseCommand(
+double runOptimiseCommand(
 	IOptimisationCode& optimisationCode,
 	const std::string& securityInputFile,
 	const std::string& securityOutputFile,
@@ -16,7 +17,6 @@ void runOptimiseCommand(
 {
 	CSVInput securityInput(securityInputFile);
 	SecurityListBuilder securityListBuilder(securityInput);
-	CSVOutput securityOutput = CSVOutput(securityOutputFile);
 	if (factorGridInputFile)
 	{
 		CSVInput factorGridInput(factorGridInputFile.value());
@@ -27,18 +27,25 @@ void runOptimiseCommand(
 		CSVInput factorListInput(factorListInputFile.value());
 		securityListBuilder.loadFactorsFromList(factorListInput);
 	}
-	std::unique_ptr<CSVOutput> factorOutput;
-	if (factorOutputFile) {
-		factorOutput = std::make_unique<CSVOutput>(factorOutputFile.value());
-	}
-	std::unique_ptr<CSVInput> groupInput;
+	ListOfGroups listOfGroups;
 	if (groupInputFile) {
-		groupInput = std::make_unique<CSVInput>(groupInputFile.value());
+		CSVInput groupInput = groupInputFile.value();
+		listOfGroups = inputGroups(groupInput);
 	}
 	std::unique_ptr<CSVOutput> groupOutput;
 	if (groupOutputFile) {
 		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
 	}	
-	optimisationCode.runOptimisation(securityListBuilder.getSecurityList(), securityOutput, minimumReturn,
-		factorOutput.get(),	groupInput.get(), groupOutput.get());
+	OptimisationResult result = optimisationCode.runOptimisation(securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
+	CSVOutput securityOutput(securityOutputFile);
+	AllocationOutputWriter(securityOutput).outputAllocations(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
+	if (factorOutputFile) {
+		CSVOutput output(factorOutputFile.value());
+		FactorExposureWriter(output).outputFactorExposures(result.factorNames, result.resultingFactorExposures);
+	}
+	if (groupOutputFile) {
+		CSVOutput output(groupOutputFile.value());
+		GroupProportionWriter(output).outputGroupProportions(listOfGroups.getIdentifiers(), result.proportionsInEachGroup);
+	}
+	return result.resultingRisk;
 }

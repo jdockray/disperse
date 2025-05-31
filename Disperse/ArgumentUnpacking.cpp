@@ -59,6 +59,7 @@ void callOptimiseCommand(const std::vector<std::string>& commandArgs)
 	const std::string& securityInputFileName = *position;
 	const std::string& securityOutputFileName = *(++position);
 	double minimumReturn = CouldNotParseNumberException::convert(*(++position));
-	runOptimiseCommand(optimisationCode, securityInputFileName, securityOutputFileName, minimumReturn, factorGridInput, factorListInput,
-		factorOutputFile, groupInputFile, groupOutputFile);
+	double resultingRisk = runOptimiseCommand(optimisationCode, securityInputFileName, securityOutputFileName, minimumReturn,
+		factorGridInput, factorListInput, factorOutputFile, groupInputFile, groupOutputFile);
+	std::cout << "Risk: " << resultingRisk << std::endl;
 }

@@ -182,7 +182,7 @@
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="Optimise.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
-    <ClCompile Include="SecurityListBuilder.cpp" />
+    <ClCompile Include="ListBuilders.cpp" />
     <ClCompile Include="Matrices.cpp" />
     <ClCompile Include="Optimisation.cpp" />
     <ClCompile Include="OptimiseCommand.cpp" />
@@ -203,7 +203,7 @@
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />
     <ClInclude Include="Help.hpp" />
-    <ClInclude Include="SecurityListBuilder.hpp" />
+    <ClInclude Include="ListBuilders.hpp" />
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Optimise.hpp" />

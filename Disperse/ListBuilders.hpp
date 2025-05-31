@@ -33,4 +33,3 @@ private:
 ListOfGroups inputGroups(IInput& input);
 
 #endif // #ifndef DISPERSE_INPUT
-

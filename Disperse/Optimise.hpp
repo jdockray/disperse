@@ -6,35 +6,36 @@
 #include "CSVInput.hpp"
 #include "CSVOutput.hpp"
 #include "Matrices.hpp"
-#include "SecurityListBuilder.hpp"
+#include "ListBuilders.hpp"
 
 #pragma warning(push, 0)
 #include <string>
 #include <vector>
 #pragma warning(pop)
 
+struct OptimisationResult {
+	OptimisationResult(const std::vector<double>& allocations, double resultingRisk, const std::vector<std::string> factorNames,
+		const std::vector<double>& resultingFactorExposures, const std::map<std::string, double>& proportionsInEachGroup)
+		: allocations(allocations), resultingRisk(resultingRisk), factorNames(factorNames),
+		resultingFactorExposures(resultingFactorExposures),	proportionsInEachGroup(proportionsInEachGroup)
+	{
+	}
+
+	const std::vector<double> allocations;
+	const double resultingRisk;
+	const std::vector<std::string> factorNames;
+	const std::vector<double> resultingFactorExposures;
+	const std::map<std::string, double> proportionsInEachGroup;
+};
+
 class IOptimisationCode {
 public:
-	virtual void runOptimisation(
-		const ListOfSecurities& securities,
-		IOutput& securityOutput,
-		double minimumReturn,
-		IOutput* factorOutput = nullptr,
-		IInput* groupInput = nullptr,
-		IOutput* groupOutput = nullptr
-	) = 0;
+	virtual OptimisationResult runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups) = 0;
 };
 
 class OptimisationCode : public IOptimisationCode {
 public:
-	virtual void runOptimisation(
-		const ListOfSecurities& securities,
-		IOutput& securityOutput,
-		double minimumReturn,
-		IOutput* factorOutput = nullptr,
-		IInput* groupInput = nullptr,
-		IOutput* groupOutput = nullptr
-	);
+	virtual OptimisationResult runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups);
 
 private:
 	static void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& securities, std::vector<Constraint>& constraints);
@@ -47,8 +48,6 @@ private:
 	static SparseMatrix generateUpperTriagonalCorrelationMatrix(const SparseMatrix& factorMatrix);
 	static SparseMatrix generateUpperTriagonalCovarianceMatrix(const std::vector<double>& securitiesStdDevs, const SparseMatrix& factorMatrix);
 	static std::vector<double> getSecurityRisks(const ListOfSecurities& securities);
-	static double roundToOptimisationTolerance(double value);
-	static std::vector<double> roundToOptimisationTolerance(const std::vector<double>& values);
 };
 
 #endif // DISPERSE_ELEMENTS

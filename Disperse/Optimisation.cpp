@@ -5,8 +5,8 @@ OSQPSettings getSettings()
 {
 	OSQPSettings osqp_settings;
 	osqp_set_default_settings(&osqp_settings);
-	osqp_settings.max_iter = static_cast<c_int>(ROUNDING_MULTIPLIER * 100); // maximum iterations to take
-	osqp_settings.eps_abs = static_cast<c_float>(0.1 / ROUNDING_MULTIPLIER); // Absolute convergence tolerance
+	osqp_settings.max_iter = static_cast<c_int>(rounding_multipler * 100); // maximum iterations to take
+	osqp_settings.eps_abs = static_cast<c_float>(0.1 / rounding_multipler); // Absolute convergence tolerance
 	osqp_settings.eps_rel = osqp_settings.eps_abs; // Relative convergence tolerance
 	return osqp_settings;
 }
@@ -168,4 +168,20 @@ std::vector<double> solve(const SparseMatrix& covarianceMatrix, const std::vecto
 
 	std::unique_ptr<OSQPWorkspace, WorkspaceDeleter> osqpWorkspace = callOSQPSetup(covarianceMatrix, matrixA, vectorL, vectorU);
 	return callOSQPSolve(*osqpWorkspace);
+}
+
+double roundToOptimisationTolerance(double value)
+{
+	return std::round(value * rounding_multipler) / rounding_multipler;
+}
+
+std::vector<double> roundToOptimisationTolerance(const std::vector<double>& values)
+{
+	std::vector<double> roundedValues;
+	roundedValues.reserve(values.size());
+	for (double value : values)
+	{
+		roundedValues.push_back(roundToOptimisationTolerance(value));
+	}
+	return roundedValues;
 }

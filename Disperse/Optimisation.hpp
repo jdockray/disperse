@@ -14,8 +14,11 @@
 #include <map>
 #pragma warning(pop)
 
-const unsigned int TOLERANCE_DECIMAL_PLACES = 3;
-const double ROUNDING_MULTIPLIER = std::pow(10.0, TOLERANCE_DECIMAL_PLACES);
+const unsigned int tolerance_decimal_places = 3;
+const double rounding_multipler = std::pow(10.0, tolerance_decimal_places);
+
+double roundToOptimisationTolerance(double value);
+std::vector<double> roundToOptimisationTolerance(const std::vector<double>& values);
 
 enum class OSQPErrorStatus
 {
