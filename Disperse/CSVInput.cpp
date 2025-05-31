@@ -1,5 +1,5 @@
 
-#include "CSVInput.hpp"
+#include "Input.hpp"
 
 #pragma warning(push, 0)
 #include <map>

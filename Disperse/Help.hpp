@@ -3,6 +3,7 @@
 #define DISPERSE_HELP
 
 #pragma warning(push, 0)
+#include <ostream>
 #include <vector>
 #include <string>
 #pragma warning(pop)

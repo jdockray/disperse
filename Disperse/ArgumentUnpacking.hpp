@@ -1,6 +1,6 @@
 
-#ifndef ARGUMENT_UNPACKING
-#define ARGUMENT_UNPACKING
+#ifndef DISPERSE_ARGUMENT_UNPACKING
+#define DISPERSE_ARGUMENT_UNPACKING
 
 #pragma warning(push, 0)
 #include <vector>
@@ -12,4 +12,4 @@ void callHelpCommand(const std::vector<std::string>& commandArgs);
 void callMultiplyCommand(const std::vector<std::string>& commandArgs);
 void callOptimiseCommand(const std::vector<std::string>& commandArgs);
 
-#endif //  #ifndef ARGUMENT_UNPACKING
+#endif //  #ifndef DISPERSE_ARGUMENT_UNPACKING

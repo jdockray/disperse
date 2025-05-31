@@ -2,7 +2,7 @@
 #ifndef DISPERSE_MATRICS
 #define DISPERSE_MATRICS
 
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 #pragma warning(push, 0)
 #include <map>

@@ -1,6 +1,6 @@
 
-#ifndef DISPERSE_QUICK_MAP
-#define DISPERSE_QUICK_MAP
+#ifndef DISPERSE_QUICK_MAPPING
+#define DISPERSE_QUICK_MAPPING
 
 #pragma warning(push, 0)
 #include <string>
@@ -8,7 +8,7 @@
 #include <map>
 #pragma warning(pop)
 
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 class IdentifiedObject
 {
@@ -146,4 +146,4 @@ protected:
 	virtual const std::vector<T>& getObjects() const = 0;
 };
 
-#endif // #ifndef DISPERSE_GROUP
+#endif // #ifndef DISPERSE_QUICK_MAPPING

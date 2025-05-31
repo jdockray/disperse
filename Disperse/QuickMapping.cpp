@@ -1,6 +1,6 @@
 
 #include "QuickMapping.hpp"
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 IdentifiedObject::IdentifiedObject(const std::string& identifier)
 	: m_identifier(identifier)

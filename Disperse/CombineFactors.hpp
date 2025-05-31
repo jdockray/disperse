@@ -1,9 +1,9 @@
 
-#ifndef COMBINE_FACTORS
-#define COMBINE_FACTORS
+#ifndef DISPERSE_COMBINE_FACTORS
+#define DISPERSE_COMBINE_FACTORS
 
-#include "CSVInput.hpp"
-#include "CSVOutput.hpp"
+#include "Input.hpp"
+#include "Output.hpp"
 #include "Elements.hpp"
 #include "ElementWriters.hpp"
 
@@ -18,4 +18,4 @@ void combineElements(std::map<Element, double> elements, double additionalMarket
 void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>& elementSets, double scalarToMultiplyBy,
 	std::vector<std::reference_wrapper<IWriter>>& outputWriters);
 
-#endif // #ifndef COMBINE_FACTORS
+#endif // #ifndef DISPERSE_COMBINE_FACTORS

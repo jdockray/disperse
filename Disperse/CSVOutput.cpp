@@ -1,5 +1,5 @@
 
-#include "CSVOutput.hpp"
+#include "Output.hpp"
 
 CSVOutput::CSVOutput(const std::string& fileName)
 	: m_fileName(fileName), firstOnLine(true)

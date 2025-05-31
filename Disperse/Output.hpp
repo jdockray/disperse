@@ -2,43 +2,38 @@
 #ifndef DISPERSE_OUTPUT
 #define DISPERSE_OUTPUT
 
-#include "CSVOutput.hpp"
-#include "Security.hpp"
-#include "Group.hpp"
+#include "Exceptions.hpp"
 
 #pragma warning(push, 0)
-#include <vector>
+#include <string>
+#include <fstream>
 #pragma warning(pop)
 
-class AllocationOutputWriter {
+class IOutput {
 public:
-	AllocationOutputWriter(IOutput& output);
-	virtual void outputAllocations(const std::vector<std::string>& factorNames,
-		const std::vector<double>& allocations);
-
-private:
-	IOutput& output;
+	virtual void writeElement(double number) = 0;
+	virtual void writeElement(std::string text) = 0;
+	virtual void finishLine() = 0;
 };
 
-class FactorExposureWriter {
+class CSVOutput : public IOutput
+{
 public:
-	FactorExposureWriter(IOutput& output);
-	virtual void outputFactorExposures(const std::vector<std::string>& factorNames,
-		const std::vector<double>& allocations);
+	CSVOutput(const std::string& fileName);
+	virtual void writeElement(double number);
+	virtual void writeElement(std::string text);
+	virtual void finishLine();
 
 private:
-	IOutput& output;
+	const std::string m_fileName;
+	std::ofstream m_outputStream;
+	bool firstOnLine;
+
+	void insertCommaIfNecessary();
+
+	// Prevent copying
+	CSVOutput(const CSVOutput& other) = delete;
+	CSVOutput& operator=(const CSVOutput& other) = delete;
 };
 
-class GroupProportionWriter {
-public:
-	GroupProportionWriter(IOutput& output);
-
-	virtual void outputGroupProportions(const std::vector<std::string>& groupNames,
-		const std::map<std::string, double>& groupProportions);
-
-private:
-	IOutput& output;
-};
-
-#endif // #ifndef DISPERSE_OUTPUT
+#endif // DISPERSE_OUTPUT

@@ -3,10 +3,11 @@
 #define DISPERSE_OPTIMISE
 
 #include "Constraint.hpp"
-#include "CSVInput.hpp"
-#include "CSVOutput.hpp"
+#include "Input.hpp"
+#include "Output.hpp"
 #include "Matrices.hpp"
 #include "ListBuilders.hpp"
+#include "Solver.hpp"
 
 #pragma warning(push, 0)
 #include <string>
@@ -30,12 +31,14 @@ struct OptimisationResult {
 
 class IOptimisationCode {
 public:
-	virtual OptimisationResult runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups) = 0;
+	virtual OptimisationResult runOptimisation(ISolver& solver, const ListOfSecurities& securities,
+		double minimumReturn, ListOfGroups& groups) = 0;
 };
 
 class OptimisationCode : public IOptimisationCode {
 public:
-	virtual OptimisationResult runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups);
+	virtual OptimisationResult runOptimisation(ISolver& solver, const ListOfSecurities& securities,
+		double minimumReturn, ListOfGroups& groups);
 
 private:
 	static void addGroupConstraints(const ListOfGroups& groups, const ListOfSecurities& securities, std::vector<Constraint>& constraints);

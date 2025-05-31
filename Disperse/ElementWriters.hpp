@@ -1,9 +1,9 @@
 
-#ifndef ELEMENTS_WRITERS
-#define ELEMENTS_WRITERS
+#ifndef DISPERSE_ELEMENTS_WRITERS
+#define DISPERSE_ELEMENTS_WRITERS
 
-#include "CSVInput.hpp"
-#include "CSVOutput.hpp"
+#include "Input.hpp"
+#include "Output.hpp"
 #include "Matrices.hpp"
 
 #pragma warning(push, 0)
@@ -41,4 +41,4 @@ private:
 	IOutput& output;
 };
 
-#endif // #ifndef ELEMENTS_WRITERS
+#endif // #ifndef DISPERSE_ELEMENTS_WRITERS

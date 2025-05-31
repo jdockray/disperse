@@ -1,11 +1,11 @@
 
-#include "CSVInput.hpp"
-#include "CSVOutput.hpp"
+#include "Input.hpp"
+#include "Output.hpp"
 #include "ListBuilders.hpp"
 #include "Optimise.hpp"
-#include "Output.hpp"
-#include "ExpectedException.hpp"
-#include "Optimisation.hpp"
+#include "Writers.hpp"
+#include "Exceptions.hpp"
+#include "ConstraintUnpacking.hpp"
 #include "Group.hpp"
 
 #pragma warning(push, 0)
@@ -155,7 +155,8 @@ void OptimisationCode::ensureAllGroupsPresent(ListOfGroups& groups, const std::s
 	}
 }
 
-OptimisationResult OptimisationCode::runOptimisation(const ListOfSecurities& securities, double minimumReturn, ListOfGroups& groups)
+OptimisationResult OptimisationCode::runOptimisation(ISolver& solver, const ListOfSecurities& securities,
+	double minimumReturn, ListOfGroups& groups)
 {
 	ensureAllGroupsPresent(groups, securities.getAllGroups());
 
@@ -165,6 +166,7 @@ OptimisationResult OptimisationCode::runOptimisation(const ListOfSecurities& sec
 		getSecurityRisks(securities), factorMatrix);
 
 	std::vector<double> solution = solve(
+		solver,
 		covarianceMatrix,
 		getConstraints(minimumReturn, securities, groups)
 	);

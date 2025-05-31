@@ -1,6 +1,6 @@
 
 #include "Constraint.hpp"
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 Constraint::Constraint(const double maximum, const double minimum, const std::size_t numberOfSecurities)
 	: maximum(maximum), minimum(minimum), securityWeights(numberOfSecurities)

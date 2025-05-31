@@ -181,14 +181,16 @@
     <ClCompile Include="ElementWriters.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="Optimise.cpp" />
-    <ClCompile Include="ExpectedException.cpp" />
+    <ClCompile Include="Exceptions.cpp" />
     <ClCompile Include="ListBuilders.cpp" />
     <ClCompile Include="Matrices.cpp" />
-    <ClCompile Include="Optimisation.cpp" />
+    <ClCompile Include="ConstraintUnpacking.cpp" />
     <ClCompile Include="OptimiseCommand.cpp" />
     <ClCompile Include="Output.cpp" />
     <ClCompile Include="QuickMapping.cpp" />
     <ClCompile Include="Security.cpp" />
+    <ClCompile Include="Solver.cpp" />
+    <ClCompile Include="SolverSession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentUnpacking.hpp" />
@@ -196,21 +198,23 @@
     <ClInclude Include="CombineFactorCommands.hpp" />
     <ClInclude Include="CombineFactors.hpp" />
     <ClInclude Include="Constraint.hpp" />
-    <ClInclude Include="CSVInput.hpp" />
-    <ClInclude Include="CSVOutput.hpp" />
+    <ClInclude Include="Input.hpp" />
+    <ClInclude Include="Output.hpp" />
     <ClInclude Include="Elements.hpp" />
     <ClInclude Include="ElementWriters.hpp" />
-    <ClInclude Include="ExpectedException.hpp" />
+    <ClInclude Include="Exceptions.hpp" />
     <ClInclude Include="Group.hpp" />
     <ClInclude Include="Help.hpp" />
     <ClInclude Include="ListBuilders.hpp" />
     <ClInclude Include="Matrices.hpp" />
-    <ClInclude Include="Optimisation.hpp" />
+    <ClInclude Include="ConstraintUnpacking.hpp" />
     <ClInclude Include="Optimise.hpp" />
     <ClInclude Include="OptimiseCommand.hpp" />
-    <ClInclude Include="Output.hpp" />
+    <ClInclude Include="SolverSession.hpp" />
+    <ClInclude Include="Writers.hpp" />
     <ClInclude Include="QuickMapping.hpp" />
     <ClInclude Include="Security.hpp" />
+    <ClInclude Include="Solver.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThirdParty\dlib\dlib.vcxproj">

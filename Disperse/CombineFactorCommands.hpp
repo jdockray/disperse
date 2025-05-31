@@ -1,6 +1,6 @@
 
-#ifndef COMBINE_FACTOR_COMMANDS
-#define COMBINE_FACTOR_COMMANDS
+#ifndef DISPERSE_COMBINE_FACTOR_COMMANDS
+#define DISPERSE_COMBINE_FACTOR_COMMANDS
 
 #pragma warning(push, 0)
 #include <optional>
@@ -27,4 +27,4 @@ void runMultiplyCommand(
 	const std::optional<std::string>& listOutputFile
 );
 
-#endif // #ifndef COMBINE_FACTOR_COMMANDS
+#endif // #ifndef DISPERSE_COMBINE_FACTOR_COMMANDS

@@ -1,7 +1,9 @@
 
 #include "Optimise.hpp"
 #include "OptimiseCommand.hpp"
-#include "Output.hpp"
+#include "Writers.hpp"
+
+OSQPSolver osqpSolver;
 
 double runOptimiseCommand(
 	IOptimisationCode& optimisationCode,
@@ -36,7 +38,7 @@ double runOptimiseCommand(
 	if (groupOutputFile) {
 		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
 	}	
-	OptimisationResult result = optimisationCode.runOptimisation(securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
+	OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
 	CSVOutput securityOutput(securityOutputFile);
 	AllocationOutputWriter(securityOutput).outputAllocations(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
 	if (factorOutputFile) {

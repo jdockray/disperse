@@ -1,6 +1,6 @@
 
 #include "Security.hpp"
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 Security::Security(const std::string& identifier)
 	:	IdentifiedObject(identifier), expectedReturn(1), risk(1), group(default_group_name),

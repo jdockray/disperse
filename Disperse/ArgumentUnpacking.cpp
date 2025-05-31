@@ -3,7 +3,7 @@
 #include "CmdLine.hpp"
 #include "CombineFactorCommands.hpp"
 #include "OptimiseCommand.hpp"
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 #include "Help.hpp"
 
 static const std::string default_market_risk_name = "Market";

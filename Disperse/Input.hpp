@@ -1,6 +1,6 @@
 
-#ifndef CSV_INPUT
-#define CSV_INPUT
+#ifndef DISPERSE_INPUT
+#define DISPERSE_INPUT
 
 #pragma warning(push, 0)
 #include "csvstream\csvstream\csvstream.hpp"
@@ -31,4 +31,4 @@ private:
 	CSVInput& operator=(const CSVInput& other) = delete;
 };
 
-#endif // CSV_INPUT
+#endif // DISPERSE_INPUT

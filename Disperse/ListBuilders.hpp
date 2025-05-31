@@ -1,8 +1,8 @@
 
-#ifndef DISPERSE_INPUT
-#define DISPERSE_INPUT
+#ifndef DISPERSE_LIST_BUILDERS
+#define DISPERSE_LIST_BUILDERS
 
-#include "CSVInput.hpp"
+#include "Input.hpp"
 #include "Security.hpp"
 #include "Group.hpp"
 
@@ -32,4 +32,4 @@ private:
 
 ListOfGroups inputGroups(IInput& input);
 
-#endif // #ifndef DISPERSE_INPUT
+#endif // #ifndef DISPERSE_LIST_BUILDERS

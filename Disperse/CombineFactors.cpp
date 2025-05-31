@@ -2,7 +2,7 @@
 #include "CombineFactors.hpp"
 #include "Elements.hpp"
 #include "ElementWriters.hpp"
-#include "ExpectedException.hpp"
+#include "Exceptions.hpp"
 
 #pragma warning(push, 0)
 #include <map>

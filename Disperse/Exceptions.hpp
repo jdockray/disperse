@@ -1,6 +1,6 @@
 
-#ifndef DISPERSE_EXPECTED_EXCEPTION
-#define DISPERSE_EXPECTED_EXCEPTION
+#ifndef DISPERSE_EXCEPTIONS
+#define DISPERSE_EXCEPTIONS
 
 #pragma warning(push, 0)
 #include "csvstream\csvstream\csvstream.hpp"
@@ -206,4 +206,4 @@ public:
 	CSVStreamException(const csvstream_exception& exception);
 };
 
-#endif // #ifndef DISPERSE_EXPECTED_EXCEPTION
+#endif // #ifndef DISPERSE_EXCEPTIONS
