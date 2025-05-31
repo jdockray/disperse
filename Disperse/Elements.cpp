@@ -8,8 +8,6 @@
 #include <map>
 #pragma warning(pop)
 
-const std::size_t MATRIX_SIZE_LIMIT = 25000000;
-
 Element::Element(const std::string& row, const std::string& column)
 	: row(row), column(column)
 {
@@ -119,78 +117,6 @@ std::vector<std::pair<Element, double>> getElementsFromListFile(AbstractInput& i
 	return elements;
 }
 
-void putElementsInListFile(AbstractOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
-{
-	csvOutput.writeElement("Row");
-	csvOutput.writeElement("Column");
-	csvOutput.writeElement("Value");
-	csvOutput.finishLine();
-	for (const std::pair<Element, double>& elementPair : elements)
-	{
-		if (elementPair.second != 0)
-		{
-			csvOutput.writeElement(elementPair.first.getRow());
-			csvOutput.writeElement(elementPair.first.getColumn());
-			csvOutput.writeElement(elementPair.second);
-			csvOutput.finishLine();
-		}
-	}
-}
-
-std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vector<std::string>& rowHeadings,
-	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
-{
-	std::vector<std::pair<Element, double>> elements;
-	for (const std::pair<std::size_t, std::map<std::size_t, double>>& row : matrix.matrixElements())
-	{
-		for (const std::pair<std::size_t, double>& element : row.second)
-		{
-			elements.push_back(std::pair<Element, double>(
-				Element(rowHeadings.at(row.first), columnHeadings.at(element.first)),
-				element.second
-			));
-		}
-	}
-	return elements;
-}
-
-void putElementsInListFile(AbstractOutput& csvOutput, const std::vector<std::string>& rowHeadings,
-	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
-{
-	putElementsInListFile(csvOutput, elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
-}
-
-void putElementsInGridFile(AbstractOutput& csvOutput, const std::vector<std::string>& rowHeadings,
-							const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
-{
-	const std::size_t numberOfRows = matrix.rowCount();
-	const std::size_t numberOfColumns = matrix.columnCount();
-	if (rowHeadings.size() != numberOfRows || columnHeadings.size() != numberOfColumns)
-	{
-		throw UnexpectedException();
-	}
-	if (numberOfRows * numberOfColumns > MATRIX_SIZE_LIMIT)
-	{
-		throw ExcessiveSizeException("Matrix of " + std::to_string(numberOfRows) + " x "
-										+ std::to_string(numberOfColumns) + " exceeds size limit.");
-	}
-	csvOutput.writeElement("");
-	for (const std::string& column : columnHeadings)
-	{
-		csvOutput.writeElement(column);
-	}
-	csvOutput.finishLine();
-	for (unsigned int rowIndex = 0; rowIndex < matrix.rowCount(); ++rowIndex)
-	{
-		csvOutput.writeElement(rowHeadings.at(rowIndex));
-		for (unsigned int columnIndex = 0; columnIndex < matrix.columnCount(); ++columnIndex)
-		{
-			csvOutput.writeElement(matrix.getValue(rowIndex, columnIndex));
-		}
-		csvOutput.finishLine();
-	}
-}
-
 SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
 	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings)
 {
@@ -217,12 +143,4 @@ SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double
 		matrix.setValue(rowLookup[elementPair.first.getRow()], columnLookup[elementPair.first.getColumn()], elementPair.second);
 	}
 	return matrix;
-}
-
-void putElementsInGridFile(AbstractOutput& csvOutput, const std::vector<std::pair<Element, double>>& elements)
-{
-	std::vector<std::string> rowHeadings;
-	std::vector<std::string> columnHeadings;
-	putElementsInGridFile(csvOutput, rowHeadings, columnHeadings,
-		elementMatrixFromVector(elements, rowHeadings, columnHeadings));
 }

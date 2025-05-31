@@ -2,15 +2,10 @@
 #ifndef DISPERSE_OPTIMISE
 #define DISPERSE_OPTIMISE
 
+#include "CSVInput.hpp"
 #include "CSVOutput.hpp"
 
-#pragma warning(push, 0)
-#include <optional>
-#include <vector>
-#include <string>
-#pragma warning(pop)
-
-void runOptimiseCommand(
+void runOptimisation(
 	AbstractInput& securityInput,
 	AbstractOutput& securityOutput,
 	double minimumReturn,

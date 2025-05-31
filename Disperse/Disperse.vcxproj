@@ -171,18 +171,21 @@
   <ItemGroup>
     <ClCompile Include="ArgumentUnpacking.cpp" />
     <ClCompile Include="CmdLine.cpp" />
+    <ClCompile Include="CombineFactorCommands.cpp" />
     <ClCompile Include="CombineFactors.cpp" />
     <ClCompile Include="Constraint.cpp" />
     <ClCompile Include="CSVInput.cpp" />
     <ClCompile Include="CSVOutput.cpp" />
     <ClCompile Include="Disperse.cpp" />
     <ClCompile Include="Elements.cpp" />
+    <ClCompile Include="ElementWriters.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="Optimise.cpp" />
     <ClCompile Include="ExpectedException.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Matrices.cpp" />
     <ClCompile Include="Optimisation.cpp" />
+    <ClCompile Include="OptimiseCommand.cpp" />
     <ClCompile Include="Output.cpp" />
     <ClCompile Include="QuickMapping.cpp" />
     <ClCompile Include="Security.cpp" />
@@ -190,11 +193,13 @@
   <ItemGroup>
     <ClInclude Include="ArgumentUnpacking.hpp" />
     <ClInclude Include="CmdLine.hpp" />
+    <ClInclude Include="CombineFactorCommands.hpp" />
     <ClInclude Include="CombineFactors.hpp" />
     <ClInclude Include="Constraint.hpp" />
     <ClInclude Include="CSVInput.hpp" />
     <ClInclude Include="CSVOutput.hpp" />
     <ClInclude Include="Elements.hpp" />
+    <ClInclude Include="ElementWriters.hpp" />
     <ClInclude Include="ExpectedException.hpp" />
     <ClInclude Include="Group.hpp" />
     <ClInclude Include="Help.hpp" />
@@ -202,6 +207,7 @@
     <ClInclude Include="Matrices.hpp" />
     <ClInclude Include="Optimisation.hpp" />
     <ClInclude Include="Optimise.hpp" />
+    <ClInclude Include="OptimiseCommand.hpp" />
     <ClInclude Include="Output.hpp" />
     <ClInclude Include="QuickMapping.hpp" />
     <ClInclude Include="Security.hpp" />

@@ -1,10 +1,11 @@
 
-
 #ifndef COMBINE_FACTORS
 #define COMBINE_FACTORS
 
 #include "CSVInput.hpp"
 #include "CSVOutput.hpp"
+#include "Elements.hpp"
+#include "ElementWriters.hpp"
 
 #pragma warning(push, 0)
 #include <optional>
@@ -12,23 +13,9 @@
 #include <string>
 #pragma warning(pop)
 
-std::vector<std::string> getDelimitedElements(const std::string& delimitedList);
-
-void runCombineCommand(
-	std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
-	std::vector<std::reference_wrapper<AbstractInput>>& listInputs,
-	double additionalMarketRisk,
-	const std::string& marketRiskName,
-	AbstractOutput* gridOutput,
-	AbstractOutput* listOutput
-);
-
-void runMultiplyCommand(
-	std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
-	std::vector<std::reference_wrapper<AbstractInput>>& listInputs,
-	double scalarToMultiplyBy,
-	AbstractOutput* gridOutput,
-	AbstractOutput* listOutput
-);
+void combineElements(std::map<Element, double> elements, double additionalMarketRisk, const std::string& marketRiskName,
+	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters);
+void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>& elementSets, double scalarToMultiplyBy,
+	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters);
 
 #endif // #ifndef COMBINE_FACTORS

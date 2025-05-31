@@ -1,6 +1,7 @@
 
 #include "CombineFactors.hpp"
 #include "Elements.hpp"
+#include "ElementWriters.hpp"
 #include "ExpectedException.hpp"
 
 #pragma warning(push, 0)
@@ -10,40 +11,9 @@
 #include <cassert>
 #pragma warning(pop)
 
-std::vector<std::string> getDelimitedElements(const std::string& delimitedList)
+void combineElements(std::map<Element, double> elements, double additionalMarketRisk, const std::string& marketRiskName,
+	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters)
 {
-	std::stringstream listStream;
-	listStream << delimitedList;
-	std::string tempString;
-	std::vector<std::string> list;
-	while (std::getline(listStream, tempString, ','))
-	{
-		list.push_back(tempString);
-	}
-	return list;
-}
-
-void addElements(const std::vector<std::pair<Element, double>>& newElements, std::map<Element, double>& elementsToAddTo)
-{
-	for (const std::pair<Element, double>& element : newElements)
-	{
-		elementsToAddTo[element.first] += element.second;
-	}
-}
-
-void runCombineCommand(std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
-	std::vector<std::reference_wrapper<AbstractInput>>& listInputs, double additionalMarketRisk,
-	const std::string& marketRiskName, AbstractOutput* gridOutput, AbstractOutput* listOutput)
-{
-	std::map<Element, double> elements;
-	for (AbstractInput& gridInput : gridInputs)
-	{
-		addElements(getElementsFromGridFile(gridInput), elements);
-	}
-	for (AbstractInput& listInput : listInputs)
-	{
-		addElements(getElementsFromListFile(listInput), elements);
-	}
 	if (additionalMarketRisk != 0) {
 		std::map<Element, double> additionalMarketRiskElements;
 		for (const std::pair<Element, double>& element : elements)
@@ -57,29 +27,14 @@ void runCombineCommand(std::vector<std::reference_wrapper<AbstractInput>>& gridI
 	{
 		pairs.push_back(element);
 	}
-	if (gridOutput)
-	{
-		putElementsInGridFile(*gridOutput, pairs);
-	}
-	if (listOutput)
-	{
-		putElementsInListFile(*listOutput, pairs);
+	for (ElementWriter& outputWriter : outputWriters) {
+		outputWriter.writeElements(pairs);
 	}
 }
 
-void runMultiplyCommand(std::vector<std::reference_wrapper<AbstractInput>>& gridInputs,
-	std::vector<std::reference_wrapper<AbstractInput>>& listInputs, double scalarToMultiplyBy, AbstractOutput* gridOutput,
-	AbstractOutput* listOutput)
+void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>& elementSets, double scalarToMultiplyBy,
+	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters)
 {
-	std::vector<std::vector<std::pair<Element, double>>> elementSets;
-	for (AbstractInput& gridInput : gridInputs)
-	{
-		elementSets.push_back(getElementsFromGridFile(gridInput));
-	}
-	for (AbstractInput& listInput : listInputs)
-	{
-		elementSets.push_back(getElementsFromListFile(listInput));
-	}
 	std::vector<std::string> columnHeadings;
 	std::vector<std::string> rowHeadings;
 	std::vector<std::string> joiningAxisHeadings1;
@@ -111,12 +66,7 @@ void runMultiplyCommand(std::vector<std::reference_wrapper<AbstractInput>>& grid
 	{
 		outputMatrix = multiply(outputMatrix.value(), scalarToMultiplyBy);
 	}
-	if (gridOutput)
-	{
-		putElementsInGridFile(*gridOutput, rowHeadings, columnHeadings, outputMatrix.value());
-	}
-	if (listOutput)
-	{
-		putElementsInListFile(*listOutput, rowHeadings, columnHeadings, outputMatrix.value());
+	for (ElementWriter& outputWriter : outputWriters) {
+		outputWriter.writeElements(rowHeadings, columnHeadings, outputMatrix.value());
 	}
 }
