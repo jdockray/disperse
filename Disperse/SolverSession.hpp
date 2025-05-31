@@ -17,7 +17,7 @@ public:
 	~OSQPSession();
 
 private:
-	OSQPWorkspace* pOsqpWorkspace;
+	OSQPWorkspace* pOsqpWorkspace = nullptr;
 };
 
 #endif // #ifndef DISPERSE_SOLVER_SESSION

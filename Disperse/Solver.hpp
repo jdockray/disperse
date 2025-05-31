@@ -8,8 +8,8 @@
 #include "osqp\osqp\include\osqp.h"
 #pragma warning(pop)
 
-const unsigned int tolerance_decimal_places = 3;
-const double rounding_multipler = std::pow(10.0, tolerance_decimal_places);
+inline const unsigned int tolerance_decimal_places = 3;
+inline const double rounding_multipler = std::pow(10.0, tolerance_decimal_places);
 
 class ISolver {
 public:
