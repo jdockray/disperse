@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dlib", "..\ThirdParty\dlib\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amd", "..\ThirdParty\osqp\amd\amd.vcxproj", "{CA8629E7-FF32-41FB-BFF9-F5B298E47018}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTesting", "..\Testing\UnitTesting\UnitTesting.vcxproj", "{9294F2CC-5A85-40F4-966D-BD23A81B0F37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -64,6 +66,14 @@ Global
 		{CA8629E7-FF32-41FB-BFF9-F5B298E47018}.Release|x64.Build.0 = Release|x64
 		{CA8629E7-FF32-41FB-BFF9-F5B298E47018}.Release|x86.ActiveCfg = Release|Win32
 		{CA8629E7-FF32-41FB-BFF9-F5B298E47018}.Release|x86.Build.0 = Release|Win32
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Debug|x64.ActiveCfg = Debug|x64
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Debug|x64.Build.0 = Debug|x64
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Debug|x86.ActiveCfg = Debug|Win32
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Debug|x86.Build.0 = Debug|Win32
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Release|x64.ActiveCfg = Release|x64
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Release|x64.Build.0 = Release|x64
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Release|x86.ActiveCfg = Release|Win32
+		{9294F2CC-5A85-40F4-966D-BD23A81B0F37}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
