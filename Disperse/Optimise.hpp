@@ -4,13 +4,12 @@
 
 #include "CSVInput.hpp"
 #include "CSVOutput.hpp"
+#include "Input.hpp"
 
 void runOptimisation(
-	AbstractInput& securityInput,
+	const ListOfSecurities& securities,
 	AbstractOutput& securityOutput,
 	double minimumReturn,
-	AbstractInput* factorGridInput = nullptr,
-	AbstractInput* factorListInput = nullptr,
 	AbstractOutput* factorOutput = nullptr,
 	AbstractInput* groupInput = nullptr,
 	AbstractOutput* groupOutput = nullptr

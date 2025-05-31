@@ -8,8 +8,6 @@
 #include "dlib\dlib\dlib\matrix.h"
 #pragma warning(pop)
 
-const std::string security_column_name = "Security";
-
 void ensureColumnPresent(AbstractInput& input, const std::string& columnName)
 {
 	const std::vector headers = input.getHeader();
@@ -19,20 +17,16 @@ void ensureColumnPresent(AbstractInput& input, const std::string& columnName)
 	}
 }
 
-ListOfSecurities inputSecurities(AbstractInput& input)
+ListOfSecurities SecurityListBuilder::inputSecurities(AbstractInput& input)
 {
-	const std::string expected_return_column_name = "Expected";
-	const std::string risk_column_name = "Risk";
-	const std::string minimum_allocation_column_name = "Min";
-	const std::string maximum_allocation_column_name = "Max";
-	const std::string group_column_name = "Group";
-
 	ensureColumnPresent(input, security_column_name);
 	ListOfSecurities securities;
 	std::map<std::string, std::string> row = input.readEntryAsMap();
 	while (!row.empty()) // Checks if map is empty
 	{
-		if (row.at(security_column_name).length() == 0) continue;
+		if (row.at(security_column_name).length() == 0) {
+			continue;
+		}
 		Security security(row.at(security_column_name));
 		std::map<std::string, std::string>::iterator expectedReturnColumn = row.find(expected_return_column_name);
 		if (expectedReturnColumn != row.end())
@@ -66,8 +60,13 @@ ListOfSecurities inputSecurities(AbstractInput& input)
 	return securities;
 }
 
+SecurityListBuilder::SecurityListBuilder(AbstractInput& input)
+	: securities(inputSecurities(input))
+{
+}
+
 // Row = Security, Column = Factor
-void inputFactorGrid(AbstractInput& input, ListOfSecurities& securities)
+void SecurityListBuilder::loadFactorsFromGrid(AbstractInput& input)
 {
 	for (const std::pair<Element, double>& element : getElementsFromGridFile(input))
 	{
@@ -76,7 +75,7 @@ void inputFactorGrid(AbstractInput& input, ListOfSecurities& securities)
 }
 
 // First column / Row = Security, SecondColumn / Column = Factor
-void inputFactorList(AbstractInput& input, ListOfSecurities& securities)
+void SecurityListBuilder::loadFactorsFromList(AbstractInput& input)
 {
 	for (const std::pair<Element, double>& element : getElementsFromListFile(input))
 	{
@@ -84,13 +83,17 @@ void inputFactorList(AbstractInput& input, ListOfSecurities& securities)
 	}
 }
 
+const ListOfSecurities& SecurityListBuilder::getSecurityList() {
+	return securities;
+}
+
 ListOfGroups inputGroups(AbstractInput& groupInput)
 {
 	ListOfGroups groups;
 
-	const std::string group_column_name = "Group";
-	const std::string group_minimum_column_name = "Min";
-	const std::string group_maximum_column_name = "Max";
+	static const std::string group_column_name = "Group";
+	static const std::string group_minimum_column_name = "Min";
+	static const std::string group_maximum_column_name = "Max";
 
 	ensureColumnPresent(groupInput, group_column_name);
 

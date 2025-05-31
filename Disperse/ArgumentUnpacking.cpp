@@ -6,9 +6,10 @@
 #include "ExpectedException.hpp"
 #include "Help.hpp"
 
+static const std::string default_market_risk_name = "Market";
+
 void callCombineCommand(const std::vector<std::string>& commandArgs)
 {
-	const std::string default_market_risk_name = "Market";
 	CmdLineArgs cmdLineArgs(commandArgs);
 	std::vector<std::string> gridInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('m').value_or(""));
 	std::vector<std::string> listInputFiles = getDelimitedElements(cmdLineArgs.getSingleArgumentOption('l').value_or(""));

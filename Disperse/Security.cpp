@@ -2,11 +2,9 @@
 #include "Security.hpp"
 #include "ExpectedException.hpp"
 
-const std::string DEFAULT_GROUP_NAME = "(Default)";
-
 Security::Security(const std::string& identifier)
-	:	IdentifiedObject(identifier), expectedReturn(1), risk(1), group(DEFAULT_GROUP_NAME),
-		residualFactorName(RESIDUAL_FACTOR_NAME_PREFIX + identifier + RESIDUAL_FACTOR_NAME_POSTFIX),
+	:	IdentifiedObject(identifier), expectedReturn(1), risk(1), group(default_group_name),
+		residualFactorName(residual_factor_name_prefix + identifier + residual_factor_name_postfix),
 		remainingExposure(1)
 {
 	exposures[residualFactorName] = remainingExposure;

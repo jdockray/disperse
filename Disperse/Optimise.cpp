@@ -171,20 +171,10 @@ void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& r
 	}
 }
 
-const std::string RISK_OUTPUT_STRING = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
-
-void runOptimisation(AbstractInput& securityInput, AbstractOutput& securityOutput, double minimumReturn, AbstractInput* factorGridInput,
-	AbstractInput* factorListInput,	AbstractOutput* factorOutput, AbstractInput* groupInput, AbstractOutput* groupOutput)
+void runOptimisation(const ListOfSecurities& securities, AbstractOutput& securityOutput, double minimumReturn,
+	AbstractOutput* factorOutput, AbstractInput* groupInput, AbstractOutput* groupOutput)
 {
-	ListOfSecurities securities = inputSecurities(securityInput);
-	if (factorGridInput)
-	{
-		inputFactorGrid(*factorGridInput, securities);
-	}
-	if (factorListInput)
-	{
-		inputFactorList(*factorListInput, securities);
-	}
+	static const std::string risk_output_string = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
 
 	ListOfGroups groups = groupInput ? inputGroups(*groupInput) : ListOfGroups();
 	ensureAllGroupsPresent(groups, securities.getAllGroups());
@@ -199,7 +189,7 @@ void runOptimisation(AbstractInput& securityInput, AbstractOutput& securityOutpu
 		getConstraints(minimumReturn, securities, groups)
 	);
 
-	printf(RISK_OUTPUT_STRING.c_str(), roundToOptimisationTolerance(std::sqrt(getSingleValue(
+	printf(risk_output_string.c_str(), roundToOptimisationTolerance(std::sqrt(getSingleValue(
 		multiply(vectorToHorizontalMatrix(solution), covarianceMatrix, vectorToVerticalMatrix(solution)))
 	)));
 

@@ -23,10 +23,11 @@ public:
 	const std::map<std::string, double>& getExposures() const;
 
 private:
-	inline static const std::string RESIDUAL_FACTOR_NAME_PREFIX = "";
-	inline static const std::string RESIDUAL_FACTOR_NAME_POSTFIX = " residual";
-	const std::string residualFactorName;
+	inline static const std::string default_group_name = "(Default)";
+	inline static const std::string residual_factor_name_prefix = "";
+	inline static const std::string residual_factor_name_postfix = " residual";
 
+	const std::string residualFactorName;
 	double expectedReturn;
 	double risk;
 	std::string group;

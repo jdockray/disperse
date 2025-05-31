@@ -14,14 +14,17 @@ void runOptimiseCommand(
 )
 {
 	CSVInput securityInput(securityInputFile);
+	SecurityListBuilder securityListBuilder(securityInput);
 	CSVOutput securityOutput = CSVOutput(securityOutputFile);
-	std::unique_ptr<CSVInput> factorGridInput;
-	if (factorGridInputFile) {
-		factorGridInput = std::make_unique<CSVInput>(factorGridInputFile.value());
+	if (factorGridInputFile)
+	{
+		CSVInput factorGridInput(factorGridInputFile.value());
+		securityListBuilder.loadFactorsFromGrid(factorGridInput);
 	}
-	std::unique_ptr<CSVInput> factorListInput;
-	if (factorListInputFile) {
-		factorListInput = std::make_unique<CSVInput>(factorListInputFile.value());
+	if (factorListInputFile)
+	{
+		CSVInput factorListInput(factorListInputFile.value());
+		securityListBuilder.loadFactorsFromList(factorListInput);
 	}
 	std::unique_ptr<CSVOutput> factorOutput;
 	if (factorOutputFile) {
@@ -35,6 +38,6 @@ void runOptimiseCommand(
 	if (groupOutputFile) {
 		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
 	}	
-	runOptimisation(securityInput, securityOutput, minimumReturn, factorGridInput.get(), factorListInput.get(), factorOutput.get(),
+	runOptimisation(securityListBuilder.getSecurityList(), securityOutput, minimumReturn, factorOutput.get(),
 		groupInput.get(), groupOutput.get());
 }
