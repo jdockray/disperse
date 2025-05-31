@@ -13,13 +13,13 @@ This software accepts as input a list of securities (potential investments), wit
 
 The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
 
-$\boldsymbol{\Sigma} = \mathrm{diag}(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}\mathrm{diag}(\boldsymbol{\sigma})$ \
-where $\boldsymbol{\Sigma}$ is the asset covariance matrix,\
-$\mathrm{diag}(\boldsymbol{\sigma})$ is the diagonal matrix of the vector of standard deviations,\
-$\boldsymbol{\sigma} = (\sigma_1, \sigma_2, ..., \sigma_N)$
-and $\boldsymbol{F}$ is a matrix defined by this formula, where $f_{ij}$ is the square root of the relative change in price of security i in response to a change in factor j. For example, if factor j changes by $x$ percent and the price of security i changes by $2x$ percent, then $f_{ij}$ would be $\sqrt{2}$. These values are the square roots of the values in the input exposure matrix described above.
+$`\boldsymbol{\Sigma} = \mathrm{diag}(\boldsymbol{\sigma})\boldsymbol{F^\mathrm{T}F}\mathrm{diag}(\boldsymbol{\sigma})`$ \
+where $`\boldsymbol{\Sigma}`$ is the asset covariance matrix,\
+$`\mathrm{diag}(\boldsymbol{\sigma})`$ is the diagonal matrix of the vector of standard deviations,\
+$`\boldsymbol{\sigma} = (\sigma_1, \sigma_2, ..., \sigma_N)`$
+and $`\boldsymbol{F}`$ is a matrix defined by this formula, where $f_{ij}$ is the square root of the relative change in price of security i in response to a change in factor j. For example, if factor j changes by $x$ percent and the price of security i changes by $2x$ percent, then $f_{ij}$ would be $`\sqrt{2}`$. These values are the square roots of the values in the input exposure matrix described above.
 
-$\boldsymbol{F^\mathrm{T}F}$ is the correlation matrix suggested by the factor weightings with diagonal elements of 1, and multiplying by the standard deviation diagonal matrix at the start and end produces the covariance matrix, $\boldsymbol{\Sigma}$, where the diagonal elements correspond to the variances of the assets. Calculating the covariance matrix in this way ensures that it fulfils the mathematical requirements of a valid covariance matrix, specifically, that it is square, symmetrical and [positive semi-definite](https://en.wikipedia.org/wiki/Definite_matrix), as required by the subsequent optimisation.
+$`\boldsymbol{F^\mathrm{T}F}`$ is the correlation matrix suggested by the factor weightings with diagonal elements of 1, and multiplying by the standard deviation diagonal matrix at the start and end produces the covariance matrix, $`\boldsymbol{\Sigma}`$, where the diagonal elements correspond to the variances of the assets. Calculating the covariance matrix in this way ensures that it fulfils the mathematical requirements of a valid covariance matrix, specifically, that it is square, symmetrical and [positive semi-definite](https://en.wikipedia.org/wiki/Definite_matrix), as required by the subsequent optimisation.
 
 How the user derives the expected returns and standard deviation of returns is left up to them, but the intention is that they use robust values that reflect the considerable uncertainty associated with the prediction of financial market returns. I have previously used the SSRI (Synthetic Risk Reward Indicator) as a stable indicator of the risk level of mutual funds and assumed [arbitrage pricing theory (APT)](https://en.wikipedia.org/wiki/Arbitrage_pricing_theory) when predicting the return, meaning that the expected return is assumed to correlate with the riskiness of the asset. The factor exposures could be used to estimate the return based on the [Capital Asset Pricing Model](https://en.wikipedia.org/wiki/Capital_asset_pricing_model).
 
@@ -30,7 +30,7 @@ From p25 of Fabozzi (2007) [Robust Portfolio Optimization and Management](https:
 minimise $w^\mathrm{T}\boldsymbol{\Sigma}w$ (Minimise the price variance)\
 subject to\
 $w^\mathrm{T}\boldsymbol{\mu}\geq\mu_0$ (The target return being achieved)\
-$\sum_{i}$=1 (All of the portfolio must be allocated)\
+$`\sum_{i}`$=1 (All of the portfolio must be allocated)\
 $w_i \geq 0$ for all i (No short selling)
 
 The program also allows additional constraints to be placed on the proportion of the portfolio assigned to particular securities or groups of securities. 
