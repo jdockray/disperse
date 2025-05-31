@@ -45,21 +45,21 @@ void runCombineCommand(
 		CSVInput input(listInputFile);
 		addElements(getElementsFromListFile(input), elements);
 	}
-	std::vector<std::reference_wrapper<ElementWriter>> outputs;
+	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;
-	std::unique_ptr<GridFileElementWriter> gridFileWriter;
+	std::unique_ptr<GridFileWriter> gridFileWriter;
 	if (gridOutputFile)
 	{
 		gridOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
-		gridFileWriter = std::make_unique<GridFileElementWriter>(*gridOutput);
+		gridFileWriter = std::make_unique<GridFileWriter>(*gridOutput);
 		outputs.push_back(*gridFileWriter);
 	}
 	std::unique_ptr<CSVOutput> listOutput;
-	std::unique_ptr<ListFileElementWriter> listFileWriter;
+	std::unique_ptr<ListFileWriter> listFileWriter;
 	if (listOutputFile)
 	{
 		listOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
-		listFileWriter = std::make_unique<ListFileElementWriter>(*listOutput);
+		listFileWriter = std::make_unique<ListFileWriter>(*listOutput);
 		outputs.push_back(*listFileWriter);
 	}
 	combineElements(elements, additionalMarketRisk, marketRiskName, outputs);
@@ -84,21 +84,21 @@ void runMultiplyCommand(
 		CSVInput input(listInputFile);
 		elementSets.push_back(getElementsFromListFile(input));
 	}
-	std::vector<std::reference_wrapper<ElementWriter>> outputs;
+	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;
-	std::unique_ptr<GridFileElementWriter> gridFileWriter;
+	std::unique_ptr<GridFileWriter> gridFileWriter;
 	if (gridOutputFile)
 	{
 		gridOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
-		gridFileWriter = std::make_unique<GridFileElementWriter>(*gridOutput);
+		gridFileWriter = std::make_unique<GridFileWriter>(*gridOutput);
 		outputs.push_back(*gridFileWriter);
 	}
 	std::unique_ptr<CSVOutput> listOutput;
-	std::unique_ptr<ListFileElementWriter> listFileWriter;
+	std::unique_ptr<ListFileWriter> listFileWriter;
 	if (listOutputFile)
 	{
 		listOutput = std::make_unique<CSVOutput>(gridOutputFile.value());
-		listFileWriter = std::make_unique<ListFileElementWriter>(*listOutput);
+		listFileWriter = std::make_unique<ListFileWriter>(*listOutput);
 		outputs.push_back(*listFileWriter);
 	}
 	multiplyElements(elementSets, scalarToMultiplyBy, outputs);

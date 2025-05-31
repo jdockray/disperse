@@ -9,12 +9,12 @@
 
 const std::size_t MATRIX_SIZE_LIMIT = 25000000;
 
-ListFileElementWriter::ListFileElementWriter(AbstractOutput& output)
+ListFileWriter::ListFileWriter(IOutput& output)
 	: output(output)
 {
 }
 
-void ListFileElementWriter::writeElements(const std::vector<std::pair<Element, double>>& elements) {
+void ListFileWriter::writeElements(const std::vector<std::pair<Element, double>>& elements) {
 	output.writeElement("Row");
 	output.writeElement("Column");
 	output.writeElement("Value");
@@ -31,11 +31,11 @@ void ListFileElementWriter::writeElements(const std::vector<std::pair<Element, d
 	}
 }
 
-void ListFileElementWriter::writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) {
+void ListFileWriter::writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) {
 	writeElements(elementVectorFromMatrix(rowHeadings, columnHeadings, matrix));
 }
 
-std::vector<std::pair<Element, double>> ListFileElementWriter::elementVectorFromMatrix(const std::vector<std::string>& rowHeadings,
+std::vector<std::pair<Element, double>> ListFileWriter::elementVectorFromMatrix(const std::vector<std::string>& rowHeadings,
 	const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix)
 {
 	std::vector<std::pair<Element, double>> elements;
@@ -52,18 +52,18 @@ std::vector<std::pair<Element, double>> ListFileElementWriter::elementVectorFrom
 	return elements;
 }
 
-GridFileElementWriter::GridFileElementWriter(AbstractOutput& output)
+GridFileWriter::GridFileWriter(IOutput& output)
 	: output(output)
 {
 }
 
-void GridFileElementWriter::writeElements(const std::vector<std::pair<Element, double>>& elements) {
+void GridFileWriter::writeElements(const std::vector<std::pair<Element, double>>& elements) {
 	std::vector<std::string> rowHeadings;
 	std::vector<std::string> columnHeadings;
 	writeElements(rowHeadings, columnHeadings, elementMatrixFromVector(elements, rowHeadings, columnHeadings));
 }
 
-void GridFileElementWriter::writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) {
+void GridFileWriter::writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) {
 	const std::size_t numberOfRows = matrix.rowCount();
 	const std::size_t numberOfColumns = matrix.columnCount();
 	if (rowHeadings.size() != numberOfRows || columnHeadings.size() != numberOfColumns)

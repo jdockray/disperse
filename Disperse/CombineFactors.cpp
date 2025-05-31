@@ -12,7 +12,7 @@
 #pragma warning(pop)
 
 void combineElements(std::map<Element, double> elements, double additionalMarketRisk, const std::string& marketRiskName,
-	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters)
+	std::vector<std::reference_wrapper<IWriter>>& outputWriters)
 {
 	if (additionalMarketRisk != 0) {
 		std::map<Element, double> additionalMarketRiskElements;
@@ -27,13 +27,13 @@ void combineElements(std::map<Element, double> elements, double additionalMarket
 	{
 		pairs.push_back(element);
 	}
-	for (ElementWriter& outputWriter : outputWriters) {
+	for (IWriter& outputWriter : outputWriters) {
 		outputWriter.writeElements(pairs);
 	}
 }
 
 void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>& elementSets, double scalarToMultiplyBy,
-	std::vector<std::reference_wrapper<ElementWriter>>& outputWriters)
+	std::vector<std::reference_wrapper<IWriter>>& outputWriters)
 {
 	std::vector<std::string> columnHeadings;
 	std::vector<std::string> rowHeadings;
@@ -66,7 +66,7 @@ void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>
 	{
 		outputMatrix = multiply(outputMatrix.value(), scalarToMultiplyBy);
 	}
-	for (ElementWriter& outputWriter : outputWriters) {
+	for (IWriter& outputWriter : outputWriters) {
 		outputWriter.writeElements(rowHeadings, columnHeadings, outputMatrix.value());
 	}
 }

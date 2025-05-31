@@ -2,7 +2,6 @@
 #ifndef DISPERSE_INPUT
 #define DISPERSE_INPUT
 
-#include "CSVInput.hpp"
 #include "Security.hpp"
 #include "Group.hpp"
 
@@ -10,11 +9,19 @@
 #include <vector>
 #pragma warning(pop)
 
+class IInput {
+public:
+	virtual std::string getName() const = 0;
+	virtual std::vector<std::string> getHeader() const = 0;
+	virtual std::map<std::string, std::string> readEntryAsMap() = 0;
+	virtual std::vector<std::pair<std::string, std::string> > readEntryAsPairVector() = 0;
+};
+
 class SecurityListBuilder {
 public:
-	SecurityListBuilder(AbstractInput& input);
-	void loadFactorsFromGrid(AbstractInput& input);
-	void loadFactorsFromList(AbstractInput& input);
+	SecurityListBuilder(IInput& input);
+	void loadFactorsFromGrid(IInput& input);
+	void loadFactorsFromList(IInput& input);
 	const ListOfSecurities& getSecurityList();
 
 private:
@@ -27,10 +34,10 @@ private:
 
 	ListOfSecurities securities;
 
-	static ListOfSecurities inputSecurities(AbstractInput& input);
+	static ListOfSecurities inputSecurities(IInput& input);
 };
 
-ListOfGroups inputGroups(AbstractInput& input);
+ListOfGroups inputGroups(IInput& input);
 
 #endif // #ifndef DISPERSE_INPUT
 

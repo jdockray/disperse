@@ -8,7 +8,7 @@
 #include "dlib\dlib\dlib\matrix.h"
 #pragma warning(pop)
 
-void ensureColumnPresent(AbstractInput& input, const std::string& columnName)
+void ensureColumnPresent(IInput& input, const std::string& columnName)
 {
 	const std::vector headers = input.getHeader();
 	if (std::find(headers.begin(), headers.end(), columnName) == headers.end())
@@ -17,7 +17,7 @@ void ensureColumnPresent(AbstractInput& input, const std::string& columnName)
 	}
 }
 
-ListOfSecurities SecurityListBuilder::inputSecurities(AbstractInput& input)
+ListOfSecurities SecurityListBuilder::inputSecurities(IInput& input)
 {
 	ensureColumnPresent(input, security_column_name);
 	ListOfSecurities securities;
@@ -60,13 +60,13 @@ ListOfSecurities SecurityListBuilder::inputSecurities(AbstractInput& input)
 	return securities;
 }
 
-SecurityListBuilder::SecurityListBuilder(AbstractInput& input)
+SecurityListBuilder::SecurityListBuilder(IInput& input)
 	: securities(inputSecurities(input))
 {
 }
 
 // Row = Security, Column = Factor
-void SecurityListBuilder::loadFactorsFromGrid(AbstractInput& input)
+void SecurityListBuilder::loadFactorsFromGrid(IInput& input)
 {
 	for (const std::pair<Element, double>& element : getElementsFromGridFile(input))
 	{
@@ -75,7 +75,7 @@ void SecurityListBuilder::loadFactorsFromGrid(AbstractInput& input)
 }
 
 // First column / Row = Security, SecondColumn / Column = Factor
-void SecurityListBuilder::loadFactorsFromList(AbstractInput& input)
+void SecurityListBuilder::loadFactorsFromList(IInput& input)
 {
 	for (const std::pair<Element, double>& element : getElementsFromListFile(input))
 	{
@@ -87,7 +87,7 @@ const ListOfSecurities& SecurityListBuilder::getSecurityList() {
 	return securities;
 }
 
-ListOfGroups inputGroups(AbstractInput& groupInput)
+ListOfGroups inputGroups(IInput& groupInput)
 {
 	ListOfGroups groups;
 

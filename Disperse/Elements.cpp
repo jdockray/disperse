@@ -73,7 +73,7 @@ void ensureColumnInExpectedPlace(const std::vector<std::string> header, std::siz
 	}
 }
 
-std::vector<std::pair<Element, double>> getElementsFromGridFile(AbstractInput& input)
+std::vector<std::pair<Element, double>> getElementsFromGridFile(IInput& input)
 {
 	std::vector<std::string> header = input.getHeader();
 	ensureColumnInExpectedPlace(header, 0, "", input.getName());
@@ -99,7 +99,7 @@ std::vector<std::pair<Element, double>> getElementsFromGridFile(AbstractInput& i
 	return elements;
 }
 
-std::vector<std::pair<Element, double>> getElementsFromListFile(AbstractInput& input)
+std::vector<std::pair<Element, double>> getElementsFromListFile(IInput& input)
 {
 	std::vector<std::string> header = input.getHeader();
 	ensureColumnInExpectedPlace(header, 0, "Row", input.getName());

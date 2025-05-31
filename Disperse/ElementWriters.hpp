@@ -11,34 +11,34 @@
 #include <vector>
 #pragma warning(pop)
 
-class ElementWriter {
+class IWriter {
 public:
 	virtual void writeElements(const std::vector<std::pair<Element, double>>& elements) = 0;
 	virtual void writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) = 0;
 };
 
-class ListFileElementWriter : public ElementWriter
+class ListFileWriter : public IWriter
 {
 public:
-	ListFileElementWriter(AbstractOutput& output);
+	ListFileWriter(IOutput& output);
 	virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);
 	virtual void writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix);
 
 private:
-	AbstractOutput& output;
+	IOutput& output;
 	std::vector<std::pair<Element, double>> elementVectorFromMatrix(const std::vector<std::string>& rowHeadings,
 		const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix);
 };
 
-class GridFileElementWriter : public ElementWriter
+class GridFileWriter : public IWriter
 {
 public:
-	GridFileElementWriter(AbstractOutput& output);
+	GridFileWriter(IOutput& output);
 	virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);
 	virtual void writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix);
 
 private:
-	AbstractOutput& output;
+	IOutput& output;
 };
 
 #endif // #ifndef ELEMENTS_WRITERS

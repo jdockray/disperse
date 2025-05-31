@@ -171,8 +171,8 @@ void ensureAllGroupsPresent(ListOfGroups& groups, const std::set<std::string>& r
 	}
 }
 
-void runOptimisation(const ListOfSecurities& securities, AbstractOutput& securityOutput, double minimumReturn,
-	AbstractOutput* factorOutput, AbstractInput* groupInput, AbstractOutput* groupOutput)
+void runOptimisation(const ListOfSecurities& securities, IOutput& securityOutput, double minimumReturn,
+	IOutput* factorOutput, IInput* groupInput, IOutput* groupOutput)
 {
 	static const std::string risk_output_string = "Risk: %." + std::to_string(TOLERANCE_DECIMAL_PLACES) + "g\n"; // Round to significant figures
 

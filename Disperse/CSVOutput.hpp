@@ -9,14 +9,14 @@
 #include <fstream>
 #pragma warning(pop)
 
-class AbstractOutput {
+class IOutput {
 public:
 	virtual void writeElement(double number) = 0;
 	virtual void writeElement(std::string text) = 0;
 	virtual void finishLine() = 0;
 };
 
-class CSVOutput : public AbstractOutput
+class CSVOutput : public IOutput
 {
 public:
 	CSVOutput(const std::string& fileName);

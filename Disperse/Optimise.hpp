@@ -8,11 +8,11 @@
 
 void runOptimisation(
 	const ListOfSecurities& securities,
-	AbstractOutput& securityOutput,
+	IOutput& securityOutput,
 	double minimumReturn,
-	AbstractOutput* factorOutput = nullptr,
-	AbstractInput* groupInput = nullptr,
-	AbstractOutput* groupOutput = nullptr
+	IOutput* factorOutput = nullptr,
+	IInput* groupInput = nullptr,
+	IOutput* groupOutput = nullptr
 );
 
 #endif // DISPERSE_ELEMENTS

@@ -2,19 +2,13 @@
 #ifndef CSV_INPUT
 #define CSV_INPUT
 
+#include "Input.hpp"
+
 #pragma warning(push, 0)
 #include "csvstream\csvstream\csvstream.hpp"
 #pragma warning(pop)
 
-class AbstractInput {
-public:
-	virtual std::string getName() const = 0;
-	virtual std::vector<std::string> getHeader() const = 0;
-	virtual std::map<std::string, std::string> readEntryAsMap() = 0;
-	virtual std::vector<std::pair<std::string, std::string> > readEntryAsPairVector() = 0;
-};
-
-class CSVInput : public AbstractInput {
+class CSVInput : public IInput {
 public:
 	CSVInput(const std::string& inputFileName);
 	virtual std::string getName() const;
