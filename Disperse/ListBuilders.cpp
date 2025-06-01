@@ -1,8 +1,9 @@
 
-#include "ListBuilders.hpp"
-#include "Input.hpp"
-#include "Matrices.hpp"
 #include "Elements.hpp"
+#include "ElementReaders.hpp"
+#include "Input.hpp"
+#include "ListBuilders.hpp"
+#include "Matrices.hpp"
 
 #pragma warning(push, 0)
 #include "dlib\dlib\dlib\matrix.h"
@@ -56,16 +57,10 @@ SecurityListBuilder::SecurityListBuilder(IInput& input)
 	: securities(inputSecurities(input)) {
 }
 
-// Row = Security, Column = Factor
-void SecurityListBuilder::loadFactorsFromGrid(IInput& input) {
-	for (const std::pair<Element, double>& element : getElementsFromGridFile(input)) {
-		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
-	}
-}
-
-// First column / Row = Security, SecondColumn / Column = Factor
-void SecurityListBuilder::loadFactorsFromList(IInput& input) {
-	for (const std::pair<Element, double>& element : getElementsFromListFile(input)) {
+// In grid files: Row = Security, Column = Factor
+// In list files: First column / Row = Security, SecondColumn / Column = Factor
+void SecurityListBuilder::loadFactors(IReader& input) {
+	for (const std::pair<Element, double>& element : input.getElements()) {
 		securities.get(element.first.getRow()).addExposure(element.first.getColumn(), element.second);
 	}
 }

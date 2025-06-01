@@ -29,8 +29,6 @@ private:
 	const std::string column;
 };
 
-std::vector<std::pair<Element, double>> getElementsFromGridFile(IInput& input);
-std::vector<std::pair<Element, double>> getElementsFromListFile(IInput& input);
 SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
 	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings);
 

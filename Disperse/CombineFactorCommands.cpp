@@ -2,6 +2,7 @@
 #include "CombineFactorCommands.hpp"
 #include "CombineFactors.hpp"
 #include "Elements.hpp"
+#include "ElementReaders.hpp"
 #include "ElementWriters.hpp"
 
 void addElements(const std::vector<std::pair<Element, double>>& newElements, std::map<Element, double>& elementsToAddTo) {
@@ -32,11 +33,11 @@ void runCombineCommand(
 	std::map<Element, double> elements;
 	for (const std::string& gridInputFile : gridInputFiles) {
 		CSVInput input(gridInputFile);
-		addElements(getElementsFromGridFile(input), elements);
+		addElements(GridFileReader(input).getElements(), elements);
 	}
 	for (const std::string& listInputFile : listInputFiles) {
 		CSVInput input(listInputFile);
-		addElements(getElementsFromListFile(input), elements);
+		addElements(ListFileReader(input).getElements(), elements);
 	}
 	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;
@@ -66,11 +67,11 @@ void runMultiplyCommand(
 	std::vector<std::vector<std::pair<Element, double>>> elementSets;
 	for (const std::string& gridInputFile : gridInputFiles) {
 		CSVInput input(gridInputFile);
-		elementSets.push_back(getElementsFromGridFile(input));
+		elementSets.push_back(GridFileReader(input).getElements());
 	}
 	for (const std::string& listInputFile : listInputFiles) {
 		CSVInput input(listInputFile);
-		elementSets.push_back(getElementsFromListFile(input));
+		elementSets.push_back(ListFileReader(input).getElements());
 	}
 	std::vector<std::reference_wrapper<IWriter>> outputs;
 	std::unique_ptr<CSVOutput> gridOutput;

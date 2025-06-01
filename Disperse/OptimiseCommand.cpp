@@ -19,12 +19,14 @@ double runOptimiseCommand(
 	CSVInput securityInput(securityInputFile);
 	SecurityListBuilder securityListBuilder(securityInput);
 	if (factorGridInputFile) {
-		CSVInput factorGridInput(factorGridInputFile.value());
-		securityListBuilder.loadFactorsFromGrid(factorGridInput);
+		CSVInput input(factorGridInputFile.value());
+		GridFileReader reader(input);
+		securityListBuilder.loadFactors(reader);
 	}
 	if (factorListInputFile) {
-		CSVInput factorListInput(factorListInputFile.value());
-		securityListBuilder.loadFactorsFromList(factorListInput);
+		CSVInput input(factorListInputFile.value());
+		ListFileReader reader(input);
+		securityListBuilder.loadFactors(reader);
 	}
 	ListOfGroups listOfGroups;
 	if (groupInputFile) {

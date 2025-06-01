@@ -188,6 +188,7 @@
     <ClCompile Include="OptimiseCommand.cpp" />
     <ClCompile Include="Output.cpp" />
     <ClCompile Include="QuickMapping.cpp" />
+    <ClCompile Include="ElementReaders.cpp" />
     <ClCompile Include="Security.cpp" />
     <ClCompile Include="Solver.cpp" />
     <ClCompile Include="SolverSession.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="ConstraintUnpacking.hpp" />
     <ClInclude Include="Optimise.hpp" />
     <ClInclude Include="OptimiseCommand.hpp" />
+    <ClInclude Include="ElementReaders.hpp" />
     <ClInclude Include="SolverSession.hpp" />
     <ClInclude Include="Writers.hpp" />
     <ClInclude Include="QuickMapping.hpp" />

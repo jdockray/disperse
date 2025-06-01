@@ -2,9 +2,10 @@
 #ifndef DISPERSE_LIST_BUILDERS
 #define DISPERSE_LIST_BUILDERS
 
+#include "ElementReaders.hpp"
+#include "Group.hpp"
 #include "Input.hpp"
 #include "Security.hpp"
-#include "Group.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -13,8 +14,7 @@
 class SecurityListBuilder {
 public:
 	SecurityListBuilder(IInput& input);
-	void loadFactorsFromGrid(IInput& input);
-	void loadFactorsFromList(IInput& input);
+	void loadFactors(IReader& input);
 	const ListOfSecurities& getSecurityList();
 
 private:
