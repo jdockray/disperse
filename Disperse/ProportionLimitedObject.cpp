@@ -1,24 +1,16 @@
 
-#include "QuickMapping.hpp"
+#include "ProportionLimitedObject.hpp"
 #include "Exceptions.hpp"
 
-IdentifiedObject::IdentifiedObject(const std::string& identifier)
-	: m_identifier(identifier) {
-}
-
-std::string IdentifiedObject::getIdentifier() const {
-	return m_identifier;
-}
-
-ObjectWithMaxAndMinProportions::ObjectWithMaxAndMinProportions()
+ProportionLimitedObject::ProportionLimitedObject()
 	: m_maxProportion(1), m_minProportion(0) {
 }
 
-ObjectWithMaxAndMinProportions::ObjectWithMaxAndMinProportions(const double maxProportion, const double minProportion)
+ProportionLimitedObject::ProportionLimitedObject(const double maxProportion, const double minProportion)
 	: m_maxProportion(maxProportion), m_minProportion(minProportion) {
 }
 
-void ObjectWithMaxAndMinProportions::verifyMaxGreaterThanMin() {
+void ProportionLimitedObject::verifyMaxGreaterThanMin() {
 	if (getMaxProportion() < getMinProportion()) {
 		throw InvalidLimitsException(
 			"The maximum, " + std::to_string(getMaxProportion()) + ", is less than minimum, " + std::to_string(getMinProportion())
@@ -26,7 +18,7 @@ void ObjectWithMaxAndMinProportions::verifyMaxGreaterThanMin() {
 	}
 }
 
-void ObjectWithMaxAndMinProportions::setMaxProportion(const double maxProportion) {
+void ProportionLimitedObject::setMaxProportion(const double maxProportion) {
 	if (getMaxProportion() > 1) {
 		throw InvalidLimitsException("The maximum proportion,  " + std::to_string(getMaxProportion()) + " is greater than 100%.");
 	}
@@ -34,11 +26,11 @@ void ObjectWithMaxAndMinProportions::setMaxProportion(const double maxProportion
 	verifyMaxGreaterThanMin();
 }
 
-double ObjectWithMaxAndMinProportions::getMaxProportion() const {
+double ProportionLimitedObject::getMaxProportion() const {
 	return m_maxProportion;
 }
 
-void ObjectWithMaxAndMinProportions::setMinProportion(const double minProportion) {
+void ProportionLimitedObject::setMinProportion(const double minProportion) {
 	if (getMinProportion() < 0) {
 		throw InvalidLimitsException("The minimum proportion, " + std::to_string(getMinProportion()) + ", is negative.");
 	}
@@ -46,10 +38,10 @@ void ObjectWithMaxAndMinProportions::setMinProportion(const double minProportion
 	verifyMaxGreaterThanMin();
 }
 
-double ObjectWithMaxAndMinProportions::getMinProportion() const {
+double ProportionLimitedObject::getMinProportion() const {
 	return m_minProportion;
 }
 
-bool ObjectWithMaxAndMinProportions::hasConstrainedProportion() const {
+bool ProportionLimitedObject::hasConstrainedProportion() const {
 	return getMinProportion() > 0.0 || getMaxProportion() < 1.0;
 }

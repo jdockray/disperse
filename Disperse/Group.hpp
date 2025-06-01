@@ -2,9 +2,10 @@
 #ifndef DISPERSE_GROUP
 #define DISPERSE_GROUP
 
-#include "QuickMapping.hpp"
+#include "IdentifiedObject.hpp"
+#include "ProportionLimitedObject.hpp"
 
-class Group : public IdentifiedObject, public ObjectWithMaxAndMinProportions {
+class Group : public IdentifiedObject, public ProportionLimitedObject {
 public:
 	Group(const std::string& identifier)
 		: IdentifiedObject(identifier) {

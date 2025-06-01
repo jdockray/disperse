@@ -2,12 +2,14 @@
 #ifndef DISPERSE_SECURITY
 #define DISPERSE_SECURITY
 
-#include "QuickMapping.hpp"
+#include "IdentifiedObject.hpp"
+#include "ProportionLimitedObject.hpp"
+
 #pragma warning(push, 0)
 #include <optional>
 #pragma warning(pop)
 
-class Security : public IdentifiedObject, public ObjectWithMaxAndMinProportions {
+class Security : public IdentifiedObject, public ProportionLimitedObject {
 public:
 	Security(const std::string& identifier);
 

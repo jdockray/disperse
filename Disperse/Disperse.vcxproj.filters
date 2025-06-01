@@ -42,7 +42,7 @@
     <ClCompile Include="Constraint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuickMapping.cpp">
+    <ClCompile Include="ProportionLimitedObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Optimise.cpp">
@@ -113,7 +113,7 @@
     <ClInclude Include="Constraint.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QuickMapping.hpp">
+    <ClInclude Include="IdentifiedObject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Optimise.hpp">
@@ -153,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ElementReaders.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProportionLimitedObject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
