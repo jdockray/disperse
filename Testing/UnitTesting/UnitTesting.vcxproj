@@ -123,6 +123,7 @@
     <ClCompile Include="CmdLineTest.cpp" />
     <ClCompile Include="MatricesTest.cpp" />
     <ClCompile Include="IdentifiedObjectTest.cpp" />
+    <ClCompile Include="ProportionLimitedObjectTest.cpp" />
     <ClCompile Include="SecurityTest.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -3,43 +3,45 @@
 #include "Exceptions.hpp"
 
 ProportionLimitedObject::ProportionLimitedObject()
-	: m_maxProportion(1), m_minProportion(0) {
+	: maxProportion(1), minProportion(0) {
 }
 
 ProportionLimitedObject::ProportionLimitedObject(const double maxProportion, const double minProportion)
-	: m_maxProportion(maxProportion), m_minProportion(minProportion) {
+	: maxProportion(maxProportion), minProportion(minProportion) {
+	verifyLimits();
 }
 
-void ProportionLimitedObject::verifyMaxGreaterThanMin() {
-	if (getMaxProportion() < getMinProportion()) {
+void ProportionLimitedObject::verifyLimits() {
+	if (maxProportion > 1) {
+		throw InvalidLimitsException("The maximum proportion,  " + std::to_string(maxProportion) + " is greater than 100%.");
+	}
+	if (minProportion < 0) {
+		throw InvalidLimitsException("The minimum proportion, " + std::to_string(minProportion) + ", is negative.");
+	}
+	if (maxProportion < minProportion) {
 		throw InvalidLimitsException(
-			"The maximum, " + std::to_string(getMaxProportion()) + ", is less than minimum, " + std::to_string(getMinProportion())
+			"The maximum, " + std::to_string(maxProportion) + ", is less than minimum, " + std::to_string(minProportion)
 		);
 	}
 }
 
 void ProportionLimitedObject::setMaxProportion(const double maxProportion) {
-	if (getMaxProportion() > 1) {
-		throw InvalidLimitsException("The maximum proportion,  " + std::to_string(getMaxProportion()) + " is greater than 100%.");
-	}
-	this->m_maxProportion = maxProportion;
-	verifyMaxGreaterThanMin();
+	this->maxProportion = maxProportion;
+	verifyLimits();
 }
 
 double ProportionLimitedObject::getMaxProportion() const {
-	return m_maxProportion;
+	return maxProportion;
 }
 
 void ProportionLimitedObject::setMinProportion(const double minProportion) {
-	if (getMinProportion() < 0) {
-		throw InvalidLimitsException("The minimum proportion, " + std::to_string(getMinProportion()) + ", is negative.");
-	}
-	this->m_minProportion;
-	verifyMaxGreaterThanMin();
+
+	this->minProportion = minProportion;
+	verifyLimits();
 }
 
 double ProportionLimitedObject::getMinProportion() const {
-	return m_minProportion;
+	return minProportion;
 }
 
 bool ProportionLimitedObject::hasConstrainedProportion() const {

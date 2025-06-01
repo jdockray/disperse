@@ -12,7 +12,7 @@ public:
 	}
 };
 
-class ListOfGroups : public IdentifiedObjectList<Group>, ListOfObjectsWithMaxAndMinProportions<Group> {
+class ListOfGroups : public IdentifiedObjectList<Group>, ProportionLimitedObjectList<Group> {
 public:
 	const std::vector<Group>& getObjects() const {
 		return IdentifiedObjectList<Group>::getObjects();

@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 /*
-class ListOfSecurities : public IdentifiedObjectList<Security>, public ListOfObjectsWithMaxAndMinProportions<Security> {
+class ListOfSecurities : public IdentifiedObjectList<Security>, public ProportionLimitedObjectList<Security> {
 public:
 	const std::vector<Security>& getObjects() const;
 	std::vector<std::string> getAllFactors() const;

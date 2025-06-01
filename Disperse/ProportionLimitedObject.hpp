@@ -21,16 +21,16 @@ public:
 	bool hasConstrainedProportion() const;
 
 private:
-	double m_maxProportion;
-	double m_minProportion;
+	double maxProportion;
+	double minProportion;
 
-	void verifyMaxGreaterThanMin();
+	void verifyLimits();
 };
 
 template <class T>
-class ListOfObjectsWithMaxAndMinProportions {
+class ProportionLimitedObjectList {
 public:
-	std::size_t numberOfConstrainedGroups() const {
+	std::size_t numberOfConstrainedObjects() const {
 		std::size_t count = 0;
 		for (const T& object : getObjects()) {
 			if (object.hasConstrainedProportion()) ++count;
