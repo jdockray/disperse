@@ -45,5 +45,5 @@ TEST(Security, ExposureAddAndResidualRecalculate) {
 }
 
 TEST(Security, ExposuresExceedOneFail) {
-	EXPECT_THROW(Security("").addExposure("", 1.1), std::exception);
+	EXPECT_THROW(Security("").addExposure("", 1.1), InvalidLimitSumException);
 }

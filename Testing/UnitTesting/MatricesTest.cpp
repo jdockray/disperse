@@ -83,7 +83,7 @@ TEST(SparseMatrix, SetThenClearRowInMap) {
 }
 
 TEST(MultiplyMatrices, IncompatibleDimensionsFail) {
-	EXPECT_THROW(multiply(SparseMatrix(1, 2), SparseMatrix(3, 1)), std::exception);
+	EXPECT_THROW(multiply(SparseMatrix(1, 2), SparseMatrix(3, 1)), IncompatibleInputArgumentsException);
 }
 
 TEST(MultiplyMatrices, Success) {

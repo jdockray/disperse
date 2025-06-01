@@ -86,7 +86,7 @@ TEST(ProportionLimitedObjectList, MinimaSumToGreaterThanOneFail) {
 	std::vector<ProportionLimitedObject> objects;
 	objects.emplace_back(1.0, 0.55);
 	objects.emplace_back(1.0, 0.55);
-	EXPECT_THROW(ProportionTestList(objects).verifyProportions(), std::exception);
+	EXPECT_THROW(ProportionTestList(objects).verifyProportions(), InvalidLimitsException);
 }
 
 TEST(ProportionLimitedObjectList, MaximaSumToOne) {
@@ -100,5 +100,5 @@ TEST(ProportionLimitedObjectList, MaximaSumToLessThanOneFail) {
 	std::vector<ProportionLimitedObject> objects;
 	objects.emplace_back(0.45, 0.0);
 	objects.emplace_back(0.45, 0.0);
-	EXPECT_THROW(ProportionTestList(objects).verifyProportions(), std::exception);
+	EXPECT_THROW(ProportionTestList(objects).verifyProportions(), InvalidLimitsException);
 }

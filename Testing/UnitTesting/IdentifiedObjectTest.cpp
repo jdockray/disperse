@@ -19,9 +19,9 @@ TEST(IdentifiedObjectList, AddGetByIdentifier) {
 TEST(IdentifiedObjectList, GetNonexistentByIdentifierFail) {
 	static const std::string identifier = "Test object";
 	IdentifiedObjectList<IdentifiedObject> myList;
-	EXPECT_THROW(myList.get(identifier), std::exception); // Calls non-const method
+	EXPECT_THROW(myList.get(identifier), IdentifierNotRecognisedException); // Calls non-const method
 	EXPECT_THROW(static_cast<const IdentifiedObjectList<IdentifiedObject>&>(myList).get(identifier),
-		std::exception);  // Calls const method
+		IdentifierNotRecognisedException);  // Calls const method
 }
 
 TEST(IdentifiedObjectList, AddGetByIndex) {
