@@ -82,11 +82,6 @@ TEST(SparseMatrix, SetThenClearRowInMap) {
 	EXPECT_EQ(matrix.matrixElements().size(), 1);
 }
 
-/*
-SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c);
-SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix);
-*/
-
 TEST(MultiplyMatrices, IncompatibleDimensionsFail) {
 	EXPECT_THROW(multiply(SparseMatrix(1, 2), SparseMatrix(3, 1)), std::exception);
 }
@@ -104,6 +99,17 @@ TEST(MultiplyMatrices, Success) {
 	EXPECT_EQ(multiplied.getValue(1, 0), 14);
 	EXPECT_EQ(multiplied.getValue(1, 1), 21);
 	EXPECT_EQ(getSingleValue(multiply(matrixB, matrixA)), 31);
+}
+
+TEST(MultiplyThreeMatrices, Success) {
+	SparseMatrix matrix(2, 1);
+	matrix.setValue(0, 0, 1);
+	matrix.setValue(1, 0, 2);
+	SparseMatrix multiplied = multiply(matrix, getTranspose(matrix), matrix);
+	EXPECT_EQ(multiplied.rowCount(), 2);
+	EXPECT_EQ(multiplied.columnCount(), 1);
+	EXPECT_EQ(multiplied.getValue(0, 0), 5);
+	EXPECT_EQ(multiplied.getValue(1, 0), 10);
 }
 
 TEST(MultiplyByScalar, Success) {
@@ -148,6 +154,23 @@ TEST(ApplyToAllNonZeroElements, Success) {
 	EXPECT_EQ(matrix.getValue(0, 1), 2);
 	EXPECT_EQ(matrix.getValue(1, 0), 2);
 	EXPECT_EQ(matrix.getValue(1, 1), 2);
+}
+
+TEST(UpperTriangularMatrix, Success) {
+	SparseMatrix matrix(3, 2);
+	matrix.setValue(0, 0, 1);
+	matrix.setValue(0, 1, 2);
+	matrix.setValue(1, 0, 3);
+	matrix.setValue(1, 1, 4);
+	matrix.setValue(2, 0, 5);
+	matrix.setValue(2, 1, 6);
+	SparseMatrix upperTriangular = upperTriangularMatrix(matrix);
+	EXPECT_EQ(upperTriangular.getValue(0, 0), 1);
+	EXPECT_EQ(upperTriangular.getValue(0, 1), 2);
+	EXPECT_EQ(upperTriangular.getValue(1, 0), 0);
+	EXPECT_EQ(upperTriangular.getValue(1, 1), 4);
+	EXPECT_EQ(upperTriangular.getValue(2, 0), 0);
+	EXPECT_EQ(upperTriangular.getValue(2, 1), 0);
 }
 
 TEST(VectorToDiagonalMatrix, ZeroSize) {
