@@ -1,40 +1,36 @@
+
 #include "CmdLine.hpp"
+#include "Exceptions.hpp"
 
 CmdLineArgs::CmdLineArgs(const std::vector<std::string>& args)
 	: arguments(args.begin(), args.end()) {
 }
 
 bool CmdLineArgs::getNoArgumentOption(const char option) {
-	return findAndExcise(option, 0).size() != 0;
+	return findAndExcise(option, 0).has_value();
 }
 
 std::optional<std::string> CmdLineArgs::getSingleArgumentOption(const char option) {
-	std::list<std::string> result = getMultipleArgumentOption(option, 1);
-	if (result.size() == 0) return {};
-	else return result.front();
+	std::optional<std::vector<std::string>> result = findAndExcise(option, 1);
+	return result.has_value() ? result.value().front() : std::optional<std::string>();
 }
 
-std::list<std::string> CmdLineArgs::getMultipleArgumentOption(const char option, const unsigned int length) {
-	std::list<std::string> result = findAndExcise(option, length);
-	if (result.size() > 0) {
-		result.pop_front();
-	}
-	return result;
+std::optional<std::vector<std::string>> CmdLineArgs::getMultipleArgumentOption(const char option, const unsigned int length) {
+	return findAndExcise(option, length);
 }
 
 const std::list<std::string>& CmdLineArgs::remainingArguments() const {
 	return arguments;
 }
 
-std::list<std::string> CmdLineArgs::findAndExcise(const char option, const unsigned int length) {
-	std::list<std::string> excisedElements;
+std::optional<std::vector<std::string>> CmdLineArgs::findAndExcise(const char option, const unsigned int length) {
 	std::list<std::string>::iterator start = arguments.begin();
 	const char optionCString[]{ '-', option, '\0' };
 	while (start != arguments.end() && *start != optionCString) {
 		++start;
 	}
 	if (start == arguments.end()) {
-		return excisedElements;
+		return {};
 	}
 	std::list<std::string>::iterator end = start;
 	int elementCount = -1;
@@ -42,9 +38,12 @@ std::list<std::string> CmdLineArgs::findAndExcise(const char option, const unsig
 		++elementCount;
 		++end;
 	} while (elementCount < static_cast<int>(length) && end != arguments.end() && end->at(0) != '-');
-	if (elementCount == static_cast<int>(length)) {
-		excisedElements.splice(excisedElements.begin(), arguments, start, end);
+	MissingArgumentException::verifyTrue(elementCount < static_cast<int>(length), "Not enough arguments for option " + option);
+	std::vector<std::string> excisedElements;
+	if (elementCount > 0) {
+		++start; // Removes option itself
+		excisedElements.insert(excisedElements.end(), start, end);
 	}
-	return excisedElements;
+	return std::optional(excisedElements);
 }
 
