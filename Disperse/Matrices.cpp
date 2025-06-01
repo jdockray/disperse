@@ -6,6 +6,9 @@ SparseMatrix::SparseMatrix(const std::size_t rows, const std::size_t columns)
 }
 
 double SparseMatrix::getValue(const std::size_t row, const std::size_t column) const {
+	if (column >= numberOfColumns || row >= numberOfRows) {
+		throw UnexpectedException();
+	}
 	auto matrixRow = elements.find(row);
 	if (matrixRow == elements.end()) {
 		return 0;
