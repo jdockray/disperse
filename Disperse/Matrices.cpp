@@ -2,7 +2,7 @@
 #include "Matrices.hpp"
 
 SparseMatrix::SparseMatrix(const std::size_t rows, const std::size_t columns)
-	: numberOfRows(rows), numberOfColumns(columns) {
+	: numberOfRows(columns == 0 ? 0 : rows), numberOfColumns(rows == 0 ? 0 : columns) {
 }
 
 double SparseMatrix::getValue(const std::size_t row, const std::size_t column) const {

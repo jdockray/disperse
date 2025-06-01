@@ -10,6 +10,11 @@ TEST(SparseMatrix, ZeroSize) {
 	EXPECT_EQ(matrix.matrixElements().size(), 0);
 }
 
+TEST(SparseMatrix, NoZeroHeightOrWidthMatrix) {
+	EXPECT_EQ(SparseMatrix(0, 1).columnCount(), 0);
+	EXPECT_EQ(SparseMatrix(1, 0).rowCount(), 0);
+}
+
 TEST(SparseMatrix, ZeroSizeOutOfRangeFail) {
 	SparseMatrix matrix(0, 0);
 	EXPECT_THROW(matrix.getValue(0, 0), std::exception);
@@ -78,18 +83,116 @@ TEST(SparseMatrix, SetThenClearRowInMap) {
 }
 
 /*
-SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b);
-SparseMatrix multiply(const SparseMatrix& a, double scalar);
 SparseMatrix multiply(const SparseMatrix& a, const SparseMatrix& b, const SparseMatrix& c);
-SparseMatrix getTranspose(const SparseMatrix& matrix);
-void applyToAllNonZeroElements(SparseMatrix& matrix, std::function<double(double)> function);
 SparseMatrix upperTriangularMatrix(const SparseMatrix& matrix);
-SparseMatrix vectorToDiagonalMatrix(const std::vector<double>& values);
-SparseMatrix vectorToHorizontalMatrix(const std::vector<double>& values);
-SparseMatrix vectorToVerticalMatrix(const std::vector<double>& values);
-std::vector<double> horizontalMatrixToVector(const SparseMatrix& matrix);
-std::vector<double> verticalMatrixToVector(const SparseMatrix& matrix);
 */
+
+TEST(MultiplyMatrices, IncompatibleDimensionsFail) {
+	EXPECT_THROW(multiply(SparseMatrix(1, 2), SparseMatrix(3, 1)), std::exception);
+}
+
+TEST(MultiplyMatrices, Success) {
+	SparseMatrix matrixA(2, 1);
+	matrixA.setValue(0, 0, 5);
+	matrixA.setValue(1, 0, 7);
+	SparseMatrix matrixB(1, 2);
+	matrixB.setValue(0, 0, 2);
+	matrixB.setValue(0, 1, 3);
+	SparseMatrix multiplied = multiply(matrixA, matrixB);
+	EXPECT_EQ(multiplied.getValue(0, 0), 10);
+	EXPECT_EQ(multiplied.getValue(0, 1), 15);
+	EXPECT_EQ(multiplied.getValue(1, 0), 14);
+	EXPECT_EQ(multiplied.getValue(1, 1), 21);
+	EXPECT_EQ(getSingleValue(multiply(matrixB, matrixA)), 31);
+}
+
+TEST(MultiplyByScalar, Success) {
+	SparseMatrix matrix(2, 2);
+	matrix.setValue(0, 0, -1);
+	matrix.setValue(0, 1, -1);
+	matrix.setValue(1, 0, -1);
+	matrix.setValue(1, 1, -1);
+	SparseMatrix multiplied = multiply(matrix, -1);
+	EXPECT_EQ(multiplied.getValue(0, 0), 1);
+	EXPECT_EQ(multiplied.getValue(0, 1), 1);
+	EXPECT_EQ(multiplied.getValue(1, 0), 1);
+	EXPECT_EQ(multiplied.getValue(1, 1), 1);
+}
+
+TEST(GetTranspose, Success) {
+	SparseMatrix matrix(2, 3);
+	matrix.setValue(0, 0, 9);
+	matrix.setValue(0, 1, 0);
+	matrix.setValue(0, 2, 1);
+	matrix.setValue(1, 0, 2);
+	matrix.setValue(1, 1, 3);
+	matrix.setValue(1, 2, 4);
+	SparseMatrix transpose = getTranspose(matrix);
+	EXPECT_EQ(transpose.columnCount(), matrix.rowCount());
+	EXPECT_EQ(transpose.rowCount(), matrix.columnCount());
+	EXPECT_EQ(transpose.getValue(0, 0), matrix.getValue(0, 0));
+	EXPECT_EQ(transpose.getValue(0, 1), matrix.getValue(1, 0));
+	EXPECT_EQ(transpose.getValue(1, 0), matrix.getValue(0, 1));
+	EXPECT_EQ(transpose.getValue(1, 1), matrix.getValue(1, 1));
+	EXPECT_EQ(transpose.getValue(2, 0), matrix.getValue(0, 2));
+	EXPECT_EQ(transpose.getValue(2, 1), matrix.getValue(1, 2));
+}
+
+TEST(ApplyToAllNonZeroElements, Success) {
+	SparseMatrix matrix(2, 2);
+	matrix.setValue(0, 1, 1);
+	matrix.setValue(1, 0, 1);
+	matrix.setValue(1, 1, 1);
+	applyToAllNonZeroElements(matrix, [](double x){ return x + 1; });
+	EXPECT_EQ(matrix.getValue(0, 0), 0);
+	EXPECT_EQ(matrix.getValue(0, 1), 2);
+	EXPECT_EQ(matrix.getValue(1, 0), 2);
+	EXPECT_EQ(matrix.getValue(1, 1), 2);
+}
+
+TEST(VectorToDiagonalMatrix, ZeroSize) {
+	SparseMatrix matrix = vectorToDiagonalMatrix(std::vector<double>());
+	EXPECT_EQ(matrix.columnCount(), 0);
+	EXPECT_EQ(matrix.rowCount(), 0);
+}
+
+TEST(VectorToDiagonalMatrix, Success) {
+	SparseMatrix matrix = vectorToDiagonalMatrix(std::vector<double>(2, 1));
+	EXPECT_EQ(matrix.columnCount(), 2);
+	EXPECT_EQ(matrix.rowCount(), 2);
+	EXPECT_EQ(matrix.getValue(0, 0), 1);
+	EXPECT_EQ(matrix.getValue(0, 1), 0);
+	EXPECT_EQ(matrix.getValue(1, 0), 0);
+	EXPECT_EQ(matrix.getValue(1, 1), 1);
+}
+
+TEST(VectorToHorizontalMatrix, ZeroSize) {
+	SparseMatrix matrix = vectorToHorizontalMatrix(std::vector<double>());
+	EXPECT_EQ(matrix.columnCount(), 0);
+	EXPECT_EQ(matrix.rowCount(), 0);
+}
+
+TEST(VectorToHorizontalMatrix, Success) {
+	SparseMatrix matrix = vectorToHorizontalMatrix(std::vector<double>(2, 1));
+	EXPECT_EQ(matrix.columnCount(), 2);
+	EXPECT_EQ(matrix.rowCount(), 1);
+	EXPECT_EQ(matrix.getValue(0, 0), 1);
+	EXPECT_EQ(matrix.getValue(0, 1), 1);
+}
+
+TEST(VectorToVerticalMatrix, ZeroSize) {
+	SparseMatrix matrix = vectorToVerticalMatrix(std::vector<double>());
+	EXPECT_EQ(matrix.columnCount(), 0);
+	EXPECT_EQ(matrix.rowCount(), 0);
+}
+
+TEST(VectorToVerticalMatrix, Success) {
+	SparseMatrix matrix = vectorToVerticalMatrix(std::vector<double>(2, 1));
+	EXPECT_EQ(matrix.columnCount(), 1);
+	EXPECT_EQ(matrix.rowCount(), 2);
+	EXPECT_EQ(matrix.getValue(0, 0), 1);
+	EXPECT_EQ(matrix.getValue(1, 0), 1);
+}
 
 TEST(HorizontalMatrixToVector, ZeroSizeFail) {
 	EXPECT_THROW(horizontalMatrixToVector(SparseMatrix(0, 0)), std::exception);
