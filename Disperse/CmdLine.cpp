@@ -24,7 +24,7 @@ const std::list<std::string>& CmdLineArgs::remainingArguments() const {
 }
 
 std::optional<std::vector<std::string>> CmdLineArgs::findAndExcise(const char option, const unsigned int length) {
-	std::list<std::string>::iterator start = arguments.begin();
+	std::list<std::string>::const_iterator start = arguments.begin();
 	const char optionCString[]{ '-', option, '\0' };
 	while (start != arguments.end() && *start != optionCString) {
 		++start;
@@ -32,18 +32,20 @@ std::optional<std::vector<std::string>> CmdLineArgs::findAndExcise(const char op
 	if (start == arguments.end()) {
 		return {};
 	}
-	std::list<std::string>::iterator end = start;
+	std::list<std::string>::const_iterator end = start;
 	int elementCount = -1;
 	do {
 		++elementCount;
 		++end;
 	} while (elementCount < static_cast<int>(length) && end != arguments.end() && end->at(0) != '-');
-	MissingArgumentException::verifyTrue(elementCount < static_cast<int>(length), "Not enough arguments for option " + option);
+	MissingArgumentException::verifyTrue(elementCount == static_cast<int>(length), "Wrong number of arguments for option " + option);
+	std::list<std::string>::const_iterator optionArgs = start;
+	++optionArgs;
 	std::vector<std::string> excisedElements;
 	if (elementCount > 0) {
-		++start; // Removes option itself
-		excisedElements.insert(excisedElements.end(), start, end);
+		std::move(optionArgs, end, std::back_inserter(excisedElements));
 	}
+	arguments.erase(start, end);
 	return std::optional(excisedElements);
 }
 
