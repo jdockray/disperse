@@ -56,7 +56,7 @@ jobs:
         name: ${{env.UNIT_TEST_EXECUTABLE_NAME}}
         path: ${{env.SOLUTION_LOCATION}}/x64/Release/${{env.UNIT_TEST_EXECUTABLE_NAME}}
 
-  integration_test:
+  integration_tests:
     runs-on: windows-latest
     needs: build
 
@@ -74,7 +74,7 @@ jobs:
       working-directory: ${{env.INTEGRATION_TEST_LOCATION}}
       run: ${{env.TEST_COMMAND}}
 
-  unit_test:
+  unit_tests:
     runs-on: windows-latest
     needs: build
   
