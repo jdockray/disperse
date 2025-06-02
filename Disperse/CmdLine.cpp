@@ -38,7 +38,9 @@ std::optional<std::vector<std::string>> CmdLineArgs::findAndExcise(const char op
 		++elementCount;
 		++end;
 	} while (elementCount < static_cast<int>(length) && end != arguments.end() && end->at(0) != '-');
-	MissingArgumentException::verifyTrue(elementCount == static_cast<int>(length), "Wrong number of arguments for option " + option);
+	if (elementCount != static_cast<int>(length)) {
+		throw MissingArgumentException("Wrong number of arguments for option " + option);
+	}
 	std::list<std::string>::const_iterator optionArgs = start;
 	++optionArgs;
 	std::vector<std::string> excisedElements;

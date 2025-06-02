@@ -1,5 +1,6 @@
 
 #include "ElementReaders.hpp"
+#include "Parsing.hpp"
 
 void ensureColumnInExpectedPlace(const std::vector<std::string> header, std::size_t index,
 	const std::string& columnTitle, const std::string& fileName) {
@@ -48,7 +49,7 @@ std::vector<std::pair<Element, double>> GridFileReader::getElements() {
 		while (columnValue != rowValues.end()) {
 			elements.push_back(std::pair<Element, double>(
 				Element(row, columnValue->first),
-				CouldNotParseNumberException::convert(columnValue->second, rowContext + columnValue->first + ")")
+				convertToNumber(columnValue->second, rowContext + columnValue->first + ")")
 			));
 			columnValue++;
 		}

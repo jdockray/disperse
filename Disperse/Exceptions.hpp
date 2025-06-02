@@ -47,17 +47,11 @@ struct ExpectedException : public std::exception {
 
 class CouldNotParseNumberException : public ExpectedException {
 public:
-	static double convert(const std::string& stringToParse, const std::string& context = "");
-
-private:
-	CouldNotParseNumberException(const std::string& attemptedToParse, const std::string& context);
+	CouldNotParseNumberException(const std::string& attemptedToParseVariable, const std::string& context);
 };
 
 class NegativeRiskException : public ExpectedException {
 public:
-	static void verify(const double risk, const std::string& securityIdentifier);
-
-private:
 	NegativeRiskException(const double risk, const std::string& securityIdentifier);
 };
 
@@ -83,40 +77,11 @@ public:
 
 class MissingArgumentException : public ExpectedException {
 public:
-	static void verifyTrue(bool expectedTrue, std::string message);
-
-	template<typename T>
-	static T verifyAndGetValue(const std::optional<T>& expectedFilled, const std::string message) {
-		verifyTrue(expectedFilled.has_value(), message);
-		return expectedFilled.value();
-	}
-
-	template<typename T>
-	static void verifyListLengthSufficient(const std::list<T> list, const unsigned int minimumLength,
-		const std::string message) {
-		verifyTrue(list.size() >= minimumLength, message);
-	}
-
 	MissingArgumentException(std::string message);
 };
 
 class RepeatedSpecificationOfVariableException : public ExpectedException {
 public:
-	template <typename T>
-	static void verifyNotSet(const std::optional<T>& optionalWhichShouldBeUnset, const std::string& variableDescription) {
-		verifyNotSet(optionalWhichShouldBeUnset.has_value(), variableDescription);
-	}
-
-	template <typename T, typename U>
-	static void verifyNotSet(
-		const T element,
-		const std::map<T, U> mapWhichShouldNotContainElement,
-		const std::string variableDescription) {
-		verifyNotSet(mapWhichShouldNotContainElement.find(element) != mapWhichShouldNotContainElement.end(), variableDescription);
-	}
-
-private:
-	static void verifyNotSet(bool presence, std::string variableDescription);
 	RepeatedSpecificationOfVariableException(std::string variableDescription);
 };
 

@@ -187,6 +187,7 @@
     <ClCompile Include="ConstraintUnpacking.cpp" />
     <ClCompile Include="OptimiseCommand.cpp" />
     <ClCompile Include="Output.cpp" />
+    <ClCompile Include="Parsing.cpp" />
     <ClCompile Include="ProportionLimitedObject.cpp" />
     <ClCompile Include="ElementReaders.cpp" />
     <ClCompile Include="Security.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Optimise.hpp" />
     <ClInclude Include="OptimiseCommand.hpp" />
     <ClInclude Include="ElementReaders.hpp" />
+    <ClInclude Include="Parsing.hpp" />
     <ClInclude Include="ProportionLimitedObject.hpp" />
     <ClInclude Include="SolverSession.hpp" />
     <ClInclude Include="Writers.hpp" />

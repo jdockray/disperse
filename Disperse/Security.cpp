@@ -18,7 +18,9 @@ double Security::getExpectedReturn() const {
 }
 
 void Security::setRisk(const double risk) {
-	NegativeRiskException::verify(risk, getIdentifier());
+	if (risk < 0) {
+		throw NegativeRiskException(risk, getIdentifier());
+	}
 	this->risk = risk;
 }
 
@@ -35,8 +37,9 @@ std::string Security::getGroup() const {
 }
 
 void Security::addExposure(std::string factorName, double exposure) {
-	RepeatedSpecificationOfVariableException::verifyNotSet(factorName, exposures,
-		"exposure to " + factorName + " for security " + getIdentifier());
+	if (exposures.find(factorName) != exposures.end()) {
+		throw RepeatedSpecificationOfVariableException("exposure to " + factorName + " for security " + getIdentifier());
+	}
 	remainingExposure -= exposure;
 	if (remainingExposure < 0) {
 		throw InvalidLimitSumException();

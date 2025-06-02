@@ -8,7 +8,9 @@
 #pragma warning(pop)
 
 void runCommand(const int argc, const char* const argv[]) {
-	MissingArgumentException::verifyTrue(argc > 1, "You must specify a command. Type 'Disperse.exe help' for usage.");
+	if (argc <= 1) {
+		throw MissingArgumentException("You must specify a command. Type 'Disperse.exe help' for usage.");
+	}
 	const std::string command(argv[1]);
 	std::vector<std::string> commandArgs;
 	commandArgs.reserve(argc - 2);
