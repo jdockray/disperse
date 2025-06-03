@@ -66,7 +66,7 @@ Files relevant to the main code path include:
 - [Optimise.hpp](Disperse/Optimise.hpp), which is the header of the code that interogates the investment-specific objects passed in and formulates the optimisation problem in more general terms involving an objective and constraints.
 - [ConstraintUnpacking.cpp](Disperse/ConstraintUnpacking.cpp), which translates the array of optimisation constraints into the vectors and matrix needed for optimisation.
 - [Solver.cpp](Disperse/Solver.cpp), which populates the C-style structures required by the solver.
-- [SolverSession.cpp](Disperse/Solver.cpp), which executes the optimisation, managing error handling and clean-up.
+- [SolverSession.cpp](Disperse/SolverSession.cpp), which executes the optimisation, managing error handling and clean-up.
 
 ## Third-Party Attribution
 
