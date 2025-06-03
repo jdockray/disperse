@@ -13,18 +13,18 @@ inline const double rounding_multipler = std::pow(10.0, tolerance_decimal_places
 
 class ISolver {
 public:
-	virtual std::vector<double> solve(const SparseMatrix& matrixP, const SparseMatrix& matrixA,
-		const std::vector<c_float>& vectorL, const std::vector<c_float>& vectorU) = 0;
+    virtual std::vector<double> solve(const SparseMatrix& matrixP, const SparseMatrix& matrixA,
+        const std::vector<c_float>& vectorL, const std::vector<c_float>& vectorU) = 0;
 };
 
 class OSQPSolver : public ISolver {
 public:
-	OSQPSolver();
-	virtual std::vector<double> solve(const SparseMatrix& matrixP, const SparseMatrix& matrixA,
-		const std::vector<c_float>& vectorL, const std::vector<c_float>& vectorU);
+    OSQPSolver();
+    virtual std::vector<double> solve(const SparseMatrix& matrixP, const SparseMatrix& matrixA,
+        const std::vector<c_float>& vectorL, const std::vector<c_float>& vectorU);
 
 private:
-	OSQPSettings osqp_settings;
+    OSQPSettings osqp_settings;
 };
 
 #endif // #ifndef DISPERSE_SOLVER

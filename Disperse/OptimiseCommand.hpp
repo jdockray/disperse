@@ -18,15 +18,15 @@ const std::string group_title = "Group";
 const std::string proportion_title = "Proportion";
 
 double runOptimiseCommand(
-	IOptimisationCode& optimisationCode,
-	const std::string& securityInputFile,
-	const std::string& securityOutputFile,
-	double minimumReturn,
-	const std::optional<std::string>& factorGridInputFile = std::optional<std::string>(),
-	const std::optional<std::string>& factorListInputFile = std::optional<std::string>(),
-	const std::optional<std::string>& factorOutputFile = std::optional<std::string>(),
-	const std::optional<std::string>& groupInputFile = std::optional<std::string>(),
-	const std::optional<std::string>& groupOutputFile = std::optional<std::string>()
+    IOptimisationCode& optimisationCode,
+    const std::string& securityInputFile,
+    const std::string& securityOutputFile,
+    double minimumReturn,
+    const std::optional<std::string>& factorGridInputFile = std::optional<std::string>(),
+    const std::optional<std::string>& factorListInputFile = std::optional<std::string>(),
+    const std::optional<std::string>& factorOutputFile = std::optional<std::string>(),
+    const std::optional<std::string>& groupInputFile = std::optional<std::string>(),
+    const std::optional<std::string>& groupOutputFile = std::optional<std::string>()
 );
 
 #endif // DISPERSE_OPTIMISE_COMMAND

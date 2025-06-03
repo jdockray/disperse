@@ -7,16 +7,16 @@
 
 class Group : public IdentifiedObject, public ProportionLimitedObject {
 public:
-	Group(const std::string& identifier)
-		: IdentifiedObject(identifier) {
-	}
+    Group(const std::string& identifier)
+        : IdentifiedObject(identifier) {
+    }
 };
 
 class ListOfGroups : public IdentifiedObjectList<Group>, ProportionLimitedObjectList<Group> {
 public:
-	const std::vector<Group>& getObjects() const {
-		return IdentifiedObjectList<Group>::getObjects();
-	}
+    const std::vector<Group>& getObjects() const {
+        return IdentifiedObjectList<Group>::getObjects();
+    }
 };
 
 #endif // #ifndef DISPERSE_GROUP

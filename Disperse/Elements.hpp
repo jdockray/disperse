@@ -13,23 +13,23 @@
 
 class Element {
 public:
-	Element(const std::string& row, const std::string& column);
-	std::string getRow() const;
-	std::string getColumn() const;
+    Element(const std::string& row, const std::string& column);
+    std::string getRow() const;
+    std::string getColumn() const;
 
-	bool operator==(const Element& other) const;
-	bool operator!=(const Element& other) const;
-	bool operator<(const Element& other) const;
-	bool operator>(const Element& other) const;
-	bool operator<=(const Element& other) const;
-	bool operator>=(const Element& other) const;
+    bool operator==(const Element& other) const;
+    bool operator!=(const Element& other) const;
+    bool operator<(const Element& other) const;
+    bool operator>(const Element& other) const;
+    bool operator<=(const Element& other) const;
+    bool operator>=(const Element& other) const;
 
 private:
-	const std::string row;
-	const std::string column;
+    const std::string row;
+    const std::string column;
 };
 
 SparseMatrix elementMatrixFromVector(const std::vector<std::pair<Element, double>>& elements,
-	std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings);
+    std::vector<std::string>& placeForRowHeadings, std::vector<std::string>& placeForColumnHeadings);
 
 #endif // DISPERSE_ELEMENTS

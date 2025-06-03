@@ -12,12 +12,12 @@
 
 class OSQPSession {
 public:
-	OSQPSession(OSQPData& osqpData, const OSQPSettings& osqp_settings);
-	std::vector<double> callOSQPSolve();
-	~OSQPSession();
+    OSQPSession(OSQPData& osqpData, const OSQPSettings& osqp_settings);
+    std::vector<double> callOSQPSolve();
+    ~OSQPSession();
 
 private:
-	OSQPWorkspace* pOsqpWorkspace = nullptr;
+    OSQPWorkspace* pOsqpWorkspace = nullptr;
 };
 
 #endif // #ifndef DISPERSE_SOLVER_SESSION

@@ -13,21 +13,21 @@
 
 class SecurityListBuilder {
 public:
-	SecurityListBuilder(IInput& input);
-	void loadFactors(IReader& input);
-	const ListOfSecurities& getSecurityList();
+    SecurityListBuilder(IInput& input);
+    void loadFactors(IReader& input);
+    const ListOfSecurities& getSecurityList();
 
 private:
-	inline static const std::string security_column_name = "Security";
-	inline static const std::string expected_return_column_name = "Expected";
-	inline static const std::string risk_column_name = "Risk";
-	inline static const std::string minimum_allocation_column_name = "Min";
-	inline static const std::string maximum_allocation_column_name = "Max";
-	inline static const std::string group_column_name = "Group";
+    inline static const std::string security_column_name = "Security";
+    inline static const std::string expected_return_column_name = "Expected";
+    inline static const std::string risk_column_name = "Risk";
+    inline static const std::string minimum_allocation_column_name = "Min";
+    inline static const std::string maximum_allocation_column_name = "Max";
+    inline static const std::string group_column_name = "Group";
 
-	ListOfSecurities securities;
+    ListOfSecurities securities;
 
-	static ListOfSecurities inputSecurities(IInput& input);
+    static ListOfSecurities inputSecurities(IInput& input);
 };
 
 ListOfGroups inputGroups(IInput& input);

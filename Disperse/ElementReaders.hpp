@@ -14,25 +14,25 @@
 
 class IReader {
 public:
-	virtual std::vector<std::pair<Element, double>> getElements() = 0;
+    virtual std::vector<std::pair<Element, double>> getElements() = 0;
 };
 
 class ListFileReader : public IReader {
 public:
-	ListFileReader(IInput& input);
-	virtual std::vector<std::pair<Element, double>> getElements();
+    ListFileReader(IInput& input);
+    virtual std::vector<std::pair<Element, double>> getElements();
 
 private:
-	IInput& input;
+    IInput& input;
 };
 
 class GridFileReader : public IReader {
 public:
-	GridFileReader(IInput& input);
-	virtual std::vector<std::pair<Element, double>> getElements();
+    GridFileReader(IInput& input);
+    virtual std::vector<std::pair<Element, double>> getElements();
 
 private:
-	IInput& input;
+    IInput& input;
 };
 
 #endif // DISPERSE_ELEMENT_READERS
