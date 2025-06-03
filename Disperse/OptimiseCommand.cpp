@@ -10,7 +10,7 @@
 // It orchestrates the main "optimise" operation performed by my software.
 // It shows the concrete components being instantiated and injected into the components that depend on them.
 // It illustrates how I have given classes a single responsibility.
-// The operation is very complicated but the code here remains quite simple.
+// The operation is very complicated but encapsulation hides the complexity.
 
 // Separating concerns is important as a piece of software gets larger.
 // It allows individual parts to be modified or removed without breaking other functionality.
@@ -35,11 +35,11 @@ double runOptimiseCommand(
 	const std::optional<std::string>& groupOutputFile		// The amount in each constrained group after the optimisation.
 ) {
 	// Reading input files
-	CSVInput securityInput(securityInputFile);						// CSVInput implements IInput
+	CSVInput securityInput(securityInputFile);					// CSVInput implements IInput
 	SecurityListBuilder securityListBuilder(securityInput);
 	if (factorGridInputFile) {
 		CSVInput input(factorGridInputFile.value());
-		GridFileReader reader(input);								// GridFileReader implements IReader
+		GridFileReader reader(input);							// GridFileReader implements IReader
 		securityListBuilder.loadFactors(reader);
 	}
 	if (factorListInputFile) {
@@ -47,13 +47,13 @@ double runOptimiseCommand(
 		ListFileReader reader(input);
 		securityListBuilder.loadFactors(reader);
 	}
-	ListOfGroups listOfGroups;										// ListOfGroups implements IdentifiedObjectList<Group> and ProportionLimitedObjectList<Group>
+	ListOfGroups listOfGroups;					// ListOfGroups implements IdentifiedObjectList<Group> and ProportionLimitedObjectList<Group>
 	if (groupInputFile) {
 		CSVInput groupInput = groupInputFile.value();
 		listOfGroups = inputGroups(groupInput);
 	}
 
-	// Processing													// OptimisationCode implements IOptimisationCode
+	// Processing												// OptimisationCode implements IOptimisationCode
 	OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
 	
 	// Output
