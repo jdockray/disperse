@@ -3,10 +3,10 @@
 #include "OptimiseCommand.hpp"
 #include "Writers.hpp"
 
-OSQPSolver osqpSolver;
+OSQPSolver osqpSolver;												// OSQPSolver implements ISolver
 
 double runOptimiseCommand(
-	IOptimisationCode& optimisationCode,
+	IOptimisationCode& optimisationCode,							// OptimisationCode implements IOptimisationCode
 	const std::string& securityInputFile,
 	const std::string& securityOutputFile,
 	double minimumReturn,
@@ -16,11 +16,12 @@ double runOptimiseCommand(
 	const std::optional<std::string>& groupInputFile,
 	const std::optional<std::string>& groupOutputFile
 ) {
-	CSVInput securityInput(securityInputFile);
+	// Input
+	CSVInput securityInput(securityInputFile);						// CSVInput implements IInput
 	SecurityListBuilder securityListBuilder(securityInput);
 	if (factorGridInputFile) {
 		CSVInput input(factorGridInputFile.value());
-		GridFileReader reader(input);
+		GridFileReader reader(input);								// GridFileReader implements IReader
 		securityListBuilder.loadFactors(reader);
 	}
 	if (factorListInputFile) {
@@ -28,25 +29,26 @@ double runOptimiseCommand(
 		ListFileReader reader(input);
 		securityListBuilder.loadFactors(reader);
 	}
-	ListOfGroups listOfGroups;
+	ListOfGroups listOfGroups;										// ListOfGroups implements IdentifiedObjectList<Group> and ProportionLimitedObjectList<Group>
 	if (groupInputFile) {
 		CSVInput groupInput = groupInputFile.value();
 		listOfGroups = inputGroups(groupInput);
 	}
-	std::unique_ptr<CSVOutput> groupOutput;
-	if (groupOutputFile) {
-		groupOutput = std::make_unique<CSVOutput>(groupOutputFile.value());
-	}
+
+	// Processing
 	OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
-	CSVOutput securityOutput(securityOutputFile);
-	AllocationOutputWriter(securityOutput).outputAllocations(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
+	
+	// Output
+	CSVOutput securityOutput(securityOutputFile);													// CSVOutput implements IOutput,	
+	AllocationWriter(securityOutput, asset_title, allocation_title)									// AllocationWriter implements IWriter
+		.write(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
 	if (factorOutputFile) {
-		CSVOutput output(factorOutputFile.value());
-		FactorExposureWriter(output).outputFactorExposures(result.factorNames, result.resultingFactorExposures);
+		CSVOutput factorOutput(factorOutputFile.value());
+		AllocationWriter(factorOutput, factor_title, exposure_title).write(result.factorNames, result.resultingFactorExposures);
 	}
 	if (groupOutputFile) {
-		CSVOutput output(groupOutputFile.value());
-		GroupProportionWriter(output).outputGroupProportions(listOfGroups.getIdentifiers(), result.proportionsInEachGroup);
+		CSVOutput groupOutput(groupOutputFile.value());
+		AllocationWriter(groupOutput, group_title, proportion_title).write(listOfGroups.getIdentifiers(), result.proportionsInEachGroup);
 	}
 	return result.resultingRisk;
 }

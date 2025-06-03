@@ -10,32 +10,17 @@
 #include <vector>
 #pragma warning(pop)
 
-class AllocationOutputWriter {
+class IWriter {
 public:
-	AllocationOutputWriter(IOutput& output);
-	virtual void outputAllocations(const std::vector<std::string>& factorNames,
-		const std::vector<double>& allocations);
-
-private:
-	IOutput& output;
+	virtual void write(const std::vector<std::string>& keys, const std::vector<double>& values) = 0;
+	virtual void write(const std::vector<std::string>& keys, const std::map<std::string, double>& values) = 0;
 };
 
-class FactorExposureWriter {
+class AllocationWriter : public IWriter {
 public:
-	FactorExposureWriter(IOutput& output);
-	virtual void outputFactorExposures(const std::vector<std::string>& factorNames,
-		const std::vector<double>& allocations);
-
-private:
-	IOutput& output;
-};
-
-class GroupProportionWriter {
-public:
-	GroupProportionWriter(IOutput& output);
-
-	virtual void outputGroupProportions(const std::vector<std::string>& groupNames,
-		const std::map<std::string, double>& groupProportions);
+	AllocationWriter(IOutput& output, const std::string& nameHeading, const std::string& allocationHeading);
+	virtual void write(const std::vector<std::string>& keys, const std::vector<double>& values);
+	virtual void write(const std::vector<std::string>& keys, const std::map<std::string, double>& values);
 
 private:
 	IOutput& output;

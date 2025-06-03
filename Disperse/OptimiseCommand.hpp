@@ -10,6 +10,13 @@
 #include <string>
 #pragma warning(pop)
 
+const std::string asset_title = "Asset";
+const std::string allocation_title = "Allocation";
+const std::string factor_title = "Factor";
+const std::string exposure_title = "Exposure";
+const std::string group_title = "Group";
+const std::string proportion_title = "Proportion";
+
 double runOptimiseCommand(
 	IOptimisationCode& optimisationCode,
 	const std::string& securityInputFile,
