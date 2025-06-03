@@ -1,19 +1,20 @@
 # disperse
 
-Disperse is a C++ financial portfolio optimisation program. It is a console application which takes CSV files as input, performs a numerical optimisation and then writes CSV output files. I originally created it for my own use, but later decided to share it online to illustrate my software engineering skills. __None of the information here constitutes financial advice.__
+Disperse is a C++ financial portfolio optimisation program. It is a console application which takes CSV files as input, performs a numerical optimisation and then writes CSV output files. I originally created it for my own use, but later decided to share it online to illustrate my software engineering skills. If I were to criticise the current state, there is insufficient testing and it lacks the comments I would put in code I was developing with others.
 
 ## Introduction
 
 One way to put money aside for the long term is to invest it in stocks and shares (equities) or bonds (fixed income investments). In the UK, investments can be held in various wrappers such as an ISA or pension, or unwrapped, but the underlying places to invest are the same. Many providers offer a supermarket in which you can choose where to put your money. While investing in individual companies is possible, it is common to invest in pooled investment funds (mutual funds, ETFs and, essentially, investment trusts) that invest in many companies, often those of an index in the case of a passive fund. This spreads the risk between different companies; it diversifies the investment.
 
-As an investor, it can be hard to decide how much money to invest in different funds or other vehicles. Funds will usually indicate the proportion of their fund invested in different asset classes (equities, bonds, cash, etc.), in different geographical regions (US, Japan, UK etc.) or in different industries (typically 11 major categories including healthcare, energy and financial services). They will also, by law, give an indication of how much risk the money is exposed to (often indicated by how much the price rises and falls over time, its volatility). While the way to select the best investments might be controversial, even straightforward tasks like trying to place the same amount of money in each of the aforementioned industrial categories is difficult to do without using some software.
+__None of the discussion here constitutes financial advice.__
+
+As an investor, it can be hard to decide how much money to invest in different funds or other vehicles. Funds will usually indicate the proportion of their fund invested in different asset classes (equities, bonds, cash, etc.), in different geographical regions (US, Japan, UK etc.) or in different industries (typically 11 major categories including healthcare, energy and financial services). [See here](https://www.morningstar.co.uk/uk/funds/snapshot/snapshot.aspx?id=F00000SRPN&tab=3) for an example. They will also, by law, give an indication of how much risk the money is exposed to (often indicated by how much the price rises and falls over time, its volatility). While the way to select the best investments might be controversial, even straightforward tasks like trying to place the same amount of money in each of the aforementioned industrial categories is difficult to do without using some software.
 
 Disperse is a program which attempts to determine the asset allocation (proportion in each of a set of specified investments) that has the lowest risk (price volatility) while still achieving a specified minimum expected return. It performs a numerical optimisation using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
 
 For those familiar with this area, a classic mean-variance portfolio optimisation is performed, but the asset covariance matrix is calculated using a factor model. THe latter means that the exposure of each asset to a set of independent risk factors is entered and this is used to generate the covariance matrix. I thought this would be easier to formulate for input than a covariance matrix, which must have certain properties to be valid.
 
   I have found Disperse to be useful for achieving a portfolio with certain properties, but the output is highly dependent on and only as valid as the input data and any assumptions made. In practice, using a tool like this still requires a significant amount of time and effort and the correlation and uncertainty of markets means that any gain achieved over manually selecting investments, is probably small.
-
 
 ## Theory
 
@@ -53,6 +54,19 @@ A risk-free asset is useful to achieve optimal portfolios at low volatilities (p
 This program is run from the command line, specifying input CSV (comma separated variable) files. In addition to facilitating the optimisation, it provides operations useful to generate the factor matrix.
 
 For example usage please see my tests [here](Testing/Integration/README.md).
+
+## Interesting code
+
+I will link to files here so the links break less frequently!
+
+Files relevant to the main code path include:
+- [Disperse.cpp](Disperse/Disperse.cpp), which contains the main function.
+- [ArgumentUnpacking.cpp](Disperse/ArgumentUnpacking.cpp), which is where the command line arguments are deduced.
+- [OptimiseCommand.cpp](Disperse/OptimiseCommand.cpp), where concrete components, each with their own single responsibility (such as reading or writing) are instantiated and injected into the components that depend on them.
+- [Optimise.hpp](Disperse/Optimise.hpp), which is the header of the code that interogates the investment-specific objects passed in and formulates the optimisation problem in more general terms involving an objective and constraints.
+- [ConstraintUnpacking.cpp](Disperse/ConstraintUnpacking.cpp), which translates the array of optimisation constraints into the vectors and matrix needed for optimisation.
+- [Solver.cpp](Disperse/Solver.cpp), which populates the C-style structures required by the solver.
+- [SolverSession.cpp](Disperse/Solver.cpp), which executes the optimisation, managing error handling and clean-up.
 
 ## Third-Party Attribution
 
