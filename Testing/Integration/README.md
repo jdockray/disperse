@@ -1,13 +1,13 @@
 # Smoke tests
 
-I have added a few integration smoke tests here to demonstrate how this program can be used.
+I have added a few integration smoke tests here to demonstrate how this program can be used and check it is not broken. There is currently a GitHub action running these. Of course, more testing would be useful.
+
 Test.bat contains instructions which can be run on the built executable Disperse.exe to test its functionality.
-The required input files are in the 'Input' directory and output files are put in a temporary 'Output' directory, which can be compared with the 'ExpectedOutput' directory here.
+The required input files are in the 'Input' directory (of the folder containing this readme) and output files are put in a temporary 'Output' directory, which can be compared with the 'ExpectedOutput' directory.
 
 ## Help messages
 
-The first argument passed to Disperse.exe is always a command. The 'help' command returns useful information in general and about other commands.
-You might find reading the output files helpful.
+The first argument passed to Disperse.exe is always a command. The 'help' command returns useful information in general and about other commands. You might find reading the output files helpful, the main command is the "optimise" command. This is the one which invokes the OSQP solver.
 
 <pre>
     Disperse.exe help ><a href="ExpectedOutput\GeneralHelp.txt">Output\GeneralHelp.txt</a>
@@ -20,9 +20,9 @@ You might find reading the output files helpful.
 
 The subsequent commands show data manipulation to generate a risk matrix followed by an optimisation.
 
-The risk matrix (generated using 'multiply' and 'combine' here) indicates the proportion of the variability in each security explained by each of independent risk factors. The optimise command multiplies the risk factor matrix by its conjugate transpose to generate a positive semidefinite security correlation matrix. The total risk associated with each security (the standard deviation of its returns) is used to convert this correlation matrix into a covariance matrix.
+The risk matrix (generated using 'multiply' and 'combine' here) indicates the proportion of the variability in each security explained by each of independent risk factors. The optimise command multiplies the risk factor matrix by its conjugate transpose to generate a positive semidefinite security correlation matrix. The total risk associated with each security (the standard deviation of its returns) is used to convert this correlation matrix into a covariance matrix. You can find more information on the theory in the main readme of this repository.
 
-In this example the variation of fund returns is modelled to be 85% global market risk, 10% industry-specific risk and 5% within category risk.
+In this example the variation of fund returns is modelled to be 85% global market risk, 10% industry-specific risk and 5% within category risk. (This does not constitute advice! These are not necessarily sensible values!)
 
 <pre>
     Disperse.exe multiply -m <a href="Input\FundRegionWeightings.csv">Input\FundRegionWeightings.csv</a>,<a href="Input\RegionSectorWeightings.csv">Input\RegionSectorWeightings.csv</a> -r <a href="ExpectedOutput\FundSectorWeightings.csv">Output\FundSectorWeightings.csv</a>

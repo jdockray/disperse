@@ -1,8 +1,21 @@
 # disperse
 
-Disperse is a C++ console financial portfolio optimisation program for Windows. It attempts to determine the asset allocation (the proportion of a portfolio which should be attributed to each of a selection of possible investments) that has the lowest volatility (price variation with time) while still achieving a specified minimum expected return (such as 6% a year). For those familiar with this area, it performs classic mean-variance portfolio optimisation but the asset covariance matrix is calculated using a factor model. The optimisation is performed using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
+Disperse is a C++ financial portfolio optimisation program. It is a console application which takes CSV files as input, performs a numerical optimisation and then writes CSV output files. I originally created it for my own use, but later decided to share it online to illustrate my software engineering skills. __None of the information here constitutes financial advice.__
 
 ## Introduction
+
+One way to put money aside for the long term is to invest it in stocks and shares (equities) or bonds (fixed income investments). In the UK, investments can be held in various wrappers such as an ISA or pension, or unwrapped, but the underlying places to invest are the same. Many providers offer a supermarket in which you can choose where to put your money. While investing in individual companies is possible, it is common to invest in pooled investment funds (mutual funds, ETFs and, essentially, investment trusts) that invest in many companies, often those of an index in the case of a passive fund. This spreads the risk between different companies; it diversifies the investment.
+
+As an investor, it can be hard to decide how much money to invest in different funds or other vehicles. Funds will usually indicate the proportion of their fund invested in different asset classes (equities, bonds, cash, etc.), in different geographical regions (US, Japan, UK etc.) or in different industries (typically 11 major categories including healthcare, energy and financial services). They will also, by law, give an indication of how much risk the money is exposed to (often indicated by how much the price rises and falls over time, its volatility). While the way to select the best investments might be controversial, even straightforward tasks like trying to place the same amount of money in each of the aforementioned industrial categories is difficult to do without using some software.
+
+Disperse is a program which attempts to determine the asset allocation (proportion in each of a set of specified investments) that has the lowest risk (price volatility) while still achieving a specified minimum expected return. It performs a numerical optimisation using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
+
+For those familiar with this area, a classic mean-variance portfolio optimisation is performed, but the asset covariance matrix is calculated using a factor model. THe latter means that the exposure of each asset to a set of independent risk factors is entered and this is used to generate the covariance matrix. I thought this would be easier to formulate for input than a covariance matrix, which must have certain properties to be valid.
+
+  I have found Disperse to be useful for achieving a portfolio with certain properties, but the output is highly dependent on and only as valid as the input data and any assumptions made. In practice, using a tool like this still requires a significant amount of time and effort and the correlation and uncertainty of markets means that any gain achieved over manually selecting investments, is probably small.
+
+
+## Theory
 
 This software accepts as input a list of securities (potential investments), with, for each asset:
 - an expected return, $\mu$ e.g. 1.07 (7% return).
