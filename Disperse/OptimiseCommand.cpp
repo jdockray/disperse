@@ -17,29 +17,29 @@
 // It enables code to be used in new features or copied out and used in other software.
 // Injecting dependencies also allows components to be swapped for dummy or mock objects in unit testing.
 
-OSQPSolver osqpSolver;									// OSQPSolver implements ISolver
+OSQPSolver osqpSolver;                                                                              // OSQPSolver implements ISolver
 
 double runOptimiseCommand(
     IOptimisationCode& optimisationCode,
 
-    const std::string& securityInputFile,		// Name of CSV file containing a list of securities with expected returns and volatilities
-    const std::string& securityOutputFile,		// The place to write the output CSV containing the allocations from the optimisation.
-    double minimumReturn, // The objective of the optimisation. This return must be achieved.
+    const std::string& securityInputFile,           // Name of CSV file containing a list of securities with expected returns and volatilities
+    const std::string& securityOutputFile,          // The place to write the output CSV containing the allocations from the optimisation.
+    double minimumReturn,                           // The objective of the optimisation. This return must be achieved.
 
     // The amount each investment depends on each risk factor (to generate the covariance matrix) can be input in two ways: (One required)
-    const std::optional<std::string>& factorGridInputFile,	// 	As an investment vs risk matrix
-    const std::optional<std::string>& factorListInputFile,	// 	The same data as a list with rows: investment name, risk name, fraction
+    const std::optional<std::string>& factorGridInputFile,      // As an investment vs risk matrix
+    const std::optional<std::string>& factorListInputFile,      // The same data as a list with rows: investment name, risk name, fraction
 
-    const std::optional<std::string>& factorOutputFile,		// The risk exposures of the portfolio resulting from the optimisation.
-    const std::optional<std::string>& groupInputFile,		// Constraints to limit allocations to certain investments or sets of investments
-    const std::optional<std::string>& groupOutputFile		// The amount in each constrained group after the optimisation.
+    const std::optional<std::string>& factorOutputFile,         // The risk exposures of the portfolio resulting from the optimisation.
+    const std::optional<std::string>& groupInputFile,           // Constraints to limit allocations to certain investments or sets of investments
+    const std::optional<std::string>& groupOutputFile           // The amount in each constrained group after the optimisation.
 ) {
     // Reading input files
-    CSVInput securityInput(securityInputFile);					// CSVInput implements IInput
+    CSVInput securityInput(securityInputFile);                  // CSVInput implements IInput
     SecurityListBuilder securityListBuilder(securityInput);
     if (factorGridInputFile) {
         CSVInput input(factorGridInputFile.value());
-        GridFileReader reader(input);						// GridFileReader implements IReader
+        GridFileReader reader(input);                           // GridFileReader implements IReader
         securityListBuilder.loadFactors(reader);
     }
     if (factorListInputFile) {
@@ -47,18 +47,18 @@ double runOptimiseCommand(
         ListFileReader reader(input);
         securityListBuilder.loadFactors(reader);
     }
-    ListOfGroups listOfGroups;					// ListOfGroups implements IdentifiedObjectList<Group> and ProportionLimitedObjectList<Group>
+    ListOfGroups listOfGroups;                      // ListOfGroups implements IdentifiedObjectList<Group> and ProportionLimitedObjectList<Group>
     if (groupInputFile) {
         CSVInput groupInput = groupInputFile.value();
         listOfGroups = inputGroups(groupInput);
     }
 
-    // Processing								// OptimisationCode implements IOptimisationCode
+    // Processing                                               // OptimisationCode implements IOptimisationCode
     OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
 
     // Output
-    CSVOutput securityOutput(securityOutputFile);							// CSVOutput implements IOutput,	
-    AllocationWriter(securityOutput, asset_title, allocation_title)			// AllocationWriter implements IWriter
+    CSVOutput securityOutput(securityOutputFile);                                                   // CSVOutput implements IOutput,    
+    AllocationWriter(securityOutput, asset_title, allocation_title)                                 // AllocationWriter implements IWriter
         .write(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
     if (factorOutputFile) {
         CSVOutput factorOutput(factorOutputFile.value());
