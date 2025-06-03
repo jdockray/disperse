@@ -39,7 +39,7 @@ double runOptimiseCommand(
 	SecurityListBuilder securityListBuilder(securityInput);
 	if (factorGridInputFile) {
 		CSVInput input(factorGridInputFile.value());
-		GridFileReader reader(input);							// GridFileReader implements IReader
+		GridFileReader reader(input);						// GridFileReader implements IReader
 		securityListBuilder.loadFactors(reader);
 	}
 	if (factorListInputFile) {
@@ -53,12 +53,12 @@ double runOptimiseCommand(
 		listOfGroups = inputGroups(groupInput);
 	}
 
-	// Processing												// OptimisationCode implements IOptimisationCode
+	// Processing								// OptimisationCode implements IOptimisationCode
 	OptimisationResult result = optimisationCode.runOptimisation(osqpSolver, securityListBuilder.getSecurityList(), minimumReturn, listOfGroups);
 	
 	// Output
-	CSVOutput securityOutput(securityOutputFile);													// CSVOutput implements IOutput,	
-	AllocationWriter(securityOutput, asset_title, allocation_title)									// AllocationWriter implements IWriter
+	CSVOutput securityOutput(securityOutputFile);							// CSVOutput implements IOutput,	
+	AllocationWriter(securityOutput, asset_title, allocation_title)			// AllocationWriter implements IWriter
 		.write(securityListBuilder.getSecurityList().getIdentifiers(), result.allocations);
 	if (factorOutputFile) {
 		CSVOutput factorOutput(factorOutputFile.value());
