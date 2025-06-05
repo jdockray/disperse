@@ -12,16 +12,16 @@ As an investor, it can be hard to decide how much money to invest in different f
 
 Disperse is a program which attempts to determine the asset allocation (proportion in each of a set of specified investments) that has the lowest risk (price volatility) while still achieving a specified minimum expected return. It performs a numerical optimisation using the [OSQP quadratic programming solver](https://osqp.org/) and I would like to draw your attention to the third-party attributions at the end of this readme.
 
-For those familiar with this area, a classic mean-variance portfolio optimisation is performed, but the asset covariance matrix is calculated using a factor model. THe latter means that the exposure of each asset to a set of independent risk factors is entered and this is used to generate the covariance matrix. I thought this would be easier to formulate for input than a covariance matrix, which must have certain properties to be valid.
+For those familiar with this area, a classic mean-variance portfolio optimisation is performed, but the asset covariance matrix is calculated using a factor model. The latter means that the exposure of each asset to a set of independent risk factors is entered and this is used to generate the covariance matrix. I thought this would be easier to formulate for input than a covariance matrix, which must have certain properties to be valid.
 
-  I have found Disperse to be useful for achieving a portfolio with certain properties, but the output is highly dependent on and only as valid as the input data and any assumptions made. In practice, using a tool like this still requires a significant amount of time and effort and the correlation and uncertainty of markets means that any gain achieved over manually selecting investments, is probably small.
+I have found Disperse to be useful for achieving a portfolio with certain properties, but the output is highly dependent on and only as valid as the input data and any assumptions made. In practice, using a tool like this still requires a significant amount of time and effort and the correlation and uncertainty of markets means that any gain achieved over manually selecting investments, is probably small.
 
 ## Theory
 
 This software accepts as input a list of securities (potential investments), with, for each asset:
 - an expected return, $\mu$ e.g. 1.07 (7% return).
 - the expected return volatility, $\sigma$, the standard deviation of the value of the security. (See Wikipedia [here](https://en.wikipedia.org/wiki/Modern_portfolio_theory).)
-- estimates of the proportion of the variation attributable to each of a set of independent factors (exposures) which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account to explain the remaining variance.
+- estimates of the proportion of the variation attributable to each of a set of independent factors (exposures) which are believed to explain the variance. One factor, the market risk, will usually dominate. If these do not sum to 1 for a security, then an additional, independent factor is added to account for the remaining variance.
 
 The standard deviations and exposures are used to calculate an estimated asset price covariance matrix.
 
