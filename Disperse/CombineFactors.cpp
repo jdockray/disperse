@@ -12,7 +12,7 @@
 #pragma warning(pop)
 
 void combineElements(std::map<Element, double> elements, double additionalMarketRisk, const std::string& marketRiskName,
-    std::vector<std::reference_wrapper<IWriter>>& outputWriters) {
+    std::vector<std::reference_wrapper<IElementWriter>>& outputWriters) {
     if (additionalMarketRisk != 0) {
         std::map<Element, double> additionalMarketRiskElements;
         for (const std::pair<Element, double>& element : elements) {
@@ -24,13 +24,13 @@ void combineElements(std::map<Element, double> elements, double additionalMarket
     for (const std::pair<Element, double>& element : elements) {
         pairs.push_back(element);
     }
-    for (IWriter& outputWriter : outputWriters) {
+    for (IElementWriter& outputWriter : outputWriters) {
         outputWriter.writeElements(pairs);
     }
 }
 
 void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>& elementSets, double scalarToMultiplyBy,
-    std::vector<std::reference_wrapper<IWriter>>& outputWriters) {
+    std::vector<std::reference_wrapper<IElementWriter>>& outputWriters) {
     std::vector<std::string> columnHeadings;
     std::vector<std::string> rowHeadings;
     std::vector<std::string> joiningAxisHeadings1;
@@ -58,7 +58,7 @@ void multiplyElements(const std::vector<std::vector<std::pair<Element, double>>>
     if (scalarToMultiplyBy != 1.0) {
         outputMatrix = multiply(outputMatrix.value(), scalarToMultiplyBy);
     }
-    for (IWriter& outputWriter : outputWriters) {
+    for (IElementWriter& outputWriter : outputWriters) {
         outputWriter.writeElements(rowHeadings, columnHeadings, outputMatrix.value());
     }
 }

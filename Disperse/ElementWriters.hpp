@@ -11,13 +11,13 @@
 #include <vector>
 #pragma warning(pop)
 
-class IWriter {
+class IElementWriter {
 public:
     virtual void writeElements(const std::vector<std::pair<Element, double>>& elements) = 0;
     virtual void writeElements(const std::vector<std::string>& rowHeadings, const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix) = 0;
 };
 
-class ListFileWriter : public IWriter {
+class ListFileWriter : public IElementWriter {
 public:
     ListFileWriter(IOutput& output);
     virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);
@@ -29,7 +29,7 @@ private:
         const std::vector<std::string>& columnHeadings, const SparseMatrix& matrix);
 };
 
-class GridFileWriter : public IWriter {
+class GridFileWriter : public IElementWriter {
 public:
     GridFileWriter(IOutput& output);
     virtual void writeElements(const std::vector<std::pair<Element, double>>& elements);

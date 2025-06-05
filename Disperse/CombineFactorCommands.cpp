@@ -39,7 +39,7 @@ void runCombineCommand(
         CSVInput input(listInputFile);
         addElements(ListFileReader(input).getElements(), elements);
     }
-    std::vector<std::reference_wrapper<IWriter>> outputs;
+    std::vector<std::reference_wrapper<IElementWriter>> outputs;
     std::unique_ptr<CSVOutput> gridOutput;
     std::unique_ptr<GridFileWriter> gridFileWriter;
     if (gridOutputFile) {
@@ -73,7 +73,7 @@ void runMultiplyCommand(
         CSVInput input(listInputFile);
         elementSets.push_back(ListFileReader(input).getElements());
     }
-    std::vector<std::reference_wrapper<IWriter>> outputs;
+    std::vector<std::reference_wrapper<IElementWriter>> outputs;
     std::unique_ptr<CSVOutput> gridOutput;
     std::unique_ptr<GridFileWriter> gridFileWriter;
     if (gridOutputFile) {
